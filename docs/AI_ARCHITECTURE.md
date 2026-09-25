@@ -1,0 +1,5 @@
+# AI Architecture (design only)
+
+**Baseline:** [Phase 0 §§8, 12](architecture/PHASE_0_BASELINE_2026-09-26.md). [Memory](MEMORY_ARCHITECTURE.md), [permissions ADR](adr/0017-ai-tool-permissions.md).
+
+CORTEX is one bounded orchestration loop with analyst, skeptic, quant, historical and risk passes when justified; no swarm requirement. ModelGateway routes by task/privacy/latency/cost through replaceable model, embedding and rerank interfaces. Models request registered, schema-validated, least-privilege tools; deterministic code owns arithmetic and backtests. A response cites exact tool output IDs and distinguishes fact, calculation, inference and uncertainty. Retrieval text, provider news, and journal content are untrusted and cannot grant tool permissions. Cloud calls obey per-context permission flags and per-run overrides; owner config defaults to private. Version model, prompt, tool schemas and datasets; evaluate on frozen adversarial questions before promotion. Phase 1 implements none of this.

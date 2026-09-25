@@ -1,0 +1,33 @@
+# Example only. Copy to owner.yaml (gitignored), then choose actual values.
+base_currency: INR
+secondary_display_currency: USD
+timezone: Asia/Kolkata
+preferred_market_sessions:
+  - NSE_CASH
+  - US_EQUITIES_REGULAR
+  - CRYPTO_UTC_DAILY
+review_times:
+  - market: NSE_CASH
+    local_time: "18:30"
+  - market: US_EQUITIES_REGULAR
+    local_time: "09:00"
+enabled_markets: [india_equities, us_equities, crypto_spot]
+ai_privacy:
+  default: local_only
+  cloud_model_allowed: false
+  portfolio_context_allowed_for_cloud: false
+  journal_context_allowed_for_cloud: false
+storage_budget:
+  max_gib: null # Set after hardware detection
+  backup_target: null # Separate device/volume; set before persistence
+model_budget:
+  monthly_inr: 0
+data_budget:
+  monthly_inr: null # Owner choice after source quote
+  annual_inr: null
+default_research_horizon: swing_days_2_to_20
+risk_display_preferences:
+  show_drawdown: true
+  show_r_multiple: true
+  show_currency_exposure: true
+  probability_label_requires_calibration: true

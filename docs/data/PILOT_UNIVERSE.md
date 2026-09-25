@@ -1,0 +1,12 @@
+# Initial Pilot Universe — provisional candidates
+
+**Status:** 25 candidate trading instruments plus nine context series. Candidate names are **not** hard-coded and no endpoint has been authenticated. A selected instrument gets an opaque UUID only after venue/contract and provider-native ID verification. [Source matrix](DATA_SOURCE_MATRIX.md), [gate](../planning/READINESS.md).
+
+| Segment | Candidates | Venue / pair interpretation | Feasibility gate |
+| --- | --- | --- | --- |
+| India (10) | RELIANCE, HDFCBANK, ICICIBANK, INFY, TCS, SBIN, BHARTIARTL, LT, M&M, ITC | NSE cash EQ listing, INR; symbols require valid-time lookup in Upstox BOD / Kite instrument dump; ISIN cross-check | Each exact ISIN/native ID, date coverage, CA status and rights probed. `M&M` must remain literal provider mapping, not URL-ticker shorthand. |
+| US (10) | NVDA, AAPL, MSFT, AMZN, META, GOOGL, TSLA, AMD, SPY, QQQ | US listed equity/ETF, USD; exchange/venue and share class resolved separately | Alpaca asset/market feed lookup; IEX/SIP feed class, actions, start/end history and split behavior. |
+| Crypto (5) | BTC, ETH, SOL, BNB, XRP | **Proposed Binance spot pairs** BTCUSDT, ETHUSDT, SOLUSDT, BNBUSDT, XRPUSDT; USDT quote, not USD | ExchangeInfo current TRADING status, pair-specific first/last bar, UTC daily anchor, regional access; Coinbase USD pair fallback may omit BNB. |
+| Context (9 slots) | NIFTY 50, S&P 500, NASDAQ-100, VIX, DXY, US 10Y par yield, gold, crude oil, USD/INR | Index, volatility level, rate, commodity benchmark or FX reference are distinct **series**, not necessarily tradable bars | NIFTY/NSE rights; SPX/NDX license or labeled SPY/QQQ proxy; Cboe VIX daily; Treasury rate; RBI fix; DXY/gold/crude exact benchmark/feed unresolved. Unverified slots are deferred, never fabricated. |
+
+The architecture has no fixed 10/10/5 counts in schemas, query paths or partition names. `enabled` is a manifest/config property. Pilot selection is time-bounded; preserve historical membership for replay. A context series may have only one daily value and must not be coerced into an OHLC bar. [Instrument sources](https://upstox.com/developer/api-documentation/instruments/), [Kite catalog](https://kite.trade/docs/connect/v3/market-quotes/), [Binance market endpoint](https://developers.binance.com/en/docs/products/spot/rest-api), [VIX archive](https://www.cboe.com/tradable_products/vix/vix_historical_data), [Treasury feed](https://home.treasury.gov/treasury-daily-interest-rate-xml-feed).

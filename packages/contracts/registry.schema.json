@@ -1,0 +1,2259 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://market-cortex.local/contracts/registry/1.0.0-draft",
+  "title": "MARKET CORTEX contract registry",
+  "description": "Architecture-only schemas; runtime validators and migrations arrive in Phase 1. Semantic cross-field checks documented in data dictionary.",
+  "contract_version": "1.0.0-draft",
+  "$defs": {
+    "Instrument": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "instrument_id",
+        "asset_class",
+        "instrument_kind",
+        "primary_venue_id",
+        "trading_currency",
+        "price_unit",
+        "quantity_unit",
+        "listing_status",
+        "valid_from"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "1.0.0-draft"
+        },
+        "instrument_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "asset_class": {
+          "enum": [
+            "equity",
+            "etf",
+            "index",
+            "crypto_spot",
+            "future",
+            "option",
+            "perpetual",
+            "fx",
+            "commodity",
+            "rate_series",
+            "other"
+          ]
+        },
+        "instrument_kind": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Listing, pair, contract or nontradable series"
+        },
+        "primary_venue_id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Controlled venue"
+        },
+        "trading_currency": {
+          "type": "string",
+          "minLength": 1,
+          "description": "ISO currency or explicitly identified crypto quote"
+        },
+        "price_unit": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Unit price expresses"
+        },
+        "quantity_unit": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Shares, base coins, contracts, etc."
+        },
+        "tick_size": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^-?(0|[1-9][0-9]*)(\\.[0-9]+)?$",
+              "description": "Exact decimal, no floating point JSON number"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "lot_size": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^-?(0|[1-9][0-9]*)(\\.[0-9]+)?$",
+              "description": "Exact decimal, no floating point JSON number"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "listing_status": {
+          "enum": [
+            "active",
+            "halted",
+            "delisted",
+            "expired",
+            "unknown"
+          ]
+        },
+        "valid_from": {
+          "type": "string",
+          "format": "date-time",
+          "description": "UTC RFC3339 instant; runtime requires Z offset"
+        },
+        "valid_to": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time",
+              "description": "UTC RFC3339 instant; runtime requires Z offset"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "underlying_instrument_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "uuid"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "issuer_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "uuid"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "IdentifierMapping": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "mapping_id",
+        "instrument_id",
+        "provider_id",
+        "venue_id",
+        "identifier_type",
+        "identifier_value",
+        "valid_from"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "1.0.0-draft"
+        },
+        "mapping_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "instrument_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "provider_id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Source namespace"
+        },
+        "venue_id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Venue namespace"
+        },
+        "identifier_type": {
+          "enum": [
+            "ticker",
+            "isin",
+            "cusip",
+            "figi",
+            "provider_token",
+            "exchange_pair",
+            "contract_code",
+            "series_code",
+            "other"
+          ]
+        },
+        "identifier_value": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Verbatim identifier"
+        },
+        "valid_from": {
+          "type": "string",
+          "format": "date-time",
+          "description": "UTC RFC3339 instant; runtime requires Z offset"
+        },
+        "valid_to": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time",
+              "description": "UTC RFC3339 instant; runtime requires Z offset"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "available_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time",
+              "description": "UTC RFC3339 instant; runtime requires Z offset"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "source_batch_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "uuid"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "TradingCalendar": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "calendar_id",
+        "venue_id",
+        "timezone",
+        "session_kind",
+        "sessions",
+        "version"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "1.0.0-draft"
+        },
+        "calendar_id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Stable ID"
+        },
+        "venue_id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Exchange or crypto anchor"
+        },
+        "timezone": {
+          "type": "string",
+          "minLength": 1,
+          "description": "IANA zone"
+        },
+        "session_kind": {
+          "enum": [
+            "regular",
+            "extended",
+            "24x7",
+            "special"
+          ]
+        },
+        "sessions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "session_date": {
+                "type": "string",
+                "format": "date"
+              },
+              "open_at": {
+                "type": "string",
+                "format": "date-time",
+                "description": "UTC RFC3339 instant; runtime requires Z offset"
+              },
+              "close_at": {
+                "type": "string",
+                "format": "date-time",
+                "description": "UTC RFC3339 instant; runtime requires Z offset"
+              },
+              "status": {
+                "enum": [
+                  "open",
+                  "closed",
+                  "early_close",
+                  "special"
+                ]
+              },
+              "source_ref": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Official notice"
+              }
+            },
+            "required": [
+              "session_date",
+              "status",
+              "source_ref"
+            ]
+          }
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Calendar revision"
+        },
+        "published_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time",
+              "description": "UTC RFC3339 instant; runtime requires Z offset"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "available_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time",
+              "description": "UTC RFC3339 instant; runtime requires Z offset"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "ProviderCapability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "provider_id",
+        "capability_id",
+        "asset_classes",
+        "venue_ids",
+        "observation_kinds",
+        "resolutions",
+        "historical_depth_note",
+        "intraday",
+        "streaming",
+        "corporate_actions",
+        "adjustment_method",
+        "timestamp_semantics",
+        "api_type",
+        "rate_limit",
+        "authentication",
+        "retention_policy_id",
+        "cost_tier",
+        "reliability_note",
+        "test_status"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "1.0.0-draft"
+        },
+        "provider_id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Namespace"
+        },
+        "capability_id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Product/feed ID"
+        },
+        "asset_classes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Asset class"
+          }
+        },
+        "venue_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Venue"
+          }
+        },
+        "observation_kinds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Kind"
+          }
+        },
+        "resolutions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "description": "ISO duration/stream"
+          }
+        },
+        "coverage_start": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time",
+              "description": "UTC RFC3339 instant; runtime requires Z offset"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "coverage_end": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time",
+              "description": "UTC RFC3339 instant; runtime requires Z offset"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "historical_depth_note": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Coverage caveats"
+        },
+        "intraday": {
+          "type": "boolean"
+        },
+        "streaming": {
+          "type": "boolean"
+        },
+        "corporate_actions": {
+          "type": "boolean"
+        },
+        "adjustment_method": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Provider method or unknown"
+        },
+        "timestamp_semantics": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Exchange/publication semantics"
+        },
+        "api_type": {
+          "type": "string",
+          "minLength": 1,
+          "description": "REST, file, WS etc."
+        },
+        "rate_limit": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Exact tier or unverified"
+        },
+        "authentication": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Key/session/public"
+        },
+        "retention_policy_id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Rights reference or pending"
+        },
+        "cost_tier": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Tariff and date or pending"
+        },
+        "reliability_note": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Caveat"
+        },
+        "test_status": {
+          "enum": [
+            "doc_only",
+            "probe_passed",
+            "probe_failed",
+            "suspended"
+          ]
+        }
+      }
+    },
+    "ObservationEnvelope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "observation_id",
+        "venue_id",
+        "provider_id",
+        "event_at",
+        "availability_basis",
+        "ingested_at",
+        "timestamp_precision",
+        "is_final",
+        "quality_state",
+        "freshness_policy_id",
+        "validation_codes",
+        "source_ref",
+        "source_batch_id",
+        "raw_content_hash",
+        "raw_retention_state",
+        "normalizer_version",
+        "license_policy_id",
+        "unit",
+        "adjustment_basis"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "1.0.0-draft"
+        },
+        "observation_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "instrument_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "uuid"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "series_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "uuid"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "venue_id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Venue"
+        },
+        "provider_id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Provider"
+        },
+        "provider_record_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "description": "Provider scoped native ID"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "event_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "UTC RFC3339 instant; runtime requires Z offset"
+        },
+        "published_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time",
+              "description": "UTC RFC3339 instant; runtime requires Z offset"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "available_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time",
+              "description": "UTC RFC3339 instant; runtime requires Z offset"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "availability_basis": {
+          "enum": [
+            "observed_arrival",
+            "documented_publication",
+            "conservative_proxy",
+            "unknown"
+          ]
+        },
+        "ingested_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "UTC RFC3339 instant; runtime requires Z offset"
+        },
+        "effective_from": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time",
+              "description": "UTC RFC3339 instant; runtime requires Z offset"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "effective_to": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time",
+              "description": "UTC RFC3339 instant; runtime requires Z offset"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "provider_timezone": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "description": "IANA or fixed offset"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "timestamp_precision": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Source time precision"
+        },
+        "is_final": {
+          "type": "boolean"
+        },
+        "quality_state": {
+          "enum": [
+            "valid",
+            "suspect",
+            "quarantined",
+            "corrected"
+          ]
+        },
+        "missing_reason": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "description": "Reason"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "freshness_policy_id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Session-aware policy"
+        },
+        "validation_codes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Code"
+          }
+        },
+        "source_ref": {
+          "type": "string",
+          "minLength": 1,
+          "description": "URI or opaque local ref"
+        },
+        "source_batch_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "raw_content_hash": {
+          "type": "string",
+          "minLength": 1,
+          "description": "SHA256 hex"
+        },
+        "raw_retention_state": {
+          "enum": [
+            "retained",
+            "hash_only",
+            "prohibited",
+            "expired"
+          ]
+        },
+        "normalizer_version": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Code version"
+        },
+        "license_policy_id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Rights record"
+        },
+        "supersedes_observation_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "uuid"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "currency": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "description": "Unit currency"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "unit": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Physical or economic unit"
+        },
+        "adjustment_basis": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Raw or named derived transform"
+        },
+        "revision": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "description": "Provider vintage"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "oneOf": [
+        {
+          "required": [
+            "instrument_id"
+          ],
+          "properties": {
+            "instrument_id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "series_id": {
+              "type": "null"
+            }
+          }
+        },
+        {
+          "required": [
+            "series_id"
+          ],
+          "properties": {
+            "series_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "instrument_id": {
+              "type": "null"
+            }
+          }
+        }
+      ]
+    },
+    "Bar": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "envelope",
+        "interval",
+        "start_at",
+        "end_at",
+        "session_date",
+        "calendar_id",
+        "open",
+        "high",
+        "low",
+        "close",
+        "aggregation_method",
+        "quote_currency",
+        "volume_unit"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "1.0.0-draft"
+        },
+        "envelope": {
+          "$ref": "#/$defs/ObservationEnvelope"
+        },
+        "interval": {
+          "type": "string",
+          "minLength": 1,
+          "description": "ISO-8601 duration"
+        },
+        "start_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "UTC RFC3339 instant; runtime requires Z offset"
+        },
+        "end_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "UTC RFC3339 instant; runtime requires Z offset"
+        },
+        "session_date": {
+          "type": "string",
+          "format": "date"
+        },
+        "calendar_id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Calendar version ID"
+        },
+        "open": {
+          "type": "string",
+          "pattern": "^-?(0|[1-9][0-9]*)(\\.[0-9]+)?$",
+          "description": "Exact decimal, no floating point JSON number"
+        },
+        "high": {
+          "type": "string",
+          "pattern": "^-?(0|[1-9][0-9]*)(\\.[0-9]+)?$",
+          "description": "Exact decimal, no floating point JSON number"
+        },
+        "low": {
+          "type": "string",
+          "pattern": "^-?(0|[1-9][0-9]*)(\\.[0-9]+)?$",
+          "description": "Exact decimal, no floating point JSON number"
+        },
+        "close": {
+          "type": "string",
+          "pattern": "^-?(0|[1-9][0-9]*)(\\.[0-9]+)?$",
+          "description": "Exact decimal, no floating point JSON number"
+        },
+        "volume": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^-?(0|[1-9][0-9]*)(\\.[0-9]+)?$",
+              "description": "Exact decimal, no floating point JSON number"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "trade_count": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "aggregation_method": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Provider or local rule"
+        },
+        "quote_currency": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Currency"
+        },
+        "volume_unit": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Shares, base asset etc."
+        }
+      }
+    },
+    "CorporateAction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "envelope",
+        "action_id",
+        "instrument_id",
+        "action_type",
+        "status"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "1.0.0-draft"
+        },
+        "envelope": {
+          "$ref": "#/$defs/ObservationEnvelope"
+        },
+        "action_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "instrument_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "action_type": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Split/dividend/merger etc."
+        },
+        "announcement_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time",
+              "description": "UTC RFC3339 instant; runtime requires Z offset"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "record_date": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "ex_date": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "pay_date": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "effective_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time",
+              "description": "UTC RFC3339 instant; runtime requires Z offset"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "factor": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^-?(0|[1-9][0-9]*)(\\.[0-9]+)?$",
+              "description": "Exact decimal, no floating point JSON number"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "cash_amount": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^-?(0|[1-9][0-9]*)(\\.[0-9]+)?$",
+              "description": "Exact decimal, no floating point JSON number"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "cash_currency": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "description": "Currency"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "status": {
+          "enum": [
+            "announced",
+            "confirmed",
+            "revised",
+            "cancelled"
+          ]
+        }
+      }
+    },
+    "EconomicEvent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "envelope",
+        "event_id",
+        "series_id",
+        "value_unit"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "1.0.0-draft"
+        },
+        "envelope": {
+          "$ref": "#/$defs/ObservationEnvelope"
+        },
+        "event_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "series_id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Series ID"
+        },
+        "scheduled_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time",
+              "description": "UTC RFC3339 instant; runtime requires Z offset"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "actual": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^-?(0|[1-9][0-9]*)(\\.[0-9]+)?$",
+              "description": "Exact decimal, no floating point JSON number"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "consensus": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^-?(0|[1-9][0-9]*)(\\.[0-9]+)?$",
+              "description": "Exact decimal, no floating point JSON number"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "prior": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^-?(0|[1-9][0-9]*)(\\.[0-9]+)?$",
+              "description": "Exact decimal, no floating point JSON number"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "value_unit": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Unit"
+        },
+        "vintage": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "description": "Release/vintage ID"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "NewsEvent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "envelope",
+        "news_id",
+        "publisher",
+        "headline",
+        "first_seen_at",
+        "entity_ids",
+        "redistribution_policy_id"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "1.0.0-draft"
+        },
+        "envelope": {
+          "$ref": "#/$defs/ObservationEnvelope"
+        },
+        "news_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "publisher": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Publisher"
+        },
+        "headline": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Headline"
+        },
+        "body_ref": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "description": "Rights-aware ref"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "updated_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time",
+              "description": "UTC RFC3339 instant; runtime requires Z offset"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "first_seen_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "UTC RFC3339 instant; runtime requires Z offset"
+        },
+        "entity_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "dedupe_group": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "description": "Group"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "redistribution_policy_id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Rights ID"
+        }
+      }
+    },
+    "MarketStateSnapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "snapshot_id",
+        "as_of",
+        "manifest_id",
+        "calendar_id",
+        "features",
+        "coverage_state",
+        "calculation_version"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "1.0.0-draft"
+        },
+        "snapshot_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "as_of": {
+          "type": "string",
+          "format": "date-time",
+          "description": "UTC RFC3339 instant; runtime requires Z offset"
+        },
+        "manifest_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "calendar_id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Calendar"
+        },
+        "features": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/EvidenceValue"
+          }
+        },
+        "coverage_state": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Completeness"
+        },
+        "calculation_version": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Version"
+        }
+      }
+    },
+    "EvidenceValue": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "unit",
+        "observation_ids",
+        "calculation_version",
+        "status"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "1.0.0-draft"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^-?(0|[1-9][0-9]*)(\\.[0-9]+)?$",
+              "description": "Exact decimal, no floating point JSON number"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "unit": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Unit"
+        },
+        "observation_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "calculation_version": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Version"
+        },
+        "status": {
+          "enum": [
+            "known",
+            "missing",
+            "stale",
+            "estimated",
+            "conflicted"
+          ]
+        }
+      }
+    },
+    "Candidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "candidate_id",
+        "instrument_id",
+        "as_of",
+        "manifest_id",
+        "detector_id",
+        "evidence_refs",
+        "contradiction_refs",
+        "status",
+        "reason"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "1.0.0-draft"
+        },
+        "candidate_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "instrument_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "as_of": {
+          "type": "string",
+          "format": "date-time",
+          "description": "UTC RFC3339 instant; runtime requires Z offset"
+        },
+        "manifest_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "detector_id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Versioned detector"
+        },
+        "evidence_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Observation or calculation ref"
+          }
+        },
+        "contradiction_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Counterevidence"
+          }
+        },
+        "status": {
+          "enum": [
+            "watching",
+            "developing",
+            "rejected",
+            "expired"
+          ]
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Explanation"
+        }
+      }
+    },
+    "TradeThesis": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "thesis_id",
+        "revision",
+        "instrument_id",
+        "created_at",
+        "as_of",
+        "manifest_id",
+        "horizon",
+        "setup",
+        "supporting_evidence",
+        "contradictory_evidence",
+        "invalidation",
+        "risk_notes",
+        "status"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "1.0.0-draft"
+        },
+        "thesis_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "instrument_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "UTC RFC3339 instant; runtime requires Z offset"
+        },
+        "as_of": {
+          "type": "string",
+          "format": "date-time",
+          "description": "UTC RFC3339 instant; runtime requires Z offset"
+        },
+        "manifest_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "horizon": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Defined horizon"
+        },
+        "setup": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Setup"
+        },
+        "supporting_evidence": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Evidence ref"
+          }
+        },
+        "contradictory_evidence": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Evidence ref"
+          }
+        },
+        "invalidation": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Invalidation"
+        },
+        "risk_notes": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Risks"
+        },
+        "status": {
+          "enum": [
+            "watching",
+            "developing",
+            "awaiting_confirmation",
+            "valid",
+            "no_edge",
+            "event_risk",
+            "invalidated",
+            "avoid"
+          ]
+        },
+        "amends_revision": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "JournalEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "entry_id",
+        "revision",
+        "category"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "1.0.0-draft"
+        },
+        "entry_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "category": {
+          "enum": [
+            "idea",
+            "decision",
+            "manual_trade",
+            "paper_trade",
+            "no_trade",
+            "review"
+          ]
+        },
+        "instrument_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "uuid"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "idea_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time",
+              "description": "UTC RFC3339 instant; runtime requires Z offset"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "decision_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time",
+              "description": "UTC RFC3339 instant; runtime requires Z offset"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "execution_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time",
+              "description": "UTC RFC3339 instant; runtime requires Z offset"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "review_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time",
+              "description": "UTC RFC3339 instant; runtime requires Z offset"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "thesis_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "uuid"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "manifest_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "uuid"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "note_ref": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "description": "Private local artifact"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "amends_revision": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "PredictionRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "prediction_id",
+        "revision",
+        "created_at",
+        "as_of",
+        "manifest_id",
+        "model_version",
+        "prompt_version",
+        "tool_versions",
+        "event_definition",
+        "deadline_at",
+        "outcome_metric",
+        "expected_scenario",
+        "invalidation",
+        "evidence_refs"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "1.0.0-draft"
+        },
+        "prediction_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "UTC RFC3339 instant; runtime requires Z offset"
+        },
+        "as_of": {
+          "type": "string",
+          "format": "date-time",
+          "description": "UTC RFC3339 instant; runtime requires Z offset"
+        },
+        "manifest_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "model_version": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Model ID and version"
+        },
+        "prompt_version": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Prompt"
+        },
+        "tool_versions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Tool"
+          }
+        },
+        "event_definition": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Observable outcome definition"
+        },
+        "deadline_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "UTC RFC3339 instant; runtime requires Z offset"
+        },
+        "outcome_metric": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Metric"
+        },
+        "expected_scenario": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Scenario"
+        },
+        "invalidation": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Rule"
+        },
+        "calibrated_probability": {
+          "anyOf": [
+            {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "evidence_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Refs"
+          }
+        },
+        "evaluation_ref": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "description": "Append-only evaluation"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "amends_revision": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "ResearchRunManifest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "run_id",
+        "created_at",
+        "decision_as_of",
+        "dataset_manifest_ids",
+        "code_version",
+        "schema_versions",
+        "feature_versions",
+        "instrument_ids",
+        "universe_membership_ref",
+        "calendar_versions",
+        "adjustment_policy",
+        "fx_policy",
+        "cost_policy",
+        "parameters",
+        "environment_ref",
+        "artifact_hashes"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "1.0.0-draft"
+        },
+        "run_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "UTC RFC3339 instant; runtime requires Z offset"
+        },
+        "decision_as_of": {
+          "type": "string",
+          "format": "date-time",
+          "description": "UTC RFC3339 instant; runtime requires Z offset"
+        },
+        "dataset_manifest_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "code_version": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Commit SHA"
+        },
+        "schema_versions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Schema IDs"
+          }
+        },
+        "feature_versions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Feature IDs"
+          }
+        },
+        "strategy_version": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "description": "Strategy"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "model_version": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "description": "Model"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "instrument_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "universe_membership_ref": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Point-in-time membership"
+        },
+        "calendar_versions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Calendar"
+          }
+        },
+        "adjustment_policy": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Policy"
+        },
+        "fx_policy": {
+          "type": "string",
+          "minLength": 1,
+          "description": "FX policy"
+        },
+        "cost_policy": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Cost model"
+        },
+        "parameters": {
+          "type": "object"
+        },
+        "random_seed": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "environment_ref": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Environment record"
+        },
+        "artifact_hashes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "description": "SHA256"
+          }
+        }
+      }
+    },
+    "DomainEvent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "event_id",
+        "event_type",
+        "occurred_at",
+        "recorded_at",
+        "aggregate_id",
+        "correlation_id",
+        "idempotency_key",
+        "payload_ref"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "1.0.0-draft"
+        },
+        "event_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "event_type": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Namespaced type"
+        },
+        "occurred_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "UTC RFC3339 instant; runtime requires Z offset"
+        },
+        "recorded_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "UTC RFC3339 instant; runtime requires Z offset"
+        },
+        "aggregate_id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Aggregate ID"
+        },
+        "correlation_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "idempotency_key": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Stable key"
+        },
+        "payload_ref": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Versioned reference"
+        }
+      }
+    },
+    "ContractSpecification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "contract_id",
+        "instrument_id",
+        "underlying_instrument_id",
+        "contract_kind",
+        "multiplier",
+        "settlement_type",
+        "quote_currency"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "1.0.0-draft"
+        },
+        "contract_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "instrument_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "underlying_instrument_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "contract_kind": {
+          "enum": [
+            "future",
+            "option",
+            "perpetual"
+          ]
+        },
+        "expiry_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "strike": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^-?(0|[1-9][0-9]*)(\\.[0-9]+)?$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "option_right": {
+          "anyOf": [
+            {
+              "enum": [
+                "call",
+                "put"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "multiplier": {
+          "type": "string",
+          "pattern": "^-?(0|[1-9][0-9]*)(\\.[0-9]+)?$"
+        },
+        "settlement_type": {
+          "enum": [
+            "cash",
+            "physical",
+            "other"
+          ]
+        },
+        "quote_currency": {
+          "type": "string"
+        },
+        "margin_unit": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "funding_schedule_ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "valid_from": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "valid_to": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "DatasetManifest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "manifest_id",
+        "parent_manifest_id",
+        "created_at",
+        "files",
+        "selection_policy_version",
+        "status"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "1.0.0-draft"
+        },
+        "manifest_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "parent_manifest_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "uuid"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "selection_policy_version": {
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "staged",
+            "committed"
+          ]
+        },
+        "files": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "content_hash",
+              "schema_version",
+              "kind",
+              "venue_id",
+              "row_count",
+              "rights_policy_id"
+            ],
+            "properties": {
+              "content_hash": {
+                "type": "string"
+              },
+              "schema_version": {
+                "type": "string"
+              },
+              "kind": {
+                "type": "string"
+              },
+              "venue_id": {
+                "type": "string"
+              },
+              "event_bucket": {
+                "type": "string"
+              },
+              "row_count": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "min_event_at": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "max_event_at": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "source_batch_id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "rights_policy_id": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

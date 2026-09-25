@@ -1,0 +1,7 @@
+# API Contracts (design only)
+
+**Baseline:** [Phase 0 §5](architecture/PHASE_0_BASELINE_2026-09-26.md). [Registry](../packages/contracts/registry.schema.json).
+
+Phase 1 proposed read routes: `GET /api/v1/instruments?query=...&as_of=...` (resolution candidates, venue and mapping validity); `GET /api/v1/calendars/{venue_id}/sessions?from=...&to=...`; `GET /api/v1/bars?instrument_id=...&interval=P1D&from=...&to=...&as_of=...&manifest_id=...&adjustment_basis=raw`; `GET /api/v1/data-health`; `GET /api/v1/manifests/{id}`. Errors carry stable code, correlation ID, retryability and missing/coverage state. List responses paginate and expose `next_cursor`. Queries require explicit provider/selection policy and provenance link for each value. `as_of` is UTC cutoff on availability, not event time; `manifest_id` pins a published dataset. Unauthorized, missing, ambiguous and quarantined are distinct cases. Route implementation and OpenAPI generation are Phase 1 work.
+
+Internal `DomainEvent` envelope: `event_id`, `event_type`, `schema_version`, `occurred_at`, `recorded_at`, `aggregate_id`, `correlation_id`, `idempotency_key`, `payload_ref`. `occurred_at` is domain event time; `recorded_at` is commit time. Outbox commits atomically with transactional records and references a committed data manifest; subscribers tolerate duplicates, retries and reordered delivery. Event types are namespaced and versioned; no event contains unconstrained provider payload or owner secrets. A new feed kind adds a payload schema without changing the envelope.

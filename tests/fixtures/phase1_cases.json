@@ -1,0 +1,29 @@
+{
+  "fixture_version": "1.0.0-draft",
+  "synthetic": true,
+  "notice": "All prices/identifiers below are invented for tests; not historical market observations.",
+  "cases": [
+    {"id":"P01","input":{"symbol":"ABC","as_of":"2025-01-02T12:00:00Z","mappings":[{"venue":"XNSE","instrument":"11111111-1111-4111-8111-111111111111"},{"venue":"XBOM","instrument":"22222222-2222-4222-8222-222222222222"}]},"expected":{"status":"ambiguous_without_venue","XNSE":"11111111-1111-4111-8111-111111111111"}},
+    {"id":"P02","input":{"symbol_old":"OLD","valid_to":"2025-01-01T00:00:00Z","symbol_new":"NEW","valid_from":"2025-01-01T00:00:00Z","instrument":"11111111-1111-4111-8111-111111111111"},"expected":{"before":"OLD","after":"NEW","instrument_unchanged":true}},
+    {"id":"P03","input":{"isin":"IN0000000000","venues":["XNSE","XBOM"]},"expected":{"listing_ids":2,"issuer_links_allowed":true}},
+    {"id":"P04","input":{"zone":"America/New_York","local_session":"2026-03-09","regular_open_local":"09:30","zone_other":"Asia/Kolkata"},"expected":{"us_open_utc":"2026-03-09T13:30:00Z","india_dst":false}},
+    {"id":"P05","input":{"venue":"XNYS","closed_date":"2026-07-03","early_close_date":"2026-11-27"},"expected":{"closed_gap":false,"early_close_from_calendar":true}},
+    {"id":"P06","input":{"crypto_window":["2026-09-24T00:00:00Z","2026-09-25T00:00:00Z"],"nse_session_date":"2026-09-24"},"expected":{"same_anchor":false,"windows_half_open":true}},
+    {"id":"P07","input":{"source_batch":"batch-1","provider_record":"bar-1","attempts":2},"expected":{"stored_observations":1,"outbox_events":1}},
+    {"id":"P08","input":{"open_sessions":["2026-09-23","2026-09-24"],"bars":["2026-09-23"]},"expected":{"gap_date":"2026-09-24","synthetic_bar":false}},
+    {"id":"P09","input":{"event_at":"2025-01-02T21:00:00Z","initial_close":"100.00","initial_available":"2025-01-02T22:00:00Z","corrected_close":"101.00","corrected_available":"2025-01-04T12:00:00Z"},"expected":{"as_of_2025_01_03":"100.00","as_of_2025_01_05":"101.00","versions_retained":2}},
+    {"id":"P10","input":{"raw_close":"50.00","split_announced":"2025-01-06T12:00:00Z","decision_as_of":"2025-01-05T12:00:00Z"},"expected":{"raw_unchanged":true,"split_visible_as_of":false}},
+    {"id":"P11","input":{"provider_a_close":"100.00","provider_b_close":"99.50"},"expected":{"source_rows":2,"conflict_state":"conflicted"}},
+    {"id":"P12","input":{"market":"crypto_24x7","market_closed":false,"last_observed":"2025-01-02T21:00:00Z","now":"2025-01-04T21:00:00Z"},"expected":{"freshness":"stale","current_label":false}},
+    {"id":"P13","input":{"open":"100.00","high":"99.00","low":"98.00","close":"100.00"},"expected":{"quality_state":"quarantined","validation_code":"OHLC_RANGE"}},
+    {"id":"P14","input":{"event_at":"2025-01-01T00:00:00Z","ingested_at":"2026-01-01T00:00:00Z","availability_basis":"unknown","as_of":"2025-06-01T00:00:00Z"},"expected":{"strict_replay_visible":false}},
+    {"id":"P15","input":{"manifest_a":"aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa","manifest_b":"bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb"},"expected":{"same_manifest_same_hash":true,"correction_new_manifest":true}},
+    {"id":"P16","input":{"backup_ref":"synthetic-backup","encryption":true},"expected":{"includes_db_and_referenced_files":true,"has_hash_manifest":true}},
+    {"id":"P17","input":{"restore_location":"isolated","pinned_case":"P09"},"expected":{"hashes_match":true,"as_of_result":"100.00"}},
+    {"id":"P18","input":{"provider_response":429,"retry_after_seconds":2,"max_attempts":3},"expected":{"bounded_retry":true,"stale_banner":true,"eventual_dead_letter":true}},
+    {"id":"P19","input":{"crash_stage":"after_file_before_pointer"},"expected":{"reader_sees_old_manifest":true,"orphan_reclaimable":true}},
+    {"id":"P20","input":{"event_ids":["x","x"],"delivery_order":"reversed"},"expected":{"effect_once":true}},
+    {"id":"P21","input":{"provider_token":"123","first_contract_expiry":"2025-01-01","second_contract_expiry":"2025-02-01"},"expected":{"same_instrument":false}},
+    {"id":"P22","input":{"rights":"hash_only","raw_payload":"SYNTHETIC"},"expected":{"raw_bytes_persisted":false,"hash_persisted":true}}
+  ]
+}
