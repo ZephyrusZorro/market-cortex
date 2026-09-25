@@ -17,3 +17,5 @@ This repository contains planning, formal draft contracts, synthetic fixtures, a
 - `config/owner.example.yaml`: nonsecret preferences; copy to ignored `config/owner.yaml`.
 
 Git is initialized locally. A remote is not configured. Do not commit secrets, provider exports, journal or portfolio contents. Phase 1 starts only after owner approval and the readiness checks are cleared.
+
+For Windows Phase 0.6 probing, install `requirements-probe.txt` for precise US time zone rules, then follow the [probe runbook](docs/operations/PROBE_RUNBOOK.md). The probe remains read-only and works with a labeled conservative UTC fallback if `tzdata` is unavailable.

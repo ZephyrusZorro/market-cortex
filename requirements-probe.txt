@@ -1,0 +1,3 @@
+# Required for precise America/New_York session dates on Windows (IANA timezone data).
+# The probe still runs with conservative UTC fallback if this package is absent.
+tzdata>=2025.2; platform_system == "Windows"
