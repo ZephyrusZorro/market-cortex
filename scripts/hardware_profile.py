@@ -5,6 +5,7 @@ import json
 import os
 import platform
 import shutil
+import sys
 import subprocess
 from pathlib import Path
 
@@ -42,6 +43,31 @@ def gpu():
         return {"name": None, "vram_mib": None, "detection": "query_failed"}
 
 
+def physical_cores():
+    if platform.system() == "Linux":
+        try:
+            pairs = set(); physical = core = None
+            for line in Path("/proc/cpuinfo").read_text().splitlines() + [""]:
+                if line.startswith("physical id"):
+                    physical = line.split(":", 1)[1].strip()
+                elif line.startswith("core id"):
+                    core = line.split(":", 1)[1].strip()
+                elif not line.strip():
+                    if physical is not None and core is not None:
+                        pairs.add((physical, core))
+                    physical = core = None
+            return len(pairs) or None
+        except OSError:
+            return None
+    if platform.system() == "Windows" and shutil.which("powershell"):
+        try:
+            command = "(Get-CimInstance Win32_Processor | Measure-Object -Property NumberOfCores -Sum).Sum"
+            return int(subprocess.check_output(["powershell", "-NoProfile", "-Command", command], text=True, timeout=5).strip())
+        except (ValueError, OSError, subprocess.SubprocessError):
+            return None
+    return None
+
+
 def cpu_model():
     if platform.system() == "Linux":
         try:
@@ -62,7 +88,7 @@ def profile(path, disk_type="unknown", vram_override=None):
     vram = graphics["vram_mib"]
     return {"profile_version": "1.0.0", "os": platform.system(), "os_version": platform.version(),
             "architecture": platform.machine(), "cpu_model": cpu_model(),
-            "logical_cpu_cores": os.cpu_count(), "ram_bytes": memory, "gpu": graphics,
+            "logical_cpu_cores": os.cpu_count(), "physical_cpu_cores": physical_cores(), "python_version": sys.version.split()[0], "ram_bytes": memory, "gpu": graphics,
             "disk": {"path": str(path), "total_bytes": disk.total, "free_bytes": disk.free,
                      "type": disk_type, "note": "Owner override or unknown; confirm with OS-specific drive query"},
             "local_model_capability": {"status": "possible_small_model" if vram and vram >= 8192 and memory and memory >= 16 * 1024**3 else "benchmark_required",

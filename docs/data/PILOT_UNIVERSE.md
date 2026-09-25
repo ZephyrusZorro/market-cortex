@@ -1,12 +1,47 @@
-# Initial Pilot Universe — provisional candidates
+# Pilot Universe — Phase 0.6 candidate register
 
-**Status:** 25 candidate trading instruments plus nine context series. Candidate names are **not** hard-coded and no endpoint has been authenticated. A selected instrument gets an opaque UUID only after venue/contract and provider-native ID verification. [Source matrix](DATA_SOURCE_MATRIX.md), [gate](../planning/READINESS.md).
+**Status: NOT FROZEN.** No owner-machine provider/account probes have succeeded. `PENDING` is an intentional empty value; no canonical UUID, native ID or history date is invented. Assign opaque IDs only after venue/product resolution. This validates architecture, not permanent coverage. [Source selection](SOURCE_MATRIX.md), [probe guide](../operations/PROBE_RUNBOOK.md).
 
-| Segment | Candidates | Venue / pair interpretation | Feasibility gate |
+| Candidate | Class | Proposed venue | Currency / quote | Primary candidate | Canonical ID | Native ID | History start | Data type | Status |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| RELIANCE | Equity | NSE cash EQ | INR | Upstox | PENDING | PENDING | PENDING | daily OHLCV | PROVISIONAL |
+| HDFCBANK | Equity | NSE cash EQ | INR | Upstox | PENDING | PENDING | PENDING | daily OHLCV | PROVISIONAL |
+| ICICIBANK | Equity | NSE cash EQ | INR | Upstox | PENDING | PENDING | PENDING | daily OHLCV | PROVISIONAL |
+| INFY | Equity | NSE cash EQ | INR | Upstox | PENDING | PENDING | PENDING | daily OHLCV | PROVISIONAL |
+| TCS | Equity | NSE cash EQ | INR | Upstox | PENDING | PENDING | PENDING | daily OHLCV | PROVISIONAL |
+| SBIN | Equity | NSE cash EQ | INR | Upstox | PENDING | PENDING | PENDING | daily OHLCV | PROVISIONAL |
+| BHARTIARTL | Equity | NSE cash EQ | INR | Upstox | PENDING | PENDING | PENDING | daily OHLCV | PROVISIONAL |
+| LT | Equity | NSE cash EQ | INR | Upstox | PENDING | PENDING | PENDING | daily OHLCV | PROVISIONAL |
+| M&M | Equity | NSE cash EQ | INR | Upstox | PENDING | PENDING | PENDING | daily OHLCV | PROVISIONAL |
+| ITC | Equity | NSE cash EQ | INR | Upstox | PENDING | PENDING | PENDING | daily OHLCV | PROVISIONAL |
+| NVDA | Equity | US listing, verify exchange | USD | Alpaca IEX | PENDING | PENDING | PENDING | daily OHLCV | PROVISIONAL |
+| AAPL | Equity | US listing, verify exchange | USD | Alpaca IEX | PENDING | PENDING | PENDING | daily OHLCV | PROVISIONAL |
+| MSFT | Equity | US listing, verify exchange | USD | Alpaca IEX | PENDING | PENDING | PENDING | daily OHLCV | PROVISIONAL |
+| AMZN | Equity | US listing, verify exchange | USD | Alpaca IEX | PENDING | PENDING | PENDING | daily OHLCV | PROVISIONAL |
+| META | Equity | US listing, verify exchange | USD | Alpaca IEX | PENDING | PENDING | PENDING | daily OHLCV | PROVISIONAL |
+| GOOGL | Equity | US listing, verify exchange | USD | Alpaca IEX | PENDING | PENDING | PENDING | daily OHLCV | PROVISIONAL |
+| TSLA | Equity | US listing, verify exchange | USD | Alpaca IEX | PENDING | PENDING | PENDING | daily OHLCV | PROVISIONAL |
+| AMD | Equity | US listing, verify exchange | USD | Alpaca IEX | PENDING | PENDING | PENDING | daily OHLCV | PROVISIONAL |
+| SPY | ETF | US listing, verify exchange | USD | Alpaca IEX | PENDING | PENDING | PENDING | daily OHLCV | PROVISIONAL |
+| QQQ | ETF | US listing, verify exchange | USD | Alpaca IEX | PENDING | PENDING | PENDING | daily OHLCV | PROVISIONAL |
+| BTCUSDT | Crypto spot pair | Binance Spot | USDT | Binance | PENDING | PENDING | PENDING | daily OHLCV, UTC | PROVISIONAL |
+| ETHUSDT | Crypto spot pair | Binance Spot | USDT | Binance | PENDING | PENDING | PENDING | daily OHLCV, UTC | PROVISIONAL |
+| SOLUSDT | Crypto spot pair | Binance Spot | USDT | Binance | PENDING | PENDING | PENDING | daily OHLCV, UTC | PROVISIONAL |
+| BNBUSDT | Crypto spot pair | Binance Spot | USDT | Binance | PENDING | PENDING | PENDING | daily OHLCV, UTC | PROVISIONAL |
+| XRPUSDT | Crypto spot pair | Binance Spot | USDT | Binance | PENDING | PENDING | PENDING | daily OHLCV, UTC | PROVISIONAL |
+
+## Context candidates
+
+| Desired context | Proposed exact source or proxy | Classification today | Gate |
 | --- | --- | --- | --- |
-| India (10) | RELIANCE, HDFCBANK, ICICIBANK, INFY, TCS, SBIN, BHARTIARTL, LT, M&M, ITC | NSE cash EQ listing, INR; symbols require valid-time lookup in Upstox BOD / Kite instrument dump; ISIN cross-check | Each exact ISIN/native ID, date coverage, CA status and rights probed. `M&M` must remain literal provider mapping, not URL-ticker shorthand. |
-| US (10) | NVDA, AAPL, MSFT, AMZN, META, GOOGL, TSLA, AMD, SPY, QQQ | US listed equity/ETF, USD; exchange/venue and share class resolved separately | Alpaca asset/market feed lookup; IEX/SIP feed class, actions, start/end history and split behavior. |
-| Crypto (5) | BTC, ETH, SOL, BNB, XRP | **Proposed Binance spot pairs** BTCUSDT, ETHUSDT, SOLUSDT, BNBUSDT, XRPUSDT; USDT quote, not USD | ExchangeInfo current TRADING status, pair-specific first/last bar, UTC daily anchor, regional access; Coinbase USD pair fallback may omit BNB. |
-| Context (9 slots) | NIFTY 50, S&P 500, NASDAQ-100, VIX, DXY, US 10Y par yield, gold, crude oil, USD/INR | Index, volatility level, rate, commodity benchmark or FX reference are distinct **series**, not necessarily tradable bars | NIFTY/NSE rights; SPX/NDX license or labeled SPY/QQQ proxy; Cboe VIX daily; Treasury rate; RBI fix; DXY/gold/crude exact benchmark/feed unresolved. Unverified slots are deferred, never fabricated. |
+| NIFTY 50 | Upstox NSE_INDEX / NSE Indices | DEFERRED | Resolve native key and daily history on owner account. |
+| S&P 500 | SPY US equity proxy if official index unavailable | DEFERRED | Label **SPY ETF proxy**, not SPX; account probe. |
+| NASDAQ-100 | QQQ ETF proxy if official NDX unavailable | DEFERRED | Label **QQQ ETF proxy**, not NDX; account probe. |
+| VIX | Cboe daily published close | DEFERRED | Verify permitted local download and date/time semantics. |
+| DXY | No robust selected source | DEFERRED | Decide benchmark feed or explicit alternate context. |
+| US 10Y Treasury yield | US Treasury daily par yield | DEFERRED | Probe feed and publication time; rate is not OHLC. |
+| Gold | GLD ETF proxy candidate | DEFERRED | Label proxy and verify US provider coverage. |
+| Crude oil | No benchmark selected; USO ETF proxy possible | DEFERRED | Oil futures/spot/ETF differ; choose explicitly after probe. |
+| USD/INR | RBI reference rate candidate | DEFERRED | Verify archive access and fix/publication semantics. |
 
-The architecture has no fixed 10/10/5 counts in schemas, query paths or partition names. `enabled` is a manifest/config property. Pilot selection is time-bounded; preserve historical membership for replay. A context series may have only one daily value and must not be coerced into an OHLC bar. [Instrument sources](https://upstox.com/developer/api-documentation/instruments/), [Kite catalog](https://kite.trade/docs/connect/v3/market-quotes/), [Binance market endpoint](https://developers.binance.com/en/docs/products/spot/rest-api), [VIX archive](https://www.cboe.com/tradable_products/vix/vix_historical_data), [Treasury feed](https://home.treasury.gov/treasury-daily-interest-rate-xml-feed).
+On a successful probe, replace `PENDING` with stable UUID, native ID, venue, first observed history, data source and **SUPPORTED** status; proxy becomes **SUPPORTED VIA LABELED PROXY** only after its feed passes. A failed or unavailable candidate becomes **DEFERRED**. `M&M` must match the provider symbol literally. BTCUSDT and BTC-USD remain distinct venue-specific instruments. Avoid hard-coded count or ticker assumptions in contracts.

@@ -1,0 +1,12 @@
+# Practical Backup and Restore Plan — Phase 0.6
+
+**State:** Procedure specified; destination and rehearsal remain unverified. Single-owner local workstation, no enterprise infrastructure.
+
+1. Proposed primary root on Windows: `C:\MarketCortexData` (configurable). Keep `postgres` data managed by PostgreSQL; store Parquet, manifests and permitted artifacts beneath separate versioned directories. Keep Git working tree separate from runtime data.
+2. Owner chooses `backup_location` in `config/owner.yaml` on a **different physical drive** or encrypted external volume, for example `E:\MarketCortexBackups`. No real drive has been confirmed. Do not point backup at the same primary volume.
+3. Daily after data refresh, pause the worker/writes. Create a custom-format `pg_dump -Fc` of the local database using credentials outside Git. Record the committed dataset manifest ID. Copy **all files referenced by that manifest**, manifest catalogs, permitted artifacts and the nonsecret owner configuration to a timestamped snapshot. Then resume writes.
+4. Generate SHA-256 hashes for dump and copied files; verify checksums immediately after copy. Keep a small rolling schedule, e.g. seven daily and four weekly snapshots subject to disk budget. Encrypt the destination using the owner's OS volume encryption or a separately managed archive key. Never put a key or provider token in Git or the normal backup bundle; maintain a separate recovery route for credentials.
+5. Restore drill: stop the app, restore into a new isolated directory and database, `pg_restore` the dump, copy manifest files/artifacts, compare hashes, verify the committed manifest pointer and row counts, then rerun the P09 late-correction as-of fixture and sample instrument resolution. Only redirect the app after validation; keep original installation intact until success.
+6. If a source forbids retaining raw response bodies, the backup contains only its permitted hashes/metadata. If a Parquet file is absent or corrupt, mark affected manifest unavailable and re-fetch where allowed; never silently use partial data.
+
+**Critical check before Phase 1A approval:** owner picks a physical backup target and enough capacity. **Critical gate before persistent ingestion:** one tested restore using the chosen target. `pg_dump`/`pg_restore` commands and consistency orchestration are implemented/tested in Phase 1A/1B, not in Phase 0.6.

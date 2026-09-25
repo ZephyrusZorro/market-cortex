@@ -17,3 +17,6 @@ runtime/
 *.pem
 *.zip
 !tests/fixtures/*.zip
+
+data/probes/
+backups/

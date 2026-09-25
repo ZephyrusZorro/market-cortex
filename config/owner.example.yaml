@@ -19,10 +19,10 @@ ai_privacy:
   journal_context_allowed_for_cloud: false
 storage_budget:
   max_gib: null # Set after hardware detection
-  backup_target: null # Separate device/volume; set before persistence
-model_budget:
+backup_location: null # Separate device/volume, e.g. E:/MarketCortexBackups
+AI_model_budget:
   monthly_inr: 0
-data_budget:
+market_data_budget:
   monthly_inr: null # Owner choice after source quote
   annual_inr: null
 default_research_horizon: swing_days_2_to_20
