@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-09-30 — Phase 1 daily-bar foundation in progress
+
+Owner authorized implementation while account validation remains open. Added installable Python modular monolith, typed registry-aligned daily-bar contracts, identity/calendar/quality logic, read-only provider adapters, local CLI and read API, PostgreSQL migrations/job/outbox catalog, SHA-256 Parquet manifests, DuckDB coverage, encrypted backup/isolated restore tooling, and hermetic tests. Added [ADR 0020](adr/0020-daily-bar-window-semantics.md) for provider-specific daily boundaries. See [status](planning/PHASE_1_STATUS.md) for untested PostgreSQL and live-provider gates. No Phase 2 work or V1 release claim.
+
 ## 2026-09-26 — Phase 0.5 draft freeze
 
 Archived original Phase 0 blueprint unchanged; recorded 19 ADRs; split living architecture documents; drafted versioned contracts, pilot and provider feasibility matrix, owner and hardware templates, Phase 1 fixture/test and milestone plan. No Phase 1 runtime code. Provider credentials, exact symbol resolution and host budget still require verification. See [readiness](planning/READINESS.md).

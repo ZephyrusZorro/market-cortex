@@ -1,6 +1,8 @@
 # Phase 1 — Market Data Foundation: ordered implementation plan
 
-**Planning only. No Phase 1 production code has begun.** Start only after [readiness](READINESS.md) and owner approval. Each step includes objective; modules; dependencies; tests; output; completion rule; principal risk.
+**Implementation update:** The owner authorized Phase 1 engineering on 2026-09-30. The table below is the original ordered plan; [current status](PHASE_1_STATUS.md) records code, tests and open live gates.
+
+**Original planning snapshot:** At the time, no Phase 1 code had begun and the plan awaited [readiness](READINESS.md) and owner approval. The owner later authorized implementation; [current status](PHASE_1_STATUS.md) records the actual code and open validation gates. Each step includes objective; modules; dependencies; tests; output; completion rule; principal risk.
 
 | Step | Objective / modules | Depends on | Tests / expected output | Completion / risk |
 | --- | --- | --- | --- | --- |

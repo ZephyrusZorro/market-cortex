@@ -21,3 +21,4 @@
 - [ADR 0017 — Ai Tool Permissions](adr/0017-ai-tool-permissions.md)
 - [ADR 0018 — Data Provenance](adr/0018-data-provenance.md)
 - [ADR 0019 — Versioning Strategy](adr/0019-versioning-strategy.md)
+- [ADR 0020 — Provider Daily Aggregation Windows](adr/0020-daily-bar-window-semantics.md)

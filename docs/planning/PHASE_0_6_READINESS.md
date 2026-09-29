@@ -1,5 +1,7 @@
 # Phase 0.6 Readiness Report — 2026-09-26
 
+**Historical gate note (2026-09-30):** The owner subsequently authorized immediate Phase 1 engineering despite pending live validation. This report preserves the original evidence assessment; current implementation and remaining gates are tracked in [Phase 1 status](PHASE_1_STATUS.md). Do not read its earlier approval pause as current owner instruction.
+
 **Recommendation: NOT READY FOR PHASE 1A.** This is a private, local, single-owner, non-execution research system. Phase 0.6 verifies practical data and environment feasibility, not enterprise regulatory architecture. No Phase 1 code has started. The Phase 0 archived baseline remains intact; the 0.5 ADRs remain the architectural baseline.
 
 | Requested result / former blocker | Classification | Evidence and shortest action |

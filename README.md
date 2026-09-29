@@ -1,21 +1,41 @@
 # MARKET CORTEX
 
-Private local-first market intelligence project. **Phase 0.6 source feasibility and environment validation; Phase 1 production code has not begun.**
+Private, local-first market research software. **Phase 1 market-data foundation is in progress; this is not a V1 workstation.** The [Phase 0 blueprint](docs/architecture/PHASE_0_BASELINE_2026-09-26.md) and [ADRs](docs/DECISION_LOG.md) remain the architecture baseline. The owner authorized implementation before live source credentials arrived; the [current evidence and gates](docs/planning/PHASE_1_STATUS.md) distinguish implemented code from validated data.
 
-Start at [Phase 0.6 readiness](docs/planning/PHASE_0_6_READINESS.md) and [owner-machine probe runbook](docs/operations/PROBE_RUNBOOK.md), then [Project Constitution](docs/PROJECT_CONSTITUTION.md), [Architecture Review](docs/architecture/ARCHITECTURE_REVIEW.md), [Phase 1 Plan](docs/planning/PHASE_1_MILESTONES.md), and the [archived Phase 0 baseline](docs/architecture/PHASE_0_BASELINE_2026-09-26.md). [Decision log](docs/DECISION_LOG.md) lists the ADRs.
+## What runs now
 
-This repository contains planning, formal draft contracts, synthetic fixtures, a read-only hardware detector and GET-only source feasibility probe. No market ingestion, API, application, trading logic, or AI orchestration is implemented. Symbols and source rankings remain provisional until owner-machine probes and settings are completed. See [Phase 0.6 gate](docs/planning/PHASE_0_6_READINESS.md).
+- Versioned JSON Schema registry and typed daily-bar contracts, venue-scoped valid-time identity, calendar sessions, quality rules, quarantine, provenance and strict as-of selection.
+- PostgreSQL migrations for identity, jobs, outbox, observations and atomic dataset manifest publication. Immutable daily bars are content-addressed Parquet. DuckDB reads pinned manifest artifacts.
+- Read-only Binance, Upstox and Alpaca daily adapters. Binance public bootstrap works without credentials. Upstox requires an instrument key; Alpaca records its selected feed class. Missing credentials return `NOT_CONFIGURED`.
+- Local FastAPI read surface, CLI, redacted Phase 0.6 probes, hardware profile, encrypted backup and isolated restore utilities.
+- Synthetic fixture suite. No live PostgreSQL or credentialed-provider integration was possible in this workspace.
 
-## Structure
+There are **no order endpoints or automated trade execution paths**. Advanced feeds, strategies, CORTEX AI, ML and the workstation are subsequent work.
 
-- `apps/api`, `apps/web`: reserved application surfaces.
-- `packages/contracts`: versioned JSON Schema registry; other package directories reserve domain boundaries.
-- `data/manifests`, `data/fixtures`: reserved runtime locations, never commit downloaded market data.
-- `docs`: living documentation, research matrix, ADRs and archived baseline.
-- `tests/fixtures`: synthetic Phase 1 acceptance cases and expected outcomes.
-- `scripts/hardware_profile.py`: read-only host capability report; `scripts/probe_sources.py`: GET-only sample provider probes.
-- `config/owner.example.yaml`: nonsecret preferences; copy to ignored `config/owner.yaml`.
+## Windows quick start
 
-Git is initialized locally. A remote is not configured. Do not commit secrets, provider exports, journal or portfolio contents. Phase 1 starts only after owner approval and the readiness checks are cleared.
+Use PowerShell in the extracted `market-cortex` directory. Python 3.12 is tested here; newer Python versions need compatible wheels.
 
-For Windows Phase 0.6 probing, install `requirements-probe.txt` for precise US time zone rules, then follow the [probe runbook](docs/operations/PROBE_RUNBOOK.md). The probe remains read-only and works with a labeled conservative UTC fallback if `tzdata` is unavailable.
+```powershell
+py -3.12 -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -e ".[test]"
+.\.venv\Scripts\python.exe -m pytest -q
+Copy-Item config\owner.example.yaml config\owner.yaml
+.\.venv\Scripts\python.exe scripts\market_cortex.py doctor
+```
+
+Install local PostgreSQL and create a **dedicated empty database** with a dedicated owner role. Put the connection string in the current PowerShell process's `MARKET_CORTEX_DATABASE_URL` environment variable. Keep its password out of Git and shell transcripts. See [the Windows runbook](docs/operations/LOCAL_RUNBOOK.md) for migration, public crypto bootstrap, daily sync, API, backup and restore commands.
+
+```powershell
+.\.venv\Scripts\python.exe scripts\market_cortex.py migrate
+.\.venv\Scripts\python.exe scripts\market_cortex.py bootstrap-crypto
+.\.venv\Scripts\python.exe scripts\market_cortex.py serve
+```
+
+The server binds to `127.0.0.1:8765`. `GET /api/v1/health` is available even before PostgreSQL is configured and reports `not_configured`. Provider probes are separate: `python scripts\probe_sources.py --run --output data\probes\phase_0_6_local.json`.
+
+## Layout
+
+`src/market_cortex` contains the Python modular monolith; `apps/api` is the ASGI entrypoint, `apps/web` is reserved, `packages/contracts` is the authoritative JSON Schema registry, `infra/migrations` is the PostgreSQL catalog, `data/lake` contains ignored immutable Parquet artifacts, `docs` holds the ADRs and runbooks, and `tests` holds synthetic cases. The code lives under `src` rather than several importable `packages/*` directories so the installed Python package has one stable namespace while domain boundaries remain separate modules.
+
+Git is initialized locally without a remote. Do not commit owner configuration, provider tokens, journal contents, database dumps or downloaded data. [Owner actions](OWNER_ACTION_REQUIRED.md) list the local validation needed before declaring Phase 1 complete.

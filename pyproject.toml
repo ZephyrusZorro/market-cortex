@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=75", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "market-cortex"
+version = "0.1.0"
+description = "Local-first, point-in-time market research foundation"
+requires-python = ">=3.12"
+dependencies = [
+  "fastapi>=0.115,<1",
+  "uvicorn>=0.30,<1",
+  "pydantic>=2.9,<3",
+  "psycopg[binary]>=3.2,<4",
+  "pyarrow>=18,<25",
+  "duckdb>=1,<3",
+  "httpx>=0.27,<1",
+  "jsonschema>=4,<5",
+  "PyYAML>=6,<7",
+  "cryptography>=44,<48",
+  "tzdata>=2025.2; platform_system == 'Windows'",
+]
+
+[project.optional-dependencies]
+analytics = ["polars>=1,<3", "numpy>=2,<3"]
+test = ["pytest>=8,<10"]
+
+[project.scripts]
+market-cortex = "market_cortex.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
