@@ -12,7 +12,7 @@ from fastapi.responses import JSONResponse
 from .config import Settings
 from .contracts import utc
 from .database import connect
-from .quality import disagreements
+from .quality import disagreements, missing_sessions
 from .storage import ArtifactStore, PostgresCatalog
 
 logger = logging.getLogger("market_cortex.api")
@@ -20,7 +20,7 @@ logger = logging.getLogger("market_cortex.api")
 
 def create_app(settings: Settings | None = None, catalog: PostgresCatalog | None = None) -> FastAPI:
     settings = settings or Settings.load()
-    app = FastAPI(title="MARKET CORTEX", version="0.1.0", docs_url="/docs", redoc_url=None)
+    app = FastAPI(title="MARKET CORTEX", version="0.2.0", docs_url="/docs", redoc_url=None)
     store = catalog or (PostgresCatalog(settings.database_url, ArtifactStore(settings.data_root)) if settings.database_url else None)
 
     @app.middleware("http")
@@ -66,10 +66,14 @@ def create_app(settings: Settings | None = None, catalog: PostgresCatalog | None
         matches = [m for m in mappings if m.identifier_value.lower() == query.lower()
                    and (provider_id is None or m.provider_id == provider_id)
                    and (venue_id is None or m.venue_id == venue_id)
-                   and m.valid_from <= at and (m.valid_to is None or at < m.valid_to)]
+                   and m.valid_from <= at and (m.valid_to is None or at < m.valid_to)
+                   and m.available_at is not None and m.available_at <= at]
         by_id = {item.instrument_id: item for item in instruments_}
+        matches = [m for m in matches if (item := by_id.get(m.instrument_id)) is not None
+                   and item.primary_venue_id == m.venue_id and item.valid_from <= at
+                   and (item.valid_to is None or at < item.valid_to)]
         rows = [{"instrument": by_id[m.instrument_id].model_dump(mode="json"),
-                 "mapping": m.model_dump(mode="json")} for m in matches[:limit] if m.instrument_id in by_id]
+                 "mapping": m.model_dump(mode="json")} for m in matches[:limit]]
         return {"items": rows, "ambiguous": len({m.instrument_id for m in matches}) > 1,
                 "truncated": len(matches) > limit, "as_of": at.isoformat()}
 
@@ -99,16 +103,17 @@ def create_app(settings: Settings | None = None, catalog: PostgresCatalog | None
         start, end = utc_or_422(from_at), utc_or_422(to_at)
         if start >= end:
             raise HTTPException(422, detail={"code": "INVALID_INTERVAL"})
+        cutoff = utc_or_422(as_of or datetime.now(timezone.utc))
         try:
             pinned, records = database().bars(instrument_id=instrument_id, start=start, end=end,
-                                              as_of=utc_or_422(as_of or datetime.now(timezone.utc)),
+                                              as_of=cutoff,
                                               manifest_id=manifest_id, adjustment_basis=adjustment_basis,
                                               provider_id=provider_id)
         except KeyError:
             raise HTTPException(404, detail={"code": "MANIFEST_NOT_FOUND"}) from None
         conflicts = disagreements(records)
         return {"manifest_id": str(pinned) if pinned else None, "selection_policy": "all_providers_v1",
-                "as_of": utc_or_422(as_of or datetime.now(timezone.utc)).isoformat(),
+                "as_of": cutoff.isoformat(),
                 "items": [b.model_dump(mode="json") for b in records[offset:offset + limit]],
                 "next_offset": offset + limit if offset + limit < len(records) else None,
                 "total": len(records),
@@ -125,6 +130,45 @@ def create_app(settings: Settings | None = None, catalog: PostgresCatalog | None
             {"sha256": a.content_hash, "rows": a.row_count, "venue_id": a.venue_id,
              "min_event_at": a.min_event_at, "max_event_at": a.max_event_at} for a in artifacts]}
 
+    @app.get("/api/v1/coverage")
+    def coverage(instrument_id: UUID, from_date: date = Query(alias="from"),
+                 to_date: date = Query(alias="to"), as_of: datetime | None = None,
+                 manifest_id: UUID | None = None, provider_id: str | None = None,
+                 adjustment_basis: str = "raw", calendar_id: str | None = None,
+                 calendar_version: str | None = None) -> dict:
+        if from_date > to_date or (to_date - from_date).days > 366:
+            raise HTTPException(422, detail={"code": "INVALID_COVERAGE_RANGE"})
+        cutoff = utc_or_422(as_of or datetime.now(timezone.utc))
+        catalog = database()
+        identities, _ = catalog.load_identity()
+        instrument = next((item for item in identities if item.instrument_id == instrument_id), None)
+        if instrument is None:
+            raise HTTPException(404, detail={"code": "INSTRUMENT_NOT_FOUND"})
+        start = datetime.combine(from_date, datetime.min.time(), timezone.utc) - timedelta(days=1)
+        end = datetime.combine(to_date + timedelta(days=2), datetime.min.time(), timezone.utc)
+        from .calendar import CalendarMissing
+
+        try:
+            calendar = catalog.load_calendar(instrument.primary_venue_id, start, end,
+                                             calendar_id, calendar_version)
+            expected = calendar.expected_dates(from_date, to_date)
+        except CalendarMissing:
+            raise HTTPException(404, detail={"code": "CALENDAR_COVERAGE_MISSING"}) from None
+        try:
+            pinned, records = catalog.bars(instrument_id=instrument_id, start=start, end=end,
+                                           as_of=cutoff, manifest_id=manifest_id,
+                                           adjustment_basis=adjustment_basis, provider_id=provider_id)
+        except KeyError:
+            raise HTTPException(404, detail={"code": "MANIFEST_NOT_FOUND"}) from None
+        observed = {bar.session_date for bar in records if from_date <= bar.session_date <= to_date}
+        gaps = missing_sessions(calendar, from_date, to_date, observed)
+        return {"manifest_id": str(pinned) if pinned else None, "as_of": cutoff.isoformat(),
+                "calendar_id": calendar.calendar_id, "calendar_version": calendar.version,
+                "provider_id": provider_id, "adjustment_basis": adjustment_basis,
+                "expected_sessions": len(expected), "observed_sessions": len(observed & set(expected)),
+                "gaps": [{"session_date": day.isoformat(),
+                          "reason": "NO_VISIBLE_OBSERVATION_AT_CUTOFF"} for day in gaps]}
+
     @app.get("/api/v1/data-health")
     def data_health() -> dict:
         repo = database()
@@ -137,6 +181,123 @@ def create_app(settings: Settings | None = None, catalog: PostgresCatalog | None
                     {"provider_id": row[0], "observations": row[1], "latest_end_at": row[2]} for row in rows],
                 "quarantined": quarantined, "jobs": dict(jobs),
                 "notice": "Latest event time is not a validated per-market freshness verdict."}
+
+    @app.get("/api/v1/features")
+    def feature_definitions() -> dict:
+        from .features import definitions
+        return {"items": [item.model_dump(mode="json") for item in definitions()]}
+
+    def feature_result(name: str, instrument_id: UUID, from_date: date, to_date: date,
+                       as_of: datetime | None, manifest_id: UUID | None, provider_id: str | None,
+                       adjustment_basis: str, period: int | None, fast: int | None, slow: int | None,
+                       signal: int | None, slope_period: int | None, rank_window: int | None,
+                       annualization: int | None, deviations: float | None):
+        from .features import FeatureEngine, FeatureRequest
+        supplied = {key: value for key, value in locals().items()
+                    if key in ("period", "fast", "slow", "signal", "slope_period", "rank_window",
+                               "annualization", "deviations") and value is not None}
+        try:
+            request = FeatureRequest(instrument_id=instrument_id, feature=name,
+                                     start_date=from_date, end_date=to_date,
+                                     as_of=utc_or_422(as_of or datetime.now(timezone.utc)),
+                                     manifest_id=manifest_id, provider_id=provider_id,
+                                     adjustment_basis=adjustment_basis, parameters=supplied)
+            return FeatureEngine(database()).calculate(request)
+        except KeyError:
+            raise HTTPException(404, detail={"code": "MANIFEST_NOT_FOUND"}) from None
+        except LookupError as error:
+            raise HTTPException(404, detail={"code": str(error)}) from None
+        except ValueError as error:
+            raise HTTPException(422, detail={"code": str(error).splitlines()[0][:80]}) from None
+
+    @app.get("/api/v1/features/series")
+    def feature_series(name: str, instrument_id: UUID, from_date: date = Query(alias="from"),
+                       to_date: date = Query(alias="to"), as_of: datetime | None = None,
+                       manifest_id: UUID | None = None, provider_id: str | None = None,
+                       adjustment_basis: str = "raw", period: int | None = None,
+                       fast: int | None = None, slow: int | None = None, signal: int | None = None,
+                       slope_period: int | None = None, rank_window: int | None = None,
+                       annualization: int | None = None, deviations: float | None = None) -> dict:
+        result = feature_result(name, instrument_id, from_date, to_date, as_of, manifest_id,
+                                provider_id, adjustment_basis, period, fast, slow, signal,
+                                slope_period, rank_window, annualization, deviations)
+        return result.model_dump(mode="json")
+
+    @app.get("/api/v1/features/compute")
+    def feature_compute(name: str, instrument_id: UUID, from_date: date = Query(alias="from"),
+                        to_date: date = Query(alias="to"), as_of: datetime | None = None,
+                        manifest_id: UUID | None = None, provider_id: str | None = None,
+                        adjustment_basis: str = "raw", period: int | None = None,
+                        fast: int | None = None, slow: int | None = None, signal: int | None = None,
+                        slope_period: int | None = None, rank_window: int | None = None,
+                        annualization: int | None = None, deviations: float | None = None) -> dict:
+        result = feature_result(name, instrument_id, from_date, to_date, as_of, manifest_id,
+                                provider_id, adjustment_basis, period, fast, slow, signal,
+                                slope_period, rank_window, annualization, deviations)
+        payload = result.model_dump(mode="json")
+        payload["latest"] = payload["points"][-1] if payload["points"] else None
+        del payload["points"]
+        payload["source_observation_count"] = len(payload.pop("source_observation_ids"))
+        return payload
+
+    @app.get("/api/v1/comparisons")
+    def comparisons(kind: str, instrument_id: UUID, reference_instrument_id: UUID,
+                    from_date: date = Query(alias="from"), to_date: date = Query(alias="to"),
+                    window: int = Query(20, ge=2, le=1000), as_of: datetime | None = None,
+                    manifest_id: UUID | None = None, provider_id: str | None = None,
+                    reference_provider_id: str | None = None, adjustment_basis: str = "raw",
+                    alignment_policy: str = "same_session",
+                    max_reference_age_hours: int = Query(72, ge=0, le=720),
+                    cutoff_lag_hours: int = Query(0, ge=0, le=720)) -> dict:
+        from .alignment import compare
+        from .features import FeatureEngine
+        engine = FeatureEngine(database())
+        cutoff = utc_or_422(as_of or datetime.now(timezone.utc))
+        pinned = manifest_id or engine.catalog.head()
+        try:
+            target = engine.load(instrument_id=instrument_id, start_date=from_date,
+                                 end_date=to_date, as_of=cutoff, manifest_id=pinned,
+                                 provider_id=provider_id, adjustment_basis=adjustment_basis)
+            reference = engine.load(instrument_id=reference_instrument_id, start_date=from_date,
+                                    end_date=to_date, as_of=cutoff, manifest_id=pinned,
+                                    provider_id=reference_provider_id, adjustment_basis=adjustment_basis)
+            result = compare(target, reference, kind=kind, window=window, policy=alignment_policy,
+                             max_reference_age=timedelta(hours=max_reference_age_hours),
+                             cutoff_lag=timedelta(hours=cutoff_lag_hours))
+        except KeyError:
+            raise HTTPException(404, detail={"code": "MANIFEST_NOT_FOUND"}) from None
+        except LookupError as error:
+            raise HTTPException(404, detail={"code": str(error)}) from None
+        except ValueError as error:
+            raise HTTPException(422, detail={"code": str(error).splitlines()[0][:80]}) from None
+        return result.model_dump(mode="json")
+
+    def state_result(history_from: date, evaluation_date: date, as_of: datetime | None,
+                     manifest_id: UUID | None):
+        from .market_state import MarketStateEngine, MarketStateRequest
+        try:
+            request = MarketStateRequest(history_start=history_from, evaluation_date=evaluation_date,
+                                         as_of=utc_or_422(as_of or datetime.now(timezone.utc)),
+                                         manifest_id=manifest_id)
+            return MarketStateEngine(database()).compute(request)
+        except KeyError:
+            raise HTTPException(404, detail={"code": "MANIFEST_NOT_FOUND"}) from None
+        except LookupError as error:
+            raise HTTPException(404, detail={"code": str(error)}) from None
+        except ValueError as error:
+            raise HTTPException(422, detail={"code": str(error).splitlines()[0][:80]}) from None
+
+    @app.get("/api/v1/market-state")
+    def market_state(history_from: date, evaluation_date: date, as_of: datetime | None = None,
+                     manifest_id: UUID | None = None) -> dict:
+        return state_result(history_from, evaluation_date, as_of, manifest_id).model_dump(mode="json")
+
+    @app.get("/api/v1/regime")
+    def regime(history_from: date, evaluation_date: date, as_of: datetime | None = None,
+               manifest_id: UUID | None = None) -> dict:
+        result = state_result(history_from, evaluation_date, as_of, manifest_id)
+        return {"snapshot_id": result.snapshot_id, "source_manifest_id": str(result.source_manifest_id),
+                "as_of": result.request.as_of.isoformat(), "regime": result.regime.model_dump(mode="json")}
 
     return app
 

@@ -120,11 +120,18 @@ class DailyProvider(Protocol):
 
 
 def require_identity(provider_id: str, instrument: Instrument, mapping: IdentifierMapping,
-                     calendar: SessionCalendar, identifier_type: str) -> None:
+                     calendar: SessionCalendar, identifier_type: str,
+                     start: datetime, end: datetime) -> None:
     if (mapping.provider_id != provider_id or mapping.instrument_id != instrument.instrument_id or
         mapping.venue_id != instrument.primary_venue_id or mapping.venue_id != calendar.venue.venue_id or
         mapping.identifier_type != identifier_type):
         raise ProviderFailure("IDENTITY_MISMATCH")
+    start, end = utc(start), utc(end)
+    if start >= end:
+        raise ValueError("invalid interval")
+    if (start < mapping.valid_from or mapping.valid_to is not None and end > mapping.valid_to or
+        start < instrument.valid_from or instrument.valid_to is not None and end > instrument.valid_to):
+        raise ProviderFailure("IDENTITY_OUTSIDE_VALID_INTERVAL")
 
 
 def prices(raw: object) -> Decimal:
@@ -182,7 +189,7 @@ class BinanceDaily:
 
     def fetch_daily(self, instrument: Instrument, mapping: IdentifierMapping,
                     calendar: SessionCalendar, start: datetime, end: datetime) -> FetchBatch:
-        require_identity(self.provider_id, instrument, mapping, calendar, "exchange_pair")
+        require_identity(self.provider_id, instrument, mapping, calendar, "exchange_pair", start, end)
         if calendar.venue.session_kind != "24x7" or not re.fullmatch(r"[A-Z0-9]{3,20}", mapping.identifier_value):
             raise ProviderFailure("UNSUPPORTED_IDENTITY_OR_CALENDAR")
         start, end = utc(start), utc(end)
@@ -192,21 +199,24 @@ class BinanceDaily:
         hashes, bars = [], []
         cursor = int(start.timestamp() * 1000)
         stop = int(end.timestamp() * 1000)
+        last_open_seen = None
         for _ in range(MAX_PAGES):
             page = self.transport.get("data-api.binance.vision", "/api/v3/klines", params={
                 "symbol": mapping.identifier_value, "interval": "1d", "startTime": cursor,
-                "endTime": stop - 1, "limit": 1000})
+                "endTime": stop - 1, "timeZone": "0", "limit": 1000})
             hashes.append(page.content_hash)
             if not isinstance(page.data, list):
                 raise ProviderFailure("MALFORMED_CANDLE_RESPONSE")
-            last_open = None
             for row in page.data:
-                if not isinstance(row, list) or len(row) < 7 or not isinstance(row[0], int):
+                if (not isinstance(row, list) or len(row) < 7 or type(row[0]) is not int
+                        or type(row[6]) is not int):
                     raise ProviderFailure("MALFORMED_CANDLE")
+                if row[0] % 86_400_000 or row[6] != row[0] + 86_400_000 - 1:
+                    raise ProviderFailure("UNEXPECTED_DAILY_WINDOW")
                 open_at = datetime.fromtimestamp(row[0] / 1000, timezone.utc)
-                if last_open is not None and open_at <= last_open:
+                if row[0] < cursor or last_open_seen is not None and row[0] <= last_open_seen:
                     raise ProviderFailure("NONMONOTONIC_PAGE")
-                last_open = open_at
+                last_open_seen = row[0]
                 if open_at + timedelta(days=1) > fetched or not start <= open_at < end:
                     continue  # in-progress day is never a complete daily candle
                 bars.append(build_bar(instrument=instrument, mapping=mapping, calendar=calendar,
@@ -235,7 +245,9 @@ class AlpacaDaily:
 
     def fetch_daily(self, instrument: Instrument, mapping: IdentifierMapping,
                     calendar: SessionCalendar, start: datetime, end: datetime) -> FetchBatch:
-        require_identity(self.provider_id, instrument, mapping, calendar, "ticker")
+        require_identity(self.provider_id, instrument, mapping, calendar, "ticker", start, end)
+        if calendar.venue.session_kind != "regular" or calendar.venue.timezone != "America/New_York":
+            raise ProviderFailure("UNSUPPORTED_IDENTITY_OR_CALENDAR")
         key, secret = os.environ.get("APCA_API_KEY_ID"), os.environ.get("APCA_API_SECRET_KEY")
         if not key or not secret:
             raise NotConfigured()
@@ -291,7 +303,10 @@ class UpstoxDaily:
 
     def fetch_daily(self, instrument: Instrument, mapping: IdentifierMapping,
                     calendar: SessionCalendar, start: datetime, end: datetime) -> FetchBatch:
-        require_identity(self.provider_id, instrument, mapping, calendar, "provider_token")
+        require_identity(self.provider_id, instrument, mapping, calendar, "provider_token", start, end)
+        if (calendar.venue.venue_id != "XNSE" or calendar.venue.timezone != "Asia/Kolkata" or
+            calendar.venue.session_kind != "regular"):
+            raise ProviderFailure("UNSUPPORTED_IDENTITY_OR_CALENDAR")
         token = os.environ.get("UPSTOX_ACCESS_TOKEN")
         if not token:
             raise NotConfigured()

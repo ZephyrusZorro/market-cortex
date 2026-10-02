@@ -136,13 +136,15 @@ class ObservationEnvelope(Contract):
     license_policy_id: str
     unit: str
     adjustment_basis: str
+    adjustment_vintage_id: str | None = None
+    adjustment_known_at: datetime | None = None
     supersedes_observation_id: UUID | None = None
     missing_reason: str | None = None
     currency: str | None = None
     # Provider vintage, if supplied. Catalog correction sequence is separate.
     revision: str | None = None
 
-    @field_validator("event_at", "published_at", "available_at", "ingested_at")
+    @field_validator("event_at", "published_at", "available_at", "ingested_at", "adjustment_known_at")
     @classmethod
     def timestamps(cls, value: datetime | None) -> datetime | None:
         return utc(value) if value is not None else None
@@ -157,6 +159,11 @@ class ObservationEnvelope(Contract):
             raise ValueError("known availability requires timestamp")
         if self.available_at is not None and self.available_at > self.ingested_at and self.availability_basis == "observed_arrival":
             raise ValueError("observed arrival cannot follow ingestion")
+        if self.adjustment_basis not in ("raw", "provider_unspecified"):
+            if not self.adjustment_vintage_id or self.adjustment_known_at is None:
+                raise ValueError("adjusted observation requires a named vintage and knowledge time")
+            if self.available_at is not None and self.adjustment_known_at > self.available_at:
+                raise ValueError("adjustment knowledge cannot follow observation availability")
         return self
 
 

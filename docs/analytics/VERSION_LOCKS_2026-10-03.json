@@ -1,0 +1,12 @@
+{
+  "feature_version": "1.0.0",
+  "calculation_version": "daily_float64_v1",
+  "feature_code_sha256": "e7093acb7d478e19b04330a0e54e416a572a251af7650f503101bf001ae8ae52",
+  "alignment_version": "aligned_daily_v1",
+  "alignment_code_sha256": "8a25eee47ee80839b514b0c4ed79143b1b310e9c7198e50c2f3cfc19c80f421d",
+  "breadth_version": "breadth_v1",
+  "breadth_code_sha256": "ea7d0013f9f5e6a23c5d43f8df58b76b1b2ef4a7593bab99ed9fbc282cb81596",
+  "state_version": "market_state_rules_v1",
+  "regime_version": "regime_rules_v1",
+  "state_code_sha256": "7b2af69b1692a79689ebfc615537e6b8444e8a0e7ecb2647e6a4ea9b59c941ca"
+}

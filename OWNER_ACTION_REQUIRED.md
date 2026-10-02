@@ -1,11 +1,10 @@
-# Owner action required for live Phase 1 validation
+# Deferred owner actions after Phase 1 foundation completion
 
-The source-independent core and synthetic tests can progress without credentials. To validate the actual pilot:
+The Binance public live pilot has validated the Phase 1 market-data pipeline. The actions below extend coverage or move the foundation from an isolated test deployment to the owner's intended installation. They do not block the Phase 1 exit decision in the [evidence matrix](docs/planning/PHASE_1_EXIT_MATRIX_2026-10-03.md).
 
-1. On the Windows machine, keep `config/hardware.local.json` and `config/owner.yaml` local. Choose `C:\MarketCortexData` or another spacious data root and a **separate** backup location. Fill budgets and review settings.
-2. Install PostgreSQL locally, create a dedicated empty database, and set `MARKET_CORTEX_DATABASE_URL` in the process environment. Apply migrations and run an isolated backup/restore drill.
-3. Run the existing Phase 0.6 probe locally and retain its redacted report. Binance public samples, while useful, do not prove full historical coverage.
-4. When ready, set Upstox and Alpaca tokens as environment variables on the owner machine and rerun the read-only probe. Share only the redacted report, never the keys. Confirm Upstox instrument keys, Alpaca feed entitlement and AAPL/NVDA raw-versus-split samples.
-5. Supply or approve a versioned NSE and US session calendar, including holidays and early closes. Do not infer market holidays from weekdays. Verify the provider daily aggregation boundaries against real responses before broad backfill.
+1. Review current provider usage and local retention terms before sustained or broad Binance ingestion. Public technical access alone does not establish caching rights.
+2. When available, keep Upstox and Alpaca credentials in environment variables and run the read-only probe. Their live status is `DEFERRED_NOT_CONFIGURED`. Record account entitlements, native identifiers, feed class, timestamp/adjustment behavior, quotas and rights without sharing secrets.
+3. For any India or US equity support, import verified venue-scoped native mappings and source-backed, versioned NSE/US exchange sessions including holidays and early closes. Until then, equity candidates stay deferred and no calendar or identity is guessed.
+4. For the intended installation, apply migrations to the owner's `market_cortex` database, use `C:\MarketCortexData`, select a separate backup destination, and rehearse an isolated restore. The Phase 1 proof used disposable test databases and workspace storage; it did not touch the owner's existing databases.
 
-Current blocker impact: live India/US coverage, full pilot identity mapping, real provider disagreement, Postgres migration/restore and production freshness remain **unverified**. These are validation gates, not reasons to stop independent implementation.
+No broker order, trading, or write endpoint is included.

@@ -18,7 +18,8 @@ class SessionCalendar:
         self.calendar_id = calendar_id
         self.version = version
         self._sessions = {s.session_date: s for s in sessions}
-        if any(s.calendar_id != calendar_id or s.venue_id != venue.venue_id for s in sessions):
+        if any(s.calendar_id != calendar_id or s.venue_id != venue.venue_id or s.version != version
+               for s in sessions):
             raise ValueError("calendar session identity mismatch")
 
     def session(self, session_date: date) -> CalendarSession:

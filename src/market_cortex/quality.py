@@ -63,21 +63,48 @@ def disagreements(bars: list[Bar], tolerance: Decimal = Decimal("0")) -> tuple[C
 
 def freshness(*, latest: Bar | None, as_of: datetime, calendar: SessionCalendar | None,
               grace: timedelta = timedelta(hours=4), provider_error: bool = False) -> str:
+    """Classify a daily feed against completed, known calendar sessions.
+
+    A missing calendar or unknown availability cannot support a current claim.
+    """
     as_of = utc(as_of)
+    if grace < timedelta(0):
+        raise ValueError("grace must be nonnegative")
     if provider_error:
         return "provider_outage"
     if latest is None:
         return "no_data"
-    if calendar is not None and calendar.venue.session_kind == "regular":
-        today = calendar.date_at(as_of)
+    if calendar is None or latest.calendar_id != calendar.calendar_id or latest.envelope.venue_id != calendar.venue.venue_id:
+        return "calendar_unknown"
+    if (latest.end_at > as_of or latest.envelope.availability_basis == "unknown"
+            or latest.envelope.available_at is None or latest.envelope.available_at > as_of
+            or latest.envelope.quality_state not in ("valid", "corrected")):
+        return "data_unavailable"
+    if calendar.venue.session_kind == "24x7":
+        # The newest UTC daily bar due by as_of has closed before its grace expires.
+        expected = calendar.session((as_of - grace).date() - timedelta(days=1))
+        return "stale" if latest.end_at < expected.close_at else "current"
+
+    today = calendar.date_at(as_of)
+    if latest.session_date > today:
+        return "data_unavailable"
+    cursor = today
+    while cursor > latest.session_date:
         try:
-            session = calendar.session(today)
+            session = calendar.session(cursor)
         except CalendarMissing:
             return "calendar_unknown"
-        if session.status == "holiday" or as_of < session.open_at:
-            return "market_closed"
-        if as_of <= session.close_at + grace:
-            return "session_in_progress"
-    if latest.end_at + timedelta(days=2) < as_of:
-        return "stale"
-    return "current"
+        if session.status != "holiday" and as_of >= session.close_at + grace:
+            return "stale"
+        cursor -= timedelta(days=1)
+    try:
+        session = calendar.session(today)
+    except CalendarMissing:
+        return "calendar_unknown"
+    if latest.session_date == today:
+        return "current"
+    if session.status == "holiday" or as_of < session.open_at:
+        return "market_closed"
+    if as_of < session.close_at:
+        return "session_in_progress"
+    return "awaiting_publication"

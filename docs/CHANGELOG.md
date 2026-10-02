@@ -1,8 +1,16 @@
 # Changelog
 
+## 2026-10-03 — Phase 2 deterministic analytics and market state
+
+Added 38 versioned daily feature definitions, manifest-pinned analytical series, explicit same-session and UTC cutoff alignment, relative strength/correlation with sample coverage, five-member breadth, a vector market-state snapshot, transparent regime rules, read-only Phase 2 API/CLI, golden and point-in-time tests, and a bounded live Binance backfill/validation. [Calculation rules](analytics/PHASE_2_ANALYTICS.md) and the [exit report](planning/PHASE_2_EXIT_MATRIX_2026-10-03.md) record exact scope and evidence. Upstox/Alpaca live coverage remains deferred; no execution path was added.
+
+## 2026-10-03 — Phase 1 foundation complete under Binance live-provider scope
+
+Validated five public Binance pairs through isolated PostgreSQL and Parquet ingestion, atomic manifests, pinned/as-of API reads, coverage, encrypted backup, and separate restore. Added provider contract and calendar guards, correction replay fixes, expanded PostgreSQL failure tests, and a 39-test final suite. Upstox/Alpaca live checks and equity mappings/calendars are `DEFERRED_NOT_CONFIGURED`; see the [exit matrix](planning/PHASE_1_EXIT_MATRIX_2026-10-03.md). The owner's main database was not modified. No broker write path exists.
+
 ## 2026-09-30 — Phase 1 daily-bar foundation in progress
 
-Owner authorized implementation while account validation remains open. Added installable Python modular monolith, typed registry-aligned daily-bar contracts, identity/calendar/quality logic, read-only provider adapters, local CLI and read API, PostgreSQL migrations/job/outbox catalog, SHA-256 Parquet manifests, DuckDB coverage, encrypted backup/isolated restore tooling, and hermetic tests. Added [ADR 0020](adr/0020-daily-bar-window-semantics.md) for provider-specific daily boundaries. See [status](planning/PHASE_1_STATUS.md) for untested PostgreSQL and live-provider gates. No Phase 2 work or V1 release claim.
+Owner authorized implementation while account validation remains open. Added installable Python modular monolith, typed registry-aligned daily-bar contracts, identity/calendar/quality logic, read-only provider adapters, local CLI and read API, PostgreSQL migrations/job/outbox catalog, SHA-256 Parquet manifests, DuckDB coverage, encrypted backup/isolated restore tooling, and hermetic tests. Added [ADR 0020](adr/0020-daily-bar-window-semantics.md) for provider-specific daily boundaries. This entry records the initial implementation checkpoint; subsequent validation appears above. No Phase 2 work or V1 release claim.
 
 ## 2026-09-26 — Phase 0.5 draft freeze
 

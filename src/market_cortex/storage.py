@@ -38,6 +38,11 @@ def fingerprint(bar: Bar) -> str:
         "volume": str(bar.volume) if bar.volume is not None else None,
         "trade_count": bar.trade_count, "is_final": bar.envelope.is_final,
     }
+    # Preserve the original raw-bar fingerprint for already ingested history.
+    if bar.envelope.adjustment_vintage_id is not None:
+        payload["adjustment_vintage"] = bar.envelope.adjustment_vintage_id
+    if bar.envelope.adjustment_known_at is not None:
+        payload["adjustment_known_at"] = bar.envelope.adjustment_known_at.isoformat()
     return hashlib.sha256(json.dumps(payload, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
 
 
@@ -79,7 +84,7 @@ class ArtifactStore:
             with tempfile.NamedTemporaryFile(dir=directory, prefix=".staged-", suffix=".parquet", delete=False) as tmp:
                 temp_path = Path(tmp.name)
             pq.write_table(pa.Table.from_pylist(rows), temp_path, compression="zstd")
-            with temp_path.open("rb") as stream:
+            with temp_path.open("r+b") as stream:
                 content_hash = hashlib.file_digest(stream, "sha256").hexdigest()
                 os.fsync(stream.fileno())
             final = directory / f"{content_hash}.parquet"
@@ -124,19 +129,28 @@ def visible_bars(bars: list[Bar], *, instrument_id: UUID, start: datetime, end: 
     start, end, as_of = utc(start), utc(end), utc(as_of)
     if start >= end:
         raise ValueError("query interval must be nonempty")
-    selected: dict[str, Bar] = {}
+    candidates: dict[str, list[Bar]] = {}
     for bar in bars:
         env = bar.envelope
         if (env.instrument_id != instrument_id or not start <= bar.start_at < end or
             env.adjustment_basis != adjustment_basis or provider_id is not None and env.provider_id != provider_id or
             env.quality_state not in ("valid", "corrected") or env.availability_basis == "unknown" or
-            env.available_at is None or env.available_at > as_of):
+            env.available_at is None or env.available_at > as_of or
+            env.adjustment_known_at is not None and env.adjustment_known_at > as_of):
             continue
-        key = logical_key(bar)
-        prior = selected.get(key)
-        if prior is None or (env.available_at, env.ingested_at) > (prior.envelope.available_at, prior.envelope.ingested_at):
-            selected[key] = bar
-    return sorted(selected.values(), key=lambda b: (b.start_at, b.envelope.provider_id))
+        candidates.setdefault(logical_key(bar), []).append(bar)
+    selected = []
+    for revisions in candidates.values():
+        superseded = {bar.envelope.supersedes_observation_id for bar in revisions}
+        heads = [bar for bar in revisions if bar.envelope.observation_id not in superseded]
+        if not heads:
+            raise ValueError("cyclic correction lineage")
+        # The catalog forms a linear chain. The final tie-breaker keeps corrupt or
+        # synthetic forked histories deterministic without relying on file order.
+        selected.append(max(heads, key=lambda bar: (bar.envelope.available_at,
+                                                     bar.envelope.ingested_at,
+                                                     str(bar.envelope.observation_id))))
+    return sorted(selected, key=lambda b: (b.start_at, b.envelope.provider_id))
 
 
 def filter_known_identity(bars: list[Bar], instruments: list[Instrument],
@@ -268,6 +282,10 @@ class PostgresCatalog:
                     raise RuntimeError("database is not migrated")
                 connection.execute("INSERT INTO source_batches VALUES (%s,%s,%s,%s,%s,%s,%s) ON CONFLICT DO NOTHING",
                                    (source_batch_id, provider_id, utc(fetched_at), raw_hash, "hash_only", rights_policy_id, "processed"))
+                batch = connection.execute("""SELECT provider_id, fetched_at, raw_hash, raw_retention_state,
+                    rights_policy_id FROM source_batches WHERE source_batch_id = %s""", (source_batch_id,)).fetchone()
+                if batch != (provider_id, utc(fetched_at), raw_hash, "hash_only", rights_policy_id):
+                    raise ValueError("source batch identity conflicts with existing lineage")
                 for bar, codes in rejected:
                     connection.execute("INSERT INTO quarantine VALUES (%s,%s,%s,%s,%s,%s,%s)",
                                        (uuid4(), source_batch_id, provider_id, bar.envelope.instrument_id,

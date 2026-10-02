@@ -6,7 +6,7 @@ import argparse
 import json
 import os
 import sys
-from datetime import datetime
+from datetime import date, datetime, timezone
 from pathlib import Path
 from uuid import UUID
 
@@ -38,6 +38,22 @@ def main(argv: list[str] | None = None) -> int:
     sub.add_parser("scan-storage", help="Read-only orphan, missing-file and checksum inventory")
     serve = sub.add_parser("serve", help="Start the loopback read API")
     serve.add_argument("--port", type=int, default=8765)
+    feature = sub.add_parser("compute-feature", help="Compute a manifest-pinned deterministic daily feature")
+    feature.add_argument("--name", required=True)
+    feature.add_argument("--instrument-id", type=UUID, required=True)
+    feature.add_argument("--from", dest="from_date", type=date.fromisoformat, required=True)
+    feature.add_argument("--to", dest="to_date", type=date.fromisoformat, required=True)
+    feature.add_argument("--as-of", type=datetime.fromisoformat)
+    feature.add_argument("--manifest-id", type=UUID)
+    feature.add_argument("--provider-id")
+    feature.add_argument("--adjustment-basis", default="raw")
+    feature.add_argument("--parameters", default="{}", help="JSON object of approved numeric parameters")
+    feature.add_argument("--series", action="store_true", help="Include every daily point")
+    state = sub.add_parser("compute-market-state", help="Inspect the Binance pilot state vector")
+    state.add_argument("--history-from", type=date.fromisoformat, required=True)
+    state.add_argument("--evaluation-date", type=date.fromisoformat, required=True)
+    state.add_argument("--as-of", type=datetime.fromisoformat)
+    state.add_argument("--manifest-id", type=UUID)
     args = parser.parse_args(argv)
     try:
         settings = Settings.load()
@@ -51,7 +67,8 @@ def main(argv: list[str] | None = None) -> int:
             root = Path(__file__).resolve().parents[2]
             print(json.dumps({"applied_migrations": migrate(settings.database_url, root)}))
             return 0
-        if args.command in ("bootstrap-crypto", "sync-daily", "inspect-manifest", "scan-storage"):
+        if args.command in ("bootstrap-crypto", "sync-daily", "inspect-manifest", "scan-storage",
+                            "compute-feature", "compute-market-state"):
             if not settings.database_url:
                 print("DATABASE_NOT_CONFIGURED", file=sys.stderr)
                 return 2
@@ -59,6 +76,30 @@ def main(argv: list[str] | None = None) -> int:
             catalog = PostgresCatalog(settings.database_url, ArtifactStore(settings.data_root))
             if args.command == "scan-storage":
                 print(json.dumps(catalog.scan_storage()))
+                return 0
+            if args.command == "compute-feature":
+                from .features import FeatureEngine, FeatureRequest
+                parameters = json.loads(args.parameters)
+                if not isinstance(parameters, dict):
+                    raise ValueError("parameters must be a JSON object")
+                request = FeatureRequest(instrument_id=args.instrument_id, feature=args.name,
+                    start_date=args.from_date, end_date=args.to_date,
+                    as_of=args.as_of or datetime.now(timezone.utc), manifest_id=args.manifest_id,
+                    provider_id=args.provider_id, adjustment_basis=args.adjustment_basis,
+                    parameters=parameters)
+                payload = FeatureEngine(catalog).calculate(request).model_dump(mode="json")
+                if not args.series:
+                    payload["latest"] = payload["points"][-1] if payload["points"] else None
+                    del payload["points"]
+                    payload["source_observation_count"] = len(payload.pop("source_observation_ids"))
+                print(json.dumps(payload))
+                return 0
+            if args.command == "compute-market-state":
+                from .market_state import MarketStateEngine, MarketStateRequest
+                request = MarketStateRequest(history_start=args.history_from,
+                    evaluation_date=args.evaluation_date, as_of=args.as_of or datetime.now(timezone.utc),
+                    manifest_id=args.manifest_id)
+                print(MarketStateEngine(catalog).compute(request).model_dump_json())
                 return 0
             if args.command == "inspect-manifest":
                 from .analytics import manifest_coverage

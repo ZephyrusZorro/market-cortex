@@ -773,6 +773,30 @@
           "minLength": 1,
           "description": "Raw or named derived transform"
         },
+        "adjustment_vintage_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "description": "Named source or corporate-action vintage for adjusted observations"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "adjustment_known_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time",
+              "description": "UTC instant when this adjustment vintage became known"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
         "revision": {
           "anyOf": [
             {

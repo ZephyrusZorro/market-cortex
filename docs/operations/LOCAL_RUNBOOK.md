@@ -48,6 +48,17 @@ Open `http://127.0.0.1:8765/docs` or `http://127.0.0.1:8765/api/v1/health`. The 
 
 The Upstox and Alpaca adapters cannot sync until venue-scoped native mappings and versioned exchange calendars are registered. The Phase 0.6 probe supplies evidence for those mappings. The project does not invent US/India holidays or guess a ticker's canonical identity.
 
+## Phase 2 deterministic analytics
+
+Use a manifest ID returned by a completed sync. The date window supplies the warm-up history; SMA200 needs at least 200 complete sessions in it. `as_of` is an availability cutoff. Omit it for a current local view, or specify it for reproducible research. A missing or stale source remains explicit in the result.
+
+```powershell
+.\.venv\Scripts\python.exe scripts\market_cortex.py compute-feature --name sma --instrument-id 'PASTE-LOCAL-UUID' --from 2025-09-01 --to 2026-10-01 --provider-id binance --parameters '{"period":200}' --manifest-id 'PASTE-PINNED-MANIFEST'
+.\.venv\Scripts\python.exe scripts\market_cortex.py compute-market-state --history-from 2025-09-01 --evaluation-date 2026-10-01 --manifest-id 'PASTE-PINNED-MANIFEST'
+```
+
+The local API adds `GET /api/v1/features`, `/api/v1/features/compute`, `/api/v1/features/series`, `/api/v1/comparisons`, `/api/v1/market-state`, and `/api/v1/regime`. See [exact indicator and state rules](../analytics/PHASE_2_ANALYTICS.md). An optional read-only validation utility, `scripts\validate_phase2_pilot.py`, checks the five-pair snapshot, pinned feature warm-up, API responses, storage inventory and local timings against an already ingested catalog. It writes a redacted report to the requested path and makes no provider request.
+
 ## Read-only source probes
 
 ```powershell

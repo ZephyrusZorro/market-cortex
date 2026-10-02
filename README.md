@@ -1,16 +1,17 @@
 # MARKET CORTEX
 
-Private, local-first market research software. **Phase 1 market-data foundation is in progress; this is not a V1 workstation.** The [Phase 0 blueprint](docs/architecture/PHASE_0_BASELINE_2026-09-26.md) and [ADRs](docs/DECISION_LOG.md) remain the architecture baseline. The owner authorized implementation before live source credentials arrived; the [current evidence and gates](docs/planning/PHASE_1_STATUS.md) distinguish implemented code from validated data.
+Private, local-first market research software. **Phase 1 daily market data and Phase 2 deterministic analytics/market state are implemented for the Binance pilot; this is not a V1 workstation.** The [Phase 0 blueprint](docs/architecture/PHASE_0_BASELINE_2026-09-26.md) and [ADRs](docs/DECISION_LOG.md) remain the architecture baseline. [Phase 1 evidence](docs/planning/PHASE_1_EXIT_MATRIX_2026-10-03.md), [Phase 2 calculation rules](docs/analytics/PHASE_2_ANALYTICS.md), and the [Phase 2 exit report](docs/planning/PHASE_2_EXIT_MATRIX_2026-10-03.md) distinguish validated results from deferred provider coverage.
 
 ## What runs now
 
 - Versioned JSON Schema registry and typed daily-bar contracts, venue-scoped valid-time identity, calendar sessions, quality rules, quarantine, provenance and strict as-of selection.
 - PostgreSQL migrations for identity, jobs, outbox, observations and atomic dataset manifest publication. Immutable daily bars are content-addressed Parquet. DuckDB reads pinned manifest artifacts.
 - Read-only Binance, Upstox and Alpaca daily adapters. Binance public bootstrap works without credentials. Upstox requires an instrument key; Alpaca records its selected feed class. Missing credentials return `NOT_CONFIGURED`.
-- Local FastAPI read surface, CLI, redacted Phase 0.6 probes, hardware profile, encrypted backup and isolated restore utilities.
-- Synthetic fixture suite. No live PostgreSQL or credentialed-provider integration was possible in this workspace.
+- Local FastAPI read surface, CLI, redacted source probes, hardware profile, encrypted backup and isolated restore utilities.
+- Synthetic acceptance suite plus isolated PostgreSQL 17 integration tests. Five public Binance pairs completed bootstrap, ingestion, as-of API reads, manifest checks, encrypted backup and separate restore. Upstox and Alpaca live checks are `DEFERRED_NOT_CONFIGURED` until owner credentials and verified equity mappings/calendars exist.
+- Versioned feature registry with deterministic returns, trend, momentum, volatility, volume, drawdown and cross-series analytics. A five-pair Binance state snapshot reports separate dimensions, breadth, quality, freshness, evidence and a transparent regime. Calculations read pinned Phase 1 manifests; no derived value changes raw history.
 
-There are **no order endpoints or automated trade execution paths**. Advanced feeds, strategies, CORTEX AI, ML and the workstation are subsequent work.
+There are **no order endpoints or automated trade execution paths**. Advanced feeds, strategies, CORTEX AI, ML and the workstation are subsequent work. Live India/US coverage remains deferred.
 
 ## Windows quick start
 
@@ -38,4 +39,4 @@ The server binds to `127.0.0.1:8765`. `GET /api/v1/health` is available even bef
 
 `src/market_cortex` contains the Python modular monolith; `apps/api` is the ASGI entrypoint, `apps/web` is reserved, `packages/contracts` is the authoritative JSON Schema registry, `infra/migrations` is the PostgreSQL catalog, `data/lake` contains ignored immutable Parquet artifacts, `docs` holds the ADRs and runbooks, and `tests` holds synthetic cases. The code lives under `src` rather than several importable `packages/*` directories so the installed Python package has one stable namespace while domain boundaries remain separate modules.
 
-Git is initialized locally without a remote. Do not commit owner configuration, provider tokens, journal contents, database dumps or downloaded data. [Owner actions](OWNER_ACTION_REQUIRED.md) list the local validation needed before declaring Phase 1 complete.
+Git is initialized locally without a remote. Do not commit owner configuration, provider tokens, journal contents, database dumps or downloaded data. [Owner actions](OWNER_ACTION_REQUIRED.md) list the deferred live-source and deployment checks.
