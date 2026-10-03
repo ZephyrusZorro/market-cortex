@@ -62,6 +62,8 @@ def main(argv: list[str] | None = None) -> int:
     research.add_argument("--symbol")
     research.add_argument("--compare-symbol")
     research.add_argument("--older-manifest-id", type=UUID)
+    research.add_argument("--candidate-id", type=UUID, help="Review a recorded opportunity candidate")
+    research.add_argument("--thesis-id", type=UUID, help="Review a recorded structured thesis")
     research.add_argument("--depth", choices=["quick", "deep"], default="deep")
     runs = sub.add_parser("research-runs", help="List recent local CORTEX research runs")
     runs.add_argument("--symbol")
@@ -69,6 +71,25 @@ def main(argv: list[str] | None = None) -> int:
     inspect_run.add_argument("run_id", type=UUID)
     replay_run = sub.add_parser("replay-research-run", help="Verify saved deterministic evidence")
     replay_run.add_argument("run_id", type=UUID)
+    opportunity = sub.add_parser("scan-opportunities", help="Scan versioned Pilot 5 daily detectors")
+    opportunity.add_argument("--mode", choices=["latest", "pinned", "historical"], default="latest")
+    opportunity.add_argument("--manifest-id", type=UUID)
+    opportunity.add_argument("--as-of", type=datetime.fromisoformat)
+    opportunity.add_argument("--symbol")
+    opportunity.add_argument("--detector-id")
+    opportunity.add_argument("--record", action="store_true", help="Append deduplicated candidate/rejection events")
+    inspect_candidate = sub.add_parser("inspect-candidate", help="Inspect a recorded opportunity candidate")
+    inspect_candidate.add_argument("candidate_id", type=UUID)
+    make_thesis = sub.add_parser("create-thesis", help="Create a structured research thesis from a recorded candidate")
+    make_thesis.add_argument("candidate_id", type=UUID)
+    inspect_thesis = sub.add_parser("inspect-thesis", help="Inspect a structured thesis")
+    inspect_thesis.add_argument("thesis_id", type=UUID)
+    inspect_thesis.add_argument("--version", type=int)
+    monitor_thesis = sub.add_parser("monitor-thesis", help="Re-evaluate a thesis under a chosen context")
+    monitor_thesis.add_argument("thesis_id", type=UUID)
+    monitor_thesis.add_argument("--mode", choices=["latest", "pinned", "historical"], default="latest")
+    monitor_thesis.add_argument("--manifest-id", type=UUID)
+    monitor_thesis.add_argument("--as-of", type=datetime.fromisoformat)
     args = parser.parse_args(argv)
     try:
         settings = Settings.load()
@@ -84,12 +105,42 @@ def main(argv: list[str] | None = None) -> int:
             return 0
         if args.command in ("bootstrap-crypto", "sync-daily", "inspect-manifest", "scan-storage",
                             "compute-feature", "compute-market-state", "research", "research-runs",
-                            "inspect-research-run", "replay-research-run"):
+                            "inspect-research-run", "replay-research-run", "scan-opportunities",
+                            "inspect-candidate", "create-thesis", "inspect-thesis", "monitor-thesis"):
             if not settings.database_url:
                 print("DATABASE_NOT_CONFIGURED", file=sys.stderr)
                 return 2
             from .storage import ArtifactStore, PostgresCatalog
             catalog = PostgresCatalog(settings.database_url, ArtifactStore(settings.data_root))
+            if args.command in ("scan-opportunities", "inspect-candidate", "create-thesis",
+                                "inspect-thesis", "monitor-thesis"):
+                from .opportunity import OpportunityService
+                from .opportunity_contracts import ScanRequest
+                from .opportunity_store import OpportunityStore
+                store = OpportunityStore(catalog.dsn)
+                if args.command == "scan-opportunities":
+                    result = OpportunityService(catalog).scan(ScanRequest(mode=args.mode,
+                        manifest_id=args.manifest_id, as_of=args.as_of, symbol=args.symbol,
+                        detector_id=args.detector_id, record=args.record))
+                elif args.command == "inspect-candidate":
+                    result = store.candidate(args.candidate_id)
+                elif args.command == "create-thesis":
+                    result = store.create_thesis(args.candidate_id)
+                elif args.command == "inspect-thesis":
+                    result = store.thesis(args.thesis_id, args.version)
+                else:
+                    prior = store.thesis(args.thesis_id)
+                    if prior is None:
+                        raise LookupError("THESIS_NOT_FOUND")
+                    scan = OpportunityService(catalog).scan(ScanRequest(mode=args.mode,
+                        manifest_id=args.manifest_id, as_of=args.as_of, symbol=prior.symbol,
+                        detector_id=prior.detector_id, record=True))
+                    result = store.advance(args.thesis_id, scan.candidates[0])
+                if result is None:
+                    print(json.dumps({"code": "RECORD_NOT_FOUND"}))
+                    return 2
+                print(result.model_dump_json())
+                return 0
             if args.command in ("research", "research-runs", "inspect-research-run", "replay-research-run"):
                 from .cortex import CortexService
                 from .cortex_contracts import ResearchRequest
@@ -98,7 +149,7 @@ def main(argv: list[str] | None = None) -> int:
                     request = ResearchRequest(question=args.question, mode=args.mode,
                         manifest_id=args.manifest_id, as_of=args.as_of, symbol=args.symbol,
                         compare_symbol=args.compare_symbol, older_manifest_id=args.older_manifest_id,
-                        depth=args.depth)
+                        candidate_id=args.candidate_id, thesis_id=args.thesis_id, depth=args.depth)
                     result = service.research(request)
                     print(json.dumps({"run_id": str(result.run_id), "answer": result.answer,
                         "evidence_strength": result.evidence_strength,

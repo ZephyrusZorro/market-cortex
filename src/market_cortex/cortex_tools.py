@@ -55,6 +55,29 @@ class PairArguments(BaseModel):
         return value
 
 
+class OpportunityScanArguments(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    symbol: str | None = None
+
+    @field_validator("symbol")
+    @classmethod
+    def pilot_only(cls, value: str | None) -> str | None:
+        if value is not None and value not in PILOT_SYMBOLS:
+            raise ValueError("UNSUPPORTED_PILOT_SYMBOL")
+        return value
+
+
+class CandidateArguments(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    candidate_id: UUID
+
+
+class ThesisArguments(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    thesis_id: UUID
+    version: int
+
+
 @dataclass(frozen=True)
 class ToolSpec:
     tool_id: str
@@ -73,6 +96,9 @@ SPECS = {
     "asset.compare": ToolSpec("asset.compare", "1.0.0", "Phase 2 relative strength and correlation", PairArguments),
     "dataset.manifest": ToolSpec("dataset.manifest", "1.0.0", "Published manifest ancestry and files", NoArguments),
     "research.prior": ToolSpec("research.prior", "1.0.0", "Prior saved research, historical context only", SymbolArguments),
+    "opportunity.scan": ToolSpec("opportunity.scan", "1.0.0", "Ephemeral deterministic Pilot 5 scan", OpportunityScanArguments),
+    "opportunity.candidate": ToolSpec("opportunity.candidate", "1.0.0", "Recorded candidate and machine-readable rules", CandidateArguments),
+    "opportunity.thesis": ToolSpec("opportunity.thesis", "1.0.0", "Recorded thesis status and transition history", ThesisArguments),
 }
 
 
@@ -119,7 +145,10 @@ class ToolRegistry:
         action: dict[str, Callable] = {
             "dataset.context": self._context, "instrument.features": self._features,
             "market.state": self._state, "asset.compare": self._compare,
-            "dataset.manifest": self._manifest, "research.prior": self._prior}
+            "dataset.manifest": self._manifest, "research.prior": self._prior,
+            "opportunity.scan": self._opportunity_scan,
+            "opportunity.candidate": self._opportunity_candidate,
+            "opportunity.thesis": self._opportunity_thesis}
         evidence = action[tool_id](parsed)
         status = "ok" if evidence and any(item.value is not None for item in evidence) else "insufficient"
         values = [item.model_dump(mode="json") for item in evidence]
@@ -264,4 +293,74 @@ class ToolRegistry:
                 version=prior.orchestration_version, source_manifest_id=prior.context.manifest_id,
                 source_as_of=prior.context.as_of, source_recorded_at=prior.created_at,
                 reason="HISTORICAL_CONTEXT_ONLY"))
+        return result
+
+    def _opportunity_scan(self, args: OpportunityScanArguments) -> list[Evidence]:
+        from .opportunity import OpportunityService
+        from .opportunity_contracts import ScanRequest
+
+        scan = OpportunityService(self.catalog).scan(ScanRequest(mode="pinned",
+            manifest_id=self.context.manifest_id, as_of=self.context.as_of,
+            symbol=args.symbol, record=False))
+        result = []
+        for candidate in scan.candidates:
+            result.append(self._evidence("opportunity.scan", "candidate_summary",
+                f"{candidate.symbol} {candidate.detector_id} {candidate.outcome}",
+                symbol=candidate.symbol, value=candidate.status,
+                session_date=candidate.event_date, source_id=str(candidate.candidate_id),
+                version=candidate.detector_version, freshness=candidate.freshness,
+                coverage=candidate.coverage,
+                reason="; ".join(candidate.rejection_reasons + candidate.contradictions) or None))
+        if not result:
+            result.append(self._evidence("opportunity.scan", "coverage", "No supported candidate evaluations",
+                value=0, reason="NO_VISIBLE_PILOT_CANDIDATES"))
+        return result
+
+    def _opportunity_candidate(self, args: CandidateArguments) -> list[Evidence]:
+        from .opportunity_store import OpportunityStore
+
+        candidate = OpportunityStore(self.catalog.dsn).candidate(args.candidate_id)
+        if candidate is None or candidate.source_manifest_id != self.context.manifest_id or \
+                candidate.as_of > self.context.as_of:
+            raise LookupError("CANDIDATE_NOT_VISIBLE_IN_CONTEXT")
+        tool_id = "opportunity.candidate"
+        result = [self._evidence(tool_id, "candidate_status", "Candidate status",
+            symbol=candidate.symbol, value=candidate.status, session_date=candidate.event_date,
+            source_id=str(candidate.candidate_id), version=candidate.detector_version,
+            source_manifest_id=candidate.source_manifest_id, source_as_of=candidate.as_of,
+            freshness=candidate.freshness, coverage=candidate.coverage,
+            reason="; ".join(candidate.rejection_reasons) or None)]
+        for item in (candidate.trigger_conditions + candidate.confirmation_conditions +
+                     candidate.invalidation_conditions + candidate.rejection_conditions):
+            result.append(self._evidence(tool_id, "candidate_condition",
+                f"{item.kind}: {item.description}", symbol=candidate.symbol,
+                value=item.observed, session_date=candidate.event_date,
+                source_id=str(candidate.candidate_id), version=candidate.detector_version,
+                source_manifest_id=candidate.source_manifest_id, source_as_of=candidate.as_of,
+                reason="met" if item.met else "not met" if item.met is False else "unavailable"))
+        for contradiction in candidate.contradictions:
+            result.append(self._evidence(tool_id, "contradiction", contradiction,
+                symbol=candidate.symbol, value="present", source_id=str(candidate.candidate_id),
+                source_manifest_id=candidate.source_manifest_id, source_as_of=candidate.as_of))
+        return result
+
+    def _opportunity_thesis(self, args: ThesisArguments) -> list[Evidence]:
+        from .opportunity_store import OpportunityStore
+
+        thesis = OpportunityStore(self.catalog.dsn).thesis(args.thesis_id, args.version)
+        if thesis is None or thesis.source_manifest_id != self.context.manifest_id or \
+                thesis.as_of > self.context.as_of:
+            raise LookupError("THESIS_NOT_VISIBLE_IN_CONTEXT")
+        tool_id = "opportunity.thesis"
+        result = [self._evidence(tool_id, "thesis_status", "Thesis status",
+            symbol=thesis.symbol, value=thesis.status,
+            source_id=str(thesis.thesis_id), version=str(thesis.version),
+            source_manifest_id=thesis.source_manifest_id, source_as_of=thesis.as_of)]
+        for event in thesis.transitions:
+            result.append(self._evidence(tool_id, "thesis_transition",
+                f"Version transition: {event.reason}", symbol=thesis.symbol,
+                value=f"{event.from_status or 'NEW'} to {event.to_status}",
+                source_id=str(thesis.thesis_id), version=str(thesis.version),
+                source_manifest_id=event.source_manifest_id, source_as_of=event.as_of,
+                source_recorded_at=event.at))
         return result

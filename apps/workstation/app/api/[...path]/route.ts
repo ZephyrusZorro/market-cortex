@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-const allowed = /^v1\/(health|features(?:\/(?:series|compute))?|workstation\/(?:context|overview|comparison|instrument\/[0-9a-f-]{36}|manifest\/[0-9a-f-]{36})|cortex\/(?:status|tools|runs(?:\/[0-9a-f-]{36}(?:\/replay)?)?))$/;
+const allowed = /^v1\/(health|features(?:\/(?:series|compute))?|workstation\/(?:context|overview|comparison|instrument\/[0-9a-f-]{36}|manifest\/[0-9a-f-]{36})|cortex\/(?:status|tools|runs(?:\/[0-9a-f-]{36}(?:\/replay)?)?)|opportunities\/(?:detectors|candidates(?:\/[0-9a-f-]{36})?|theses(?:\/[0-9a-f-]{36}(?:\/(?:versions|comparison))?)?))$/;
+const postAllowed = /^v1\/(?:cortex\/research|opportunities\/(?:scan|theses(?:\/[0-9a-f-]{36}\/(?:monitor|decision|review))?))$/;
 
 function backendUrl() {
   const backend = new URL(process.env.MARKET_CORTEX_API_URL ?? 'http://127.0.0.1:8765');
@@ -30,13 +31,14 @@ export async function GET(request: NextRequest, context: { params: Promise<{ pat
 
 export async function POST(request: NextRequest, context: { params: Promise<{ path: string[] }> }) {
   const { path } = await context.params;
-  if (path.join('/') !== 'v1/cortex/research') return NextResponse.json({ code: 'ROUTE_NOT_AVAILABLE' }, { status: 404 });
+  const route = path.join('/');
+  if (!postAllowed.test(route)) return NextResponse.json({ code: 'ROUTE_NOT_AVAILABLE' }, { status: 404 });
   const backend = backendUrl();
   if (!backend) return NextResponse.json({ code: 'BACKEND_MUST_BE_LOOPBACK' }, { status: 503 });
   const body = await request.text();
   if (body.length > 8192) return NextResponse.json({ code: 'REQUEST_TOO_LARGE' }, { status: 413 });
   try {
-    const response = await fetch(new URL('/api/v1/cortex/research', backend), {
+    const response = await fetch(new URL(`/api/${route}`, backend), {
       method: 'POST', headers: { 'Content-Type': 'application/json' }, body,
       cache: 'no-store', signal: AbortSignal.timeout(60_000)
     });

@@ -3,16 +3,17 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Activity, ArrowDownRight, ArrowUpRight, BarChart3, BookOpenText, Check,
   ChevronRight, CircleHelp, Command, Database, FileClock, Gauge, HeartPulse,
-  LayoutDashboard, ListFilter, RefreshCw, Search, Settings2, ShieldCheck,
+  LayoutDashboard, Lightbulb, ListFilter, RefreshCw, Search, Settings2, ShieldCheck,
   Star, Table2, X } from 'lucide-react';
 import { PriceChart, SeriesChart } from './charts';
 import CortexPane from './CortexPane';
+import OpportunityPane from './OpportunityPane';
 import { ApiError, appendParams, category, contextParams, getJson, number, percent, pinnedParams, shortId,
   type ChartFeature, type Comparison, type Context, type Dimension, type FeatureDefinition, type FeatureSeries,
   type InstrumentView, type ManifestDetail, type MarketState, type Mode, type Overview, type OverviewItem,
   type ResearchSelection } from '@/lib/api';
 
-type View = 'overview' | 'instruments' | 'analytics' | 'market-state' | 'compare' | 'coverage' | 'research' | 'system' | 'cortex';
+type View = 'overview' | 'instruments' | 'analytics' | 'market-state' | 'compare' | 'coverage' | 'research' | 'system' | 'cortex' | 'opportunities';
 const NAV: { id: View; label: string; icon: typeof LayoutDashboard; key: string }[] = [
   { id: 'overview', label: 'Overview', icon: LayoutDashboard, key: '1' },
   { id: 'instruments', label: 'Instruments', icon: BarChart3, key: '2' },
@@ -22,9 +23,12 @@ const NAV: { id: View; label: string; icon: typeof LayoutDashboard; key: string 
   { id: 'coverage', label: 'Data & Coverage', icon: Database, key: '6' },
   { id: 'research', label: 'Research Desk', icon: BookOpenText, key: '7' },
   { id: 'system', label: 'System & Lineage', icon: Settings2, key: '8' },
-  { id: 'cortex', label: 'CORTEX Research', icon: HeartPulse, key: '9' }
+  { id: 'cortex', label: 'CORTEX Research', icon: HeartPulse, key: '9' },
+  { id: 'opportunities', label: 'Opportunities', icon: Lightbulb, key: '0' }
 ];
 type Watchlist = { id: string; name: string; instrumentIds: string[] };
+type WatchSignal = { symbol: string; detector_id: string; status: string; outcome?: string;
+  source_manifest_id: string; as_of: string; updated_at?: string };
 const WATCH_KEY = 'market-cortex.watchlists.v1';
 const PREF_KEY = 'market-cortex.preferences.v1';
 const UTC = 'en-GB';
@@ -135,6 +139,7 @@ export default function Workstation() {
   const [watchName, setWatchName] = useState('');
   const [note, setNote] = useState('');
   const [savedNote, setSavedNote] = useState(false);
+  const [watchSignals, setWatchSignals] = useState<{ candidates: WatchSignal[]; theses: WatchSignal[] }>({ candidates: [], theses: [] });
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -235,6 +240,15 @@ export default function Workstation() {
     context?.source_manifest_id : `${context?.source_manifest_id}.${context?.as_of}`;
   const noteKey = context && instrumentId ? `market-cortex.note.v1.${instrumentId}.${noteContext}` : null;
   useEffect(() => { if (view === 'research' && noteKey) { setNote(localStorage.getItem(noteKey) ?? ''); setSavedNote(false); } }, [view, noteKey]);
+  useEffect(() => {
+    if (view !== 'research' || !context) return;
+    let active = true;
+    Promise.all([getJson<{ items: WatchSignal[] }>('opportunities/candidates', new URLSearchParams({ limit: '200' })),
+      getJson<{ items: WatchSignal[] }>('opportunities/theses', new URLSearchParams({ limit: '200' }))])
+      .then(([candidates, theses]) => { if (active) setWatchSignals({ candidates: candidates.items ?? [], theses: theses.items ?? [] }); })
+      .catch(() => { if (active) setWatchSignals({ candidates: [], theses: [] }); });
+    return () => { active = false; };
+  }, [view, context]);
   useEffect(() => {
     const handle = (event: KeyboardEvent) => {
       if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k') { event.preventDefault(); setCommandOpen(true); }
@@ -346,7 +360,7 @@ export default function Workstation() {
     const last = chart?.bars.at(-1);
     const rangeChoices = ['1M', '3M', '6M', '1Y', '2Y', 'Max', 'Custom'];
     return <>{header(research ? 'Research desk' : 'Instrument workspace',
-      research ? 'A context-bound chart and local notes for the selected instrument. CORTEX AI arrives in Phase 4.' :
+      research ? 'A context-bound chart and local notes for the selected instrument.' :
         'Real stored OHLC, volume and Phase 2 indicator series. Zoom and inspect without recalculating values in the browser.',
       <div className="row">{instrumentSelector()}<button className="button" onClick={() => { setCortexFocus('instrument'); navigate('cortex'); }}>Ask CORTEX</button></div>)}
       {chartLoading ? <Loading label="Loading immutable bars and backend feature series…" /> : chartError ?
@@ -389,7 +403,8 @@ export default function Workstation() {
             onChange={(event) => { setNote(event.target.value); setSavedNote(false); }} />
           <div className="row between mt12"><span className="subtle">These notes stay in this browser profile and are not backed up with PostgreSQL.</span>
             <button className="button primary" onClick={saveNote}>{savedNote ? <Check size={14} /> : <BookOpenText size={14} />}{savedNote ? 'Saved' : 'Save note'}</button></div>
-        </Panel><Panel title="Watchlists" subtitle="Local only · canonical instrument IDs">
+        </Panel><Panel title="Watchlists" subtitle="Local only · canonical instrument IDs"
+          action={<button className="button ghost" onClick={() => navigate('opportunities')}>Open opportunities</button>}>
           <div className="row wrap mb14"><select className="select grow" aria-label="Active watchlist" value={currentWatchlist?.id ?? ''} onChange={(e) => setActiveWatchlist(e.target.value)}>
             {!currentWatchlist && <option value="">No watchlist</option>}{watchlists.map((item) => <option value={item.id} key={item.id}>{item.name}</option>)}</select>
             {currentWatchlist && <button className="button danger" onClick={() => { updateWatchlists(watchlists.filter((item) => item.id !== currentWatchlist.id)); setActiveWatchlist(''); }}>Delete</button>}</div>
@@ -397,10 +412,19 @@ export default function Workstation() {
             <button className="button" onClick={addWatchlist}>Create</button></div>
           {currentWatchlist && <><div className="row mb14"><input className="input grow" aria-label="Rename watchlist" value={currentWatchlist.name} onChange={(e) =>
             updateWatchlists(watchlists.map((item) => item.id === currentWatchlist.id ? { ...item, name: e.target.value } : item))} /></div>
-            <div className="data-list">{available.map((item) => <div className="data-row" key={item.instrument_id}>
-              <span className="symbol">{item.symbol}</span><button className="button ghost" onClick={() => toggleWatchMember(item.instrument_id!)}>
+            <div className="data-list">{available.map((item) => {
+              const watched = currentWatchlist.instrumentIds.includes(item.instrument_id!);
+              const recorded = watchSignals.candidates.find((entry) => entry.symbol === item.symbol &&
+                entry.outcome === 'candidate' && entry.source_manifest_id === context?.source_manifest_id &&
+                entry.as_of <= (context?.as_of ?? ''));
+              const thesisSignal = watchSignals.theses.find((entry) => entry.symbol === item.symbol &&
+                entry.source_manifest_id === context?.source_manifest_id && entry.as_of <= (context?.as_of ?? ''));
+              return <div className="data-row" key={item.instrument_id}>
+              <span className="row wrap"><span className="symbol">{item.symbol}</span>{watched && recorded && <span className="badge info" title="Recorded candidate at this manifest and cutoff">{category(recorded.detector_id)} · {category(recorded.status)}</span>}
+                {watched && thesisSignal && <span className="badge warn" title={`Last thesis change: ${dateTime(thesisSignal.updated_at)}`}>{category(thesisSignal.detector_id)} thesis · {category(thesisSignal.status)} · {dateTime(thesisSignal.updated_at)}</span>}</span>
+              <button className="button ghost" onClick={() => toggleWatchMember(item.instrument_id!)}>
                 <Star size={13} fill={currentWatchlist.instrumentIds.includes(item.instrument_id!) ? 'currentColor' : 'none'} />
-                {currentWatchlist.instrumentIds.includes(item.instrument_id!) ? 'Remove' : 'Add'}</button></div>)}</div></>}
+                {currentWatchlist.instrumentIds.includes(item.instrument_id!) ? 'Remove' : 'Add'}</button></div>; })}</div></>}
         </Panel></div>}
       </>}</>;
   }
@@ -559,7 +583,7 @@ export default function Workstation() {
             <div className="data-row"><span className="label">Price adjustment</span><span className="value">raw</span></div>
             <div className="data-row"><span className="label">Frontend FX conversion</span><span className="value">disabled</span></div>
             <div className="data-row"><span className="label">Order execution</span><span className="value">not available</span></div>
-            <div className="data-row"><span className="label">API scope</span><span className="value">Read endpoints plus local research-run creation</span></div>
+            <div className="data-row"><span className="label">API scope</span><span className="value">Read endpoints plus local research, candidate and thesis records</span></div>
           </div></Panel></div></div>}</>;
   }
 
@@ -579,7 +603,7 @@ export default function Workstation() {
       const Icon = item.icon; return <button key={item.id} onClick={() => { if (item.id === 'cortex') setCortexFocus(view === 'market-state' ? 'market' : 'instrument'); navigate(item.id); }} className={view === item.id ? 'active' : ''}>
         <Icon />{item.label}<span className="key">{item.key}</span></button>;
     })}</nav><div className="rail-spacer"/><div className="rail-bottom"><div><span className={`tiny-dot ${health === 'ready' ? 'good' : 'bad'}`}/><strong>{health === 'ready' ? 'LOCAL SYSTEM READY' : category(health).toUpperCase()}</strong></div>
-      <div>Research only · No execution</div><div>Phase 4 · v0.4.0</div></div></aside>
+      <div>Research only · No execution</div><div>Phase 5 · v0.5.0</div></div></aside>
     <main className="main"><header className="topbar"><button className="search-trigger" onClick={() => setCommandOpen(true)}><Search size={15} /> Search markets, features, pages <kbd>Ctrl K</kbd></button>
       <div className="top-grow" /><span className={`top-tag env-badge ${dataEnvironment === 'UNLABELED' ? 'warning' : ''}`}>{dataEnvironment.replaceAll('_', ' / ')}</span><span className="top-tag"><span className={`tiny-dot ${health === 'ready' ? 'good' : 'bad'}`} /> API {category(health)}</span>
       <span className="top-tag"><FileClock size={13} /> {selection.mode === 'latest' ? 'Latest head' : selection.mode === 'pinned' ? 'Pinned research' : 'Historical research'}</span>
@@ -608,7 +632,9 @@ export default function Workstation() {
         view === 'overview' ? overviewPage() : view === 'instruments' ? instrumentPage() :
         view === 'analytics' ? analyticsPage() : view === 'market-state' ? statePage() :
         view === 'compare' ? comparePage() : view === 'coverage' ? coveragePage() :
-        view === 'research' ? instrumentPage(true) : view === 'cortex' ?
+        view === 'research' ? instrumentPage(true) : view === 'opportunities' ?
+          <OpportunityPane key={`${context.source_manifest_id}.${context.as_of}`} context={context}
+            mode={selection.mode} watchlistIds={currentWatchlist?.instrumentIds ?? []} /> : view === 'cortex' ?
           <CortexPane key={`${context.source_manifest_id}.${context.as_of}.${cortexFocus}`} context={context}
             mode={selection.mode} symbol={cortexFocus === 'market' ? null : selectedMember?.symbol ?? null} /> : systemPage()}
       </div></main>

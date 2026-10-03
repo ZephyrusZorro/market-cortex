@@ -88,9 +88,22 @@ class CortexService:
 
     def _plan(self, request: ResearchRequest, context: ResearchContext) -> list[tuple[str, dict, ResearchContext]]:
         question = request.question.lower()
+        opportunity_question = any(term in question for term in
+            ("opportunit", "candidate", "no-edge", "no edge", "rejected", "scanner"))
         plan = [("dataset.context", {}, context)]
         if context.symbol:
             plan.append(("instrument.features", {"symbol": context.symbol}, context))
+        if request.candidate_id:
+            plan.append(("opportunity.candidate", {"candidate_id": request.candidate_id}, context))
+        if request.thesis_id:
+            from .opportunity_store import OpportunityStore
+            thesis = OpportunityStore(self.catalog.dsn).thesis(request.thesis_id)
+            if thesis is None:
+                raise LookupError("THESIS_NOT_FOUND")
+            plan.append(("opportunity.thesis", {"thesis_id": request.thesis_id,
+                                                "version": thesis.version}, context))
+        if not request.candidate_id and not request.thesis_id and opportunity_question:
+            plan.append(("opportunity.scan", {"symbol": context.symbol}, context))
         market_question = any(term in question for term in ("market state", "regime", "breadth", "pilot", "trend", "volatility", "evidence"))
         if market_question or not context.symbol or request.depth == "deep":
             plan.append(("market.state", {}, context))
@@ -105,11 +118,19 @@ class CortexService:
             plan.append(("dataset.manifest", {}, context))
         if context.symbol and any(term in question for term in ("previous", "last week", "prior research", "conclude")):
             plan.append(("research.prior", {"symbol": context.symbol}, context))
-        historical = request.older_manifest_id or ("one month ago" in question or "earlier manifest" in question)
-        if historical and context.symbol:
-            old_cutoff = context.as_of if request.older_manifest_id else context.as_of - timedelta(days=30)
+        parent_requested = any(term in question for term in
+            ("previous manifest", "prior manifest", "earlier manifest"))
+        parent_id = None
+        if parent_requested and request.older_manifest_id is None:
+            selected = build_context(self.catalog, as_of=context.as_of, manifest_id=context.manifest_id)
+            parent = selected["manifest"]["parent_manifest_id"]
+            parent_id = UUID(parent) if parent else None
+        older_manifest_id = request.older_manifest_id or parent_id
+        historical = older_manifest_id or "one month ago" in question
+        if historical and (context.symbol or opportunity_question):
+            old_cutoff = context.as_of if older_manifest_id else context.as_of - timedelta(days=30)
             old_data = build_context(self.catalog, as_of=old_cutoff,
-                                     manifest_id=request.older_manifest_id or context.manifest_id)
+                                     manifest_id=older_manifest_id or context.manifest_id)
             old_context = ResearchContext(mode="historical", manifest_id=UUID(old_data["source_manifest_id"]),
                 as_of=old_cutoff, evaluation_date=date.fromisoformat(old_data["evaluation_date"])
                     if old_data["evaluation_date"] else None,
@@ -122,9 +143,12 @@ class CortexService:
                 compare_symbol=None, environment=context.environment,
                 base_currency=context.base_currency)
             plan.append(("dataset.context", {}, old_context))
-            plan.append(("instrument.features", {"symbol": context.symbol}, old_context))
+            if context.symbol:
+                plan.append(("instrument.features", {"symbol": context.symbol}, old_context))
             if "state" in question or "regime" in question:
                 plan.append(("market.state", {}, old_context))
+            if opportunity_question and not request.candidate_id and not request.thesis_id:
+                plan.append(("opportunity.scan", {"symbol": context.symbol}, old_context))
         # Tool selection is code-controlled, bounded, and deduplicated; no model tool calls.
         unique = {}
         for tool_id, args, ctx in plan:
@@ -216,6 +240,18 @@ class CortexService:
                 f"Among measured pilot members, {top[0]} had the strongest 20-session return at {_percent(top[1])}.",
                 [row[2] for row in ranked], "support"))
         old = [item for item in all_evidence if item.manifest_id != context.manifest_id or item.as_of != context.as_of]
+        current_opportunities = {(item.symbol, item.label.split(" ", 2)[1]): item
+            for item in current if item.kind == "candidate_summary" and len(item.label.split(" ", 2)) == 3}
+        older_opportunities = {(item.symbol, item.label.split(" ", 2)[1]): item
+            for item in old if item.kind == "candidate_summary" and len(item.label.split(" ", 2)) == 3}
+        for key in sorted(current_opportunities.keys() & older_opportunities.keys()):
+            earlier, later = older_opportunities[key], current_opportunities[key]
+            earlier_outcome, later_outcome = earlier.label.rsplit(" ", 1)[-1], later.label.rsplit(" ", 1)[-1]
+            change = "changed" if (earlier_outcome, earlier.value) != (later_outcome, later.value) else "remained"
+            claims.append(_claim("CLASSIFICATION",
+                f"{key[0]} {key[1]} opportunity {change} from {earlier_outcome}/{earlier.value} "
+                f"under manifest {earlier.manifest_id} to {later_outcome}/{later.value} "
+                f"under manifest {later.manifest_id}.", [earlier, later], "neutral"))
         if symbol and old:
             old_close = pick("Latest stored close", symbol, old)
             current_close = pick("Latest stored close", symbol)
@@ -232,6 +268,26 @@ class CortexService:
             if item.kind == "prior_run" and item.value:
                 claims.append(_claim("OBSERVATION", f"A prior {item.symbol} research run concluded (historical context only): {item.value}",
                                      [item], "neutral"))
+            if item.kind == "candidate_summary":
+                claims.append(_claim("CLASSIFICATION",
+                    f"{item.label}: {item.value}." + (f" Reasons: {item.reason}." if item.reason else ""),
+                    [item], "counter" if "rejected" in item.label else "support"))
+            if item.kind == "candidate_status":
+                claims.append(_claim("CLASSIFICATION",
+                    f"Recorded candidate {item.source_id} for {item.symbol} is {item.value}." +
+                    (f" Reasons: {item.reason}." if item.reason else ""), [item], "neutral"))
+            if item.kind == "candidate_condition":
+                observed = _number(item.value, 4) if isinstance(item.value, (int, float)) else "unavailable"
+                claims.append(_claim("CALCULATION", f"{item.label}: observed {observed}; {item.reason}.",
+                    [item], "counter" if item.label.startswith(("invalidation", "rejection")) and
+                    item.reason == "met" else "neutral"))
+            if item.kind == "contradiction":
+                claims.append(_claim("INTERPRETATION", f"Recorded contradiction: {item.label}.", [item], "counter"))
+            if item.kind == "thesis_status":
+                claims.append(_claim("CLASSIFICATION", f"Recorded thesis {item.source_id} is {item.value}.",
+                    [item], "neutral"))
+            if item.kind == "thesis_transition":
+                claims.append(_claim("OBSERVATION", f"{item.label}: {item.value}.", [item], "neutral"))
         return claims
 
     def _challenge(self, context: ResearchContext, tools: list[ToolRun], claims: list[Claim]) -> list[Claim]:
@@ -296,6 +352,15 @@ class CortexService:
         question = request.question.lower()
         def priority(item: Claim) -> int:
             value = item.text.lower()
+            if request.candidate_id and "recorded candidate" in value:
+                return 0
+            if request.thesis_id and "recorded thesis" in value:
+                return 0
+            if "opportunit" in question and "candidate: " in value:
+                return 0
+            if "opportunit" in question and any(term in question for term in ("compare", "changed", "previous", "earlier")) and \
+                    (" opportunity changed " in value or " opportunity remained " in value):
+                return 0
             if "relative strength" in question and "strongest" in value:
                 return 0
             if (any(term in question for term in ("compare", "stronger", "versus")) and
@@ -312,7 +377,11 @@ class CortexService:
         title = (f"{context.symbol} research" if context.symbol else "Binance Pilot 5 research")
         header = (f"{title} | {context.mode} | manifest {context.manifest_id} | "
                   f"as of {context.as_of.isoformat()} | evidence strength: {strength}")
-        if any(term in question for term in ("contradict", "bearish", "counter-evidence")) and counter:
+        if request.candidate_id:
+            conclusion = next((item for item in support if "Recorded candidate" in item.text), None)
+        elif request.thesis_id:
+            conclusion = next((item for item in support if "Recorded thesis" in item.text), None)
+        elif any(term in question for term in ("contradict", "bearish", "counter-evidence", "no edge", "no-edge", "rejected")) and counter:
             conclusion = counter[0]
         elif any(term in question for term in ("missing", "insufficient", "unavailable")) and limits:
             conclusion = limits[0]

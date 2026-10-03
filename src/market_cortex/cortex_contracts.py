@@ -21,6 +21,8 @@ class ResearchRequest(BaseModel):
     symbol: str | None = None
     compare_symbol: str | None = None
     older_manifest_id: UUID | None = None
+    candidate_id: UUID | None = None
+    thesis_id: UUID | None = None
     depth: Literal["quick", "deep"] = "deep"
 
     @field_validator("as_of")

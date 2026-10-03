@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-10-03 — Phase 5 Opportunity Engine and structured theses
+
+Added eight deterministic Binance Pilot 5 daily-bar detectors, explicit unsupported detector records, manifest/cutoff-pinned candidate evidence, a deduplicated candidate and rejection ledger, append-only thesis versions and controlled lifecycle transitions. Added CORTEX opportunity tools and candidate review, local CLI/API routes, and a workstation scanner, detail and thesis board with watchlist badges. Synthetic detector and lifecycle tests, pilot PostgreSQL replay tests, frontend tests and visual UI validation cover the implementation. See the [Phase 5 guide](opportunity/PHASE_5_OPPORTUNITY_AND_THESIS.md) and [exit matrix](planning/PHASE_5_EXIT_MATRIX_2026-10-03.md). No trade execution or win probabilities were added.
+
 ## 2026-10-03 — Phase 4 CORTEX v1
 
 Added six allowlisted research tools over Phase 1/2 data, a typed single-orchestrator CORTEX flow, deterministic analyst/skeptic/limitations passes, internal evidence citations, optional loopback OpenAI-compatible claim selection, privacy-gated model use, PostgreSQL research-run manifests, pinned evidence replay, local CLI/API routes, and an integrated workstation pane with an active environment badge. Real Binance pilot research was validated; no local model runtime was configured, so the deterministic fallback was used. See [CORTEX v1](cortex/PHASE_4_CORTEX_V1.md) and the [Phase 4 exit matrix](planning/PHASE_4_EXIT_MATRIX_2026-10-03.md). Live Upstox/Alpaca remain deferred and no order path was added.

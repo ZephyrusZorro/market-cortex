@@ -305,6 +305,8 @@ def create_app(settings: Settings | None = None, catalog: PostgresCatalog | None
         if isinstance(store, PostgresCatalog):
             from .cortex_api import router_for as cortex_router
             app.include_router(cortex_router(store, settings))
+            from .opportunity_api import router_for as opportunity_router
+            app.include_router(opportunity_router(store, settings))
     return app
 
 

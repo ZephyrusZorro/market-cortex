@@ -1,6 +1,6 @@
 # MARKET CORTEX
 
-Private, local-first market research software. **Phases 1–4 are implemented for the five-pair Binance pilot.** The [Phase 0 blueprint](docs/architecture/PHASE_0_BASELINE_2026-09-26.md), [Phase 1 evidence](docs/planning/PHASE_1_EXIT_MATRIX_2026-10-03.md), [Phase 2 rules](docs/analytics/PHASE_2_ANALYTICS.md), [workstation guide](docs/workstation/PHASE_3_WORKSTATION.md), and [CORTEX v1 guide](docs/cortex/PHASE_4_CORTEX_V1.md) describe the validated scope.
+Private, local-first market research software. **Phases 1–5 are implemented for the five-pair Binance pilot.** The [Phase 0 blueprint](docs/architecture/PHASE_0_BASELINE_2026-09-26.md), [Phase 1 evidence](docs/planning/PHASE_1_EXIT_MATRIX_2026-10-03.md), [Phase 2 rules](docs/analytics/PHASE_2_ANALYTICS.md), [workstation guide](docs/workstation/PHASE_3_WORKSTATION.md), [CORTEX v1 guide](docs/cortex/PHASE_4_CORTEX_V1.md), and [opportunity guide](docs/opportunity/PHASE_5_OPPORTUNITY_AND_THESIS.md) describe the validated scope.
 
 ## What runs now
 
@@ -11,7 +11,8 @@ Private, local-first market research software. **Phases 1–4 are implemented fo
 - Synthetic acceptance suite plus isolated PostgreSQL 17 integration tests. Five public Binance pairs completed bootstrap, ingestion, as-of API reads, manifest checks, encrypted backup and separate restore. Upstox and Alpaca live checks are `DEFERRED_NOT_CONFIGURED` until owner credentials and verified equity mappings/calendars exist.
 - Versioned feature registry with deterministic returns, trend, momentum, volatility, volume, drawdown and cross-series analytics. A five-pair Binance state snapshot reports separate dimensions, breadth, quality, freshness, evidence and a transparent regime. Calculations read pinned Phase 1 manifests; no derived value changes raw history.
 - A local Next.js research workstation with manifest/as-of selection, candlesticks and backend indicators, Feature Explorer, explainable state, correlation, breadth, coverage, lineage, local watchlists and notes. Run it with the Python API; see the [Phase 3 guide](docs/workstation/PHASE_3_WORKSTATION.md).
-- CORTEX v1 research uses six allowlisted deterministic tools, manifest-pinned evidence, typed claims, a skeptic/limitations pass, inspectable citations, saved research runs and evidence replay. A local model can curate existing claims; a deterministic fallback works without one. See the [Phase 4 guide](docs/cortex/PHASE_4_CORTEX_V1.md).
+- CORTEX v1 research uses allowlisted deterministic tools, manifest-pinned evidence, typed claims, a skeptic/limitations pass, inspectable citations, saved research runs and evidence replay. A local model can curate existing claims; a deterministic fallback works without one. See the [Phase 4 guide](docs/cortex/PHASE_4_CORTEX_V1.md).
+- Phase 5 adds eight versioned daily-bar opportunity detectors, recorded candidate and rejection events, structured versioned theses, deterministic monitoring, CORTEX candidate review and an integrated workstation scanner/board. See the [Phase 5 guide](docs/opportunity/PHASE_5_OPPORTUNITY_AND_THESIS.md).
 
 There are **no order endpoints or automated trade execution paths**. Advanced feeds, strategies, and ML are subsequent work. Live India/US coverage remains deferred.
 
@@ -35,7 +36,7 @@ Install local PostgreSQL and create a **dedicated empty database** with a dedica
 .\.venv\Scripts\python.exe scripts\market_cortex.py serve
 ```
 
-The server binds to `127.0.0.1:8765`. `GET /api/v1/health` is available even before PostgreSQL is configured and reports `not_configured`. For CORTEX run persistence, apply migration `0003_cortex_research.sql` through `migrate`. Provider probes are separate: `python scripts\probe_sources.py --run --output data\probes\phase_0_6_local.json`.
+The server binds to `127.0.0.1:8765`. `GET /api/v1/health` is available even before PostgreSQL is configured and reports `not_configured`. The `migrate` command also applies `0003_cortex_research.sql` and `0004_opportunity_theses.sql` for local research persistence. Provider probes are separate: `python scripts\probe_sources.py --run --output data\probes\phase_0_6_local.json`.
 
 In a second PowerShell window, start the workstation. Node.js and npm must be installed; `npm ci` is needed only on first setup or after dependency changes.
 
@@ -45,7 +46,7 @@ npm ci
 npm run dev
 ```
 
-Open `http://127.0.0.1:3000`. Both processes bind to loopback. The frontend server proxies an allowlist of read routes and the local CORTEX research-run POST to the standard Python port. For a nonstandard backend port, set `MARKET_CORTEX_API_URL` in the frontend server process to a loopback URL before starting it. Set `MARKET_CORTEX_ENVIRONMENT=PILOT_TEST` or `OWNER_MAIN` in the Python process to label the connected catalog visibly. The PostgreSQL DSN stays only in the Python process.
+Open `http://127.0.0.1:3000`. Both processes bind to loopback. The frontend server proxies an allowlist of read routes and bounded local CORTEX/opportunity research POSTs to the standard Python port. For a nonstandard backend port, set `MARKET_CORTEX_API_URL` in the frontend server process to a loopback URL before starting it. Set `MARKET_CORTEX_ENVIRONMENT=PILOT_TEST` or `OWNER_MAIN` in the Python process to label the connected catalog visibly. The PostgreSQL DSN stays only in the Python process.
 
 ## Layout
 
