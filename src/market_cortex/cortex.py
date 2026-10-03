@@ -65,6 +65,8 @@ class CortexService:
                                 manifest_id=request.manifest_id)
         present = {item["symbol"]: UUID(item["instrument_id"]) for item in context["members"]
                    if item["instrument_id"]}
+        last_sessions = {item["symbol"]: date.fromisoformat(item["last_session"])
+                         for item in context["members"] if item["last_session"]}
         tokens = re.findall(r"\b[A-Z]{2,8}(?:USDT)?\b", request.question.upper())
         mentioned = [item for item in PILOT_SYMBOLS if item in tokens or item.removesuffix("USDT") in tokens]
         unsupported = [item for item in tokens if item.endswith("USDT") and item not in PILOT_SYMBOLS]
@@ -80,7 +82,8 @@ class CortexService:
                 if context["evaluation_date"] else None,
             history_start=date.fromisoformat(context["history_start"])
                 if context["history_start"] else None,
-            members=present, symbol=symbol, compare_symbol=second,
+            members=present, member_last_sessions=last_sessions,
+            symbol=symbol, compare_symbol=second,
             environment=self.settings.environment, base_currency=self.settings.base_currency)
 
     def _plan(self, request: ResearchRequest, context: ResearchContext) -> list[tuple[str, dict, ResearchContext]]:
@@ -114,6 +117,8 @@ class CortexService:
                     if old_data["history_start"] else None,
                 members={item["symbol"]: UUID(item["instrument_id"]) for item in old_data["members"]
                          if item["instrument_id"]}, symbol=context.symbol,
+                member_last_sessions={item["symbol"]: date.fromisoformat(item["last_session"])
+                                      for item in old_data["members"] if item["last_session"]},
                 compare_symbol=None, environment=context.environment,
                 base_currency=context.base_currency)
             plan.append(("dataset.context", {}, old_context))
@@ -377,7 +382,12 @@ class CortexService:
             failure_state=None if has_observation or context.symbol is None and
                 any(item.kind == "regime" for run in tools for item in run.evidence)
                 else "INSUFFICIENT_EVIDENCE",
-            evidence_hash=evidence_hash, model_provider=model_result.provider,
+            evidence_hash=evidence_hash,
+            model_configuration=({"selection": "claim_ids_only", "temperature": 0,
+                                  "timeout_seconds": getattr(self.gateway, "timeout", 15.0)}
+                                 if model_result.provider == "local_openai_compatible" else
+                                 {"selection": "deterministic_fallback"}),
+            model_provider=model_result.provider,
             model_id=model_result.model, model_status=model_result.status,
             model_latency_ms=model_result.latency_ms,
             deterministic_latency_ms=round(sum(item.elapsed_ms for item in tools), 2),
@@ -408,6 +418,8 @@ class CortexService:
                         if raw["history_start"] else None,
                     members={item["symbol"]: UUID(item["instrument_id"]) for item in raw["members"]
                              if item["instrument_id"]}, symbol=stored.context.symbol,
+                    member_last_sessions={item["symbol"]: date.fromisoformat(item["last_session"])
+                                          for item in raw["members"] if item["last_session"]},
                     compare_symbol=None, environment=stored.context.environment,
                     base_currency=stored.context.base_currency)
             arguments = {key: value for key, value in prior.inputs.items()

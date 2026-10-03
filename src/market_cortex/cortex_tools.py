@@ -141,17 +141,19 @@ class ToolRegistry:
             value=self.context.environment)]
 
     def _load(self, symbol: str):
-        if symbol not in self.context.members or self.context.evaluation_date is None or self.context.history_start is None:
+        end_date = self.context.evaluation_date or self.context.member_last_sessions.get(symbol)
+        if symbol not in self.context.members or end_date is None or self.context.history_start is None:
             return None
         if symbol not in self._loaded:
             self._loaded[symbol] = self.engine.load(instrument_id=self.context.members[symbol],
-                start_date=self.context.history_start, end_date=self.context.evaluation_date,
+                start_date=self.context.history_start, end_date=end_date,
                 as_of=self.context.as_of, manifest_id=self.context.manifest_id,
                 provider_id="binance")
         return self._loaded[symbol]
 
     def _features(self, args: SymbolArguments) -> list[Evidence]:
         tool_id = "instrument.features"
+        end_date = self.context.evaluation_date or self.context.member_last_sessions.get(args.symbol)
         loaded = self._load(args.symbol)
         if loaded is None:
             return [self._evidence(tool_id, "missing", "No visible observations", symbol=args.symbol,
@@ -172,14 +174,14 @@ class ToolRegistry:
         for name, params in specs:
             series = self.engine.calculate(FeatureRequest(
                 instrument_id=self.context.members[args.symbol], feature=name,
-                start_date=self.context.history_start, end_date=self.context.evaluation_date,
+                start_date=self.context.history_start, end_date=end_date,
                 as_of=self.context.as_of, manifest_id=self.context.manifest_id,
                 provider_id="binance", parameters=params), loaded)
             point = series.points[-1] if series.points else None
             label = f"{name}({params['period']})" if "period" in params else name
             result.append(self._evidence(tool_id, "feature", label, symbol=args.symbol,
                 value=point.value if point else None, unit=series.definition.unit,
-                session_date=point.session_date if point else self.context.evaluation_date,
+                session_date=point.session_date if point else end_date,
                 source_id=series.feature_id, version=series.definition.version,
                 parameters=series.resolved_parameters,
                 observation_id=point.observation_id if point else None,

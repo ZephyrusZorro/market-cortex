@@ -55,6 +55,7 @@ class ResearchContext(BaseModel):
     evaluation_date: date | None
     history_start: date | None
     members: dict[str, UUID]
+    member_last_sessions: dict[str, date] = Field(default_factory=dict)
     symbol: str | None
     compare_symbol: str | None
     environment: str
@@ -124,6 +125,8 @@ class ResearchRun(BaseModel):
     failure_state: str | None = None
     evidence_hash: str
     orchestration_version: str = "cortex_orchestrator_v1"
+    model_prompt_version: str = "cortex_claim_selection_v1"
+    model_configuration: dict[str, str | int | float | bool] = Field(default_factory=dict)
     model_provider: str = "deterministic"
     model_id: str | None = None
     model_status: str = "no_model_configured"

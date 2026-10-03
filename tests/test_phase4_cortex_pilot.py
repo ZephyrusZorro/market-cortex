@@ -37,6 +37,8 @@ def test_real_pilot_research_persistence_grounding_and_replay():
     btc = service.research(ResearchRequest(question="Analyze BTCUSDT.", symbol="BTCUSDT"))
     assert btc.failure_state is None
     assert btc.model_provider == "deterministic"
+    assert btc.model_prompt_version == "cortex_claim_selection_v1"
+    assert btc.model_configuration == {"selection": "deterministic_fallback"}
     assert btc.context.environment == "PILOT_TEST"
     assert any(item.kind == "observation" and item.symbol == "BTCUSDT"
                for tool in btc.tools for item in tool.evidence)
@@ -67,6 +69,10 @@ def test_real_pilot_research_persistence_grounding_and_replay():
     earlier = service.research(ResearchRequest(question="What changed in BTC compared with an earlier manifest?",
         symbol="BTCUSDT", older_manifest_id=old_manifest))
     assert any(tool.inputs["manifest_id"] == str(old_manifest) for tool in earlier.tools)
+    assert any(item.kind == "observation" and item.manifest_id == old_manifest
+               for tool in earlier.tools for item in tool.evidence)
+    assert any("Compared with the older research context" in claim.text for claim in earlier.claims)
+    assert "Compared with the older research context" in earlier.answer.split("Conclusion\n", 1)[1].splitlines()[0]
     assert service.replay(earlier.run_id)["evidence_reproducible"] is True
 
     historical = service.research(ResearchRequest(question="Analyze BTC as of June 1, 2025.", symbol="BTCUSDT"))
