@@ -6,12 +6,13 @@ import { Activity, ArrowDownRight, ArrowUpRight, BarChart3, BookOpenText, Check,
   LayoutDashboard, ListFilter, RefreshCw, Search, Settings2, ShieldCheck,
   Star, Table2, X } from 'lucide-react';
 import { PriceChart, SeriesChart } from './charts';
+import CortexPane from './CortexPane';
 import { ApiError, appendParams, category, contextParams, getJson, number, percent, pinnedParams, shortId,
   type ChartFeature, type Comparison, type Context, type Dimension, type FeatureDefinition, type FeatureSeries,
   type InstrumentView, type ManifestDetail, type MarketState, type Mode, type Overview, type OverviewItem,
   type ResearchSelection } from '@/lib/api';
 
-type View = 'overview' | 'instruments' | 'analytics' | 'market-state' | 'compare' | 'coverage' | 'research' | 'system';
+type View = 'overview' | 'instruments' | 'analytics' | 'market-state' | 'compare' | 'coverage' | 'research' | 'system' | 'cortex';
 const NAV: { id: View; label: string; icon: typeof LayoutDashboard; key: string }[] = [
   { id: 'overview', label: 'Overview', icon: LayoutDashboard, key: '1' },
   { id: 'instruments', label: 'Instruments', icon: BarChart3, key: '2' },
@@ -20,7 +21,8 @@ const NAV: { id: View; label: string; icon: typeof LayoutDashboard; key: string 
   { id: 'compare', label: 'Compare & Breadth', icon: Table2, key: '5' },
   { id: 'coverage', label: 'Data & Coverage', icon: Database, key: '6' },
   { id: 'research', label: 'Research Desk', icon: BookOpenText, key: '7' },
-  { id: 'system', label: 'System & Lineage', icon: Settings2, key: '8' }
+  { id: 'system', label: 'System & Lineage', icon: Settings2, key: '8' },
+  { id: 'cortex', label: 'CORTEX Research', icon: HeartPulse, key: '9' }
 ];
 type Watchlist = { id: string; name: string; instrumentIds: string[] };
 const WATCH_KEY = 'market-cortex.watchlists.v1';
@@ -98,6 +100,8 @@ export default function Workstation() {
   const [context, setContext] = useState<Context | null>(null);
   const [overview, setOverview] = useState<Overview | null>(null);
   const [health, setHealth] = useState<string>('checking');
+  const [dataEnvironment, setDataEnvironment] = useState('UNLABELED');
+  const [cortexFocus, setCortexFocus] = useState<'instrument' | 'market'>('instrument');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [refresh, setRefresh] = useState(0);
@@ -153,7 +157,9 @@ export default function Workstation() {
   useEffect(() => {
     let cancelled = false;
     setLoading(true); setError(null); setOverview(null); setContext(null);
-    getJson<{ status: string }>('health').then((result) => { if (!cancelled) setHealth(result.status); })
+    getJson<{ status: string; settings?: { environment?: string } }>('health').then((result) => {
+      if (!cancelled) { setHealth(result.status); setDataEnvironment(result.settings?.environment ?? 'UNLABELED'); }
+    })
       .catch(() => { if (!cancelled) setHealth('BACKEND_UNAVAILABLE'); });
     getJson<Context>('workstation/context', contextParams(selection)).then(async (ctx) => {
       if (cancelled) return;
@@ -342,7 +348,7 @@ export default function Workstation() {
     return <>{header(research ? 'Research desk' : 'Instrument workspace',
       research ? 'A context-bound chart and local notes for the selected instrument. CORTEX AI arrives in Phase 4.' :
         'Real stored OHLC, volume and Phase 2 indicator series. Zoom and inspect without recalculating values in the browser.',
-      instrumentSelector())}
+      <div className="row">{instrumentSelector()}<button className="button" onClick={() => { setCortexFocus('instrument'); navigate('cortex'); }}>Ask CORTEX</button></div>)}
       {chartLoading ? <Loading label="Loading immutable bars and backend feature series…" /> : chartError ?
         <ErrorPanel error={chartError} retry={reload} /> : !chart || !chart.bars.length ?
         <Empty title="No visible bars" body="This manifest and cutoff contain no chartable observations for the selected instrument." /> : <>
@@ -439,7 +445,8 @@ export default function Workstation() {
 
   function statePage() {
     return <>{header('Market State', 'Every dimension comes from explicit Phase 2 features, comparisons or breadth rules.',
-      <div className="head-meta">SNAPSHOT ID<strong title={state?.snapshot_id}>{shortId(state?.snapshot_id)}</strong></div>)}
+      <div className="row"><div className="head-meta">SNAPSHOT ID<strong title={state?.snapshot_id}>{shortId(state?.snapshot_id)}</strong></div>
+        <button className="button" onClick={() => { setCortexFocus('market'); navigate('cortex'); }}>Ask CORTEX</button></div>)}
       {!state ? <Empty title="State unavailable" body="The selected research context does not have a computable state snapshot." /> : <>
         <div className="grid four mb14"><Metric label="Rule regime" value={category(state.regime.category)} foot={`Version ${state.regime.rule_version}`} />
           <Metric label="Breadth universe" value={state.breadth ? `${state.breadth.observed_members} / ${state.breadth.total_members}` : '—'} foot="Binance Pilot 5 only" />
@@ -552,7 +559,7 @@ export default function Workstation() {
             <div className="data-row"><span className="label">Price adjustment</span><span className="value">raw</span></div>
             <div className="data-row"><span className="label">Frontend FX conversion</span><span className="value">disabled</span></div>
             <div className="data-row"><span className="label">Order execution</span><span className="value">not available</span></div>
-            <div className="data-row"><span className="label">API method</span><span className="value">GET only</span></div>
+            <div className="data-row"><span className="label">API scope</span><span className="value">Read endpoints plus local research-run creation</span></div>
           </div></Panel></div></div>}</>;
   }
 
@@ -569,12 +576,12 @@ export default function Workstation() {
 
   return <div className="app"><aside className="rail"><div className="brand"><span className="brand-mark">MC</span><div><strong>MARKET CORTEX</strong><small>RESEARCH WORKSTATION</small></div></div>
     <div className="rail-label">Workspace</div><nav className="nav" aria-label="Main navigation">{NAV.map((item) => {
-      const Icon = item.icon; return <button key={item.id} onClick={() => navigate(item.id)} className={view === item.id ? 'active' : ''}>
+      const Icon = item.icon; return <button key={item.id} onClick={() => { if (item.id === 'cortex') setCortexFocus(view === 'market-state' ? 'market' : 'instrument'); navigate(item.id); }} className={view === item.id ? 'active' : ''}>
         <Icon />{item.label}<span className="key">{item.key}</span></button>;
     })}</nav><div className="rail-spacer"/><div className="rail-bottom"><div><span className={`tiny-dot ${health === 'ready' ? 'good' : 'bad'}`}/><strong>{health === 'ready' ? 'LOCAL SYSTEM READY' : category(health).toUpperCase()}</strong></div>
-      <div>Research only · No execution</div><div>Phase 3 · v0.3.0</div></div></aside>
+      <div>Research only · No execution</div><div>Phase 4 · v0.4.0</div></div></aside>
     <main className="main"><header className="topbar"><button className="search-trigger" onClick={() => setCommandOpen(true)}><Search size={15} /> Search markets, features, pages <kbd>Ctrl K</kbd></button>
-      <div className="top-grow" /><span className="top-tag"><span className={`tiny-dot ${health === 'ready' ? 'good' : 'bad'}`} /> API {category(health)}</span>
+      <div className="top-grow" /><span className={`top-tag env-badge ${dataEnvironment === 'UNLABELED' ? 'warning' : ''}`}>{dataEnvironment.replaceAll('_', ' / ')}</span><span className="top-tag"><span className={`tiny-dot ${health === 'ready' ? 'good' : 'bad'}`} /> API {category(health)}</span>
       <span className="top-tag"><FileClock size={13} /> {selection.mode === 'latest' ? 'Latest head' : selection.mode === 'pinned' ? 'Pinned research' : 'Historical research'}</span>
       <button className="button icon ghost" title="Refresh research context" aria-label="Refresh research context" onClick={reload}><RefreshCw size={15} /></button></header>
       <div className="content"><div className={`context-strip ${selection.mode === 'latest' ? '' : 'historical'}`}>
@@ -601,7 +608,9 @@ export default function Workstation() {
         view === 'overview' ? overviewPage() : view === 'instruments' ? instrumentPage() :
         view === 'analytics' ? analyticsPage() : view === 'market-state' ? statePage() :
         view === 'compare' ? comparePage() : view === 'coverage' ? coveragePage() :
-        view === 'research' ? instrumentPage(true) : systemPage()}
+        view === 'research' ? instrumentPage(true) : view === 'cortex' ?
+          <CortexPane key={`${context.source_manifest_id}.${context.as_of}.${cortexFocus}`} context={context}
+            mode={selection.mode} symbol={cortexFocus === 'market' ? null : selectedMember?.symbol ?? null} /> : systemPage()}
       </div></main>
     {commandOpen && <div className="modal-backdrop" onClick={() => setCommandOpen(false)}><div className="modal" role="dialog" aria-label="Command search" onClick={(e) => e.stopPropagation()}>
       <div className="modal-head"><Command size={17} color="var(--accent)" /><input aria-label="Command search input" autoFocus placeholder="Find an instrument, feature or workspace…" value={commandQuery} onChange={(e) => setCommandQuery(e.target.value)} />

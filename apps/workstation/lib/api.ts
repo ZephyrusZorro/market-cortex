@@ -91,6 +91,20 @@ export async function getJson<T>(path: string, params?: URLSearchParams): Promis
   return payload as T;
 }
 
+export async function postJson<T>(path: string, body: unknown): Promise<T> {
+  let response: Response;
+  try { response = await fetch(`/api/v1/${path}`, { method: 'POST', cache: 'no-store',
+    headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }); }
+  catch { throw new ApiError('BACKEND_UNAVAILABLE', 503); }
+  let payload: unknown;
+  try { payload = await response.json(); } catch { throw new ApiError('INVALID_BACKEND_RESPONSE', response.status); }
+  if (!response.ok) {
+    const result = payload as { code?: string; detail?: { code?: string } };
+    throw new ApiError(result.detail?.code ?? result.code ?? 'REQUEST_FAILED', response.status);
+  }
+  return payload as T;
+}
+
 export function shortId(value: string | null | undefined): string { return value ? `${value.slice(0, 8)}…${value.slice(-4)}` : '—'; }
 export function number(value: number | null | undefined, digits = 2): string {
   return value == null || !Number.isFinite(value) ? '—' : new Intl.NumberFormat('en-IN', { maximumFractionDigits: digits }).format(value);

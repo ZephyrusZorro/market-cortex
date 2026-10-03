@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-10-03 — Phase 4 CORTEX v1
+
+Added six allowlisted research tools over Phase 1/2 data, a typed single-orchestrator CORTEX flow, deterministic analyst/skeptic/limitations passes, internal evidence citations, optional loopback OpenAI-compatible claim selection, privacy-gated model use, PostgreSQL research-run manifests, pinned evidence replay, local CLI/API routes, and an integrated workstation pane with an active environment badge. Real Binance pilot research was validated; no local model runtime was configured, so the deterministic fallback was used. See [CORTEX v1](cortex/PHASE_4_CORTEX_V1.md) and the [Phase 4 exit matrix](planning/PHASE_4_EXIT_MATRIX_2026-10-03.md). Live Upstox/Alpaca remain deferred and no order path was added.
+
 ## 2026-10-03 — Phase 3 research workstation
 
 Added a loopback-only Next.js research workstation and five read-only FastAPI workstation read models. The interface exposes real Binance pilot bars, Phase 2 features and MarketStateSnapshot, manifest/as-of context, correlation and breadth, coverage, lineage, local watchlists and notes. It does not calculate canonical indicators in the browser or expose execution controls. See the [workstation guide](workstation/PHASE_3_WORKSTATION.md) and [Phase 3 exit matrix](planning/PHASE_3_EXIT_MATRIX_2026-10-03.md).

@@ -8,6 +8,7 @@ from pathlib import Path
 from zoneinfo import ZoneInfo
 
 import yaml
+from psycopg.conninfo import conninfo_to_dict
 
 
 @dataclass(frozen=True)
@@ -18,6 +19,7 @@ class Settings:
     base_currency: str
     cloud_model_allowed: bool
     owner_configured: bool
+    environment: str = "UNLABELED"
 
     @classmethod
     def load(cls, root: Path | None = None) -> "Settings":
@@ -36,17 +38,24 @@ class Settings:
             raise ValueError("ai_privacy must be a mapping")
         raw_data_root = os.environ.get("MARKET_CORTEX_DATA_ROOT")
         data_root = Path(raw_data_root).expanduser().resolve() if raw_data_root else (project / "data").resolve()
+        database_url = os.environ.get("MARKET_CORTEX_DATABASE_URL")
+        inferred = "PILOT_TEST" if database_url and conninfo_to_dict(database_url).get("dbname", "").lower().endswith("_test") else "UNLABELED"
+        environment = os.environ.get("MARKET_CORTEX_ENVIRONMENT", inferred).upper()
+        if environment not in {"PILOT_TEST", "OWNER_MAIN", "UNLABELED"}:
+            raise ValueError("MARKET_CORTEX_ENVIRONMENT must be PILOT_TEST or OWNER_MAIN")
         return cls(
-            database_url=os.environ.get("MARKET_CORTEX_DATABASE_URL"),
+            database_url=database_url,
             data_root=data_root,
             owner_timezone=timezone,
             base_currency=currency.upper(),
             cloud_model_allowed=privacy.get("cloud_model_allowed") is True,
             owner_configured=owner_path.exists(),
+            environment=environment,
         )
 
     def safe_summary(self) -> dict[str, object]:
         """Whitelist only; never serialize the dataclass because it contains a DSN."""
         return {"database_configured": bool(self.database_url), "owner_configured": self.owner_configured,
                 "timezone": self.owner_timezone, "base_currency": self.base_currency,
-                "cloud_model_allowed": self.cloud_model_allowed}
+                "cloud_model_allowed": self.cloud_model_allowed,
+                "environment": self.environment}

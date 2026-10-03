@@ -54,6 +54,21 @@ def main(argv: list[str] | None = None) -> int:
     state.add_argument("--evaluation-date", type=date.fromisoformat, required=True)
     state.add_argument("--as-of", type=datetime.fromisoformat)
     state.add_argument("--manifest-id", type=UUID)
+    research = sub.add_parser("research", help="Create an evidence-grounded local CORTEX research run")
+    research.add_argument("question")
+    research.add_argument("--mode", choices=["latest", "pinned", "historical"], default="latest")
+    research.add_argument("--manifest-id", type=UUID)
+    research.add_argument("--as-of", type=datetime.fromisoformat)
+    research.add_argument("--symbol")
+    research.add_argument("--compare-symbol")
+    research.add_argument("--older-manifest-id", type=UUID)
+    research.add_argument("--depth", choices=["quick", "deep"], default="deep")
+    runs = sub.add_parser("research-runs", help="List recent local CORTEX research runs")
+    runs.add_argument("--symbol")
+    inspect_run = sub.add_parser("inspect-research-run", help="Inspect a saved research manifest")
+    inspect_run.add_argument("run_id", type=UUID)
+    replay_run = sub.add_parser("replay-research-run", help="Verify saved deterministic evidence")
+    replay_run.add_argument("run_id", type=UUID)
     args = parser.parse_args(argv)
     try:
         settings = Settings.load()
@@ -68,12 +83,36 @@ def main(argv: list[str] | None = None) -> int:
             print(json.dumps({"applied_migrations": migrate(settings.database_url, root)}))
             return 0
         if args.command in ("bootstrap-crypto", "sync-daily", "inspect-manifest", "scan-storage",
-                            "compute-feature", "compute-market-state"):
+                            "compute-feature", "compute-market-state", "research", "research-runs",
+                            "inspect-research-run", "replay-research-run"):
             if not settings.database_url:
                 print("DATABASE_NOT_CONFIGURED", file=sys.stderr)
                 return 2
             from .storage import ArtifactStore, PostgresCatalog
             catalog = PostgresCatalog(settings.database_url, ArtifactStore(settings.data_root))
+            if args.command in ("research", "research-runs", "inspect-research-run", "replay-research-run"):
+                from .cortex import CortexService
+                from .cortex_contracts import ResearchRequest
+                service = CortexService(catalog, settings)
+                if args.command == "research":
+                    request = ResearchRequest(question=args.question, mode=args.mode,
+                        manifest_id=args.manifest_id, as_of=args.as_of, symbol=args.symbol,
+                        compare_symbol=args.compare_symbol, older_manifest_id=args.older_manifest_id,
+                        depth=args.depth)
+                    result = service.research(request)
+                    print(json.dumps({"run_id": str(result.run_id), "answer": result.answer,
+                        "evidence_strength": result.evidence_strength,
+                        "model_status": result.model_status}))
+                elif args.command == "research-runs":
+                    print(json.dumps({"items": service.store.recent(symbol=args.symbol)}))
+                elif args.command == "inspect-research-run":
+                    result = service.store.get(args.run_id)
+                    print(result.model_dump_json() if result else json.dumps({"code": "RESEARCH_RUN_NOT_FOUND"}))
+                    if result is None:
+                        return 2
+                else:
+                    print(json.dumps(service.replay(args.run_id)))
+                return 0
             if args.command == "scan-storage":
                 print(json.dumps(catalog.scan_storage()))
                 return 0
