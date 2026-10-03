@@ -15,3 +15,15 @@ Feature routes require `name`, `instrument_id`, inclusive session dates `from`/`
 Comparison routes take target/reference instrument IDs, an inclusive date window, `kind=relative_strength|correlation`, `window`, provider selectors, and `alignment_policy=same_session|completed_at_utc_cutoff`. The latter exposes maximum reference age and decision cutoff lag in hours. Mixed currencies require a sourced FX series through the internal alignment contract; the HTTP comparison route currently fails closed for mixed currencies because no verified FX feed is configured.
 
 Market-state routes take `history_from`, `evaluation_date`, optional `as_of`, and `manifest_id`. They currently resolve the five named Binance pilot mappings known at `as_of`. The result includes ten evidence-backed dimensions plus an uncertainty dimension, each with category, metrics, evidence references, coverage, freshness and unknown reason, along with the scoped breadth snapshot and regime rules. See [calculation semantics](analytics/PHASE_2_ANALYTICS.md).
+
+## Phase 3 workstation read models
+
+All routes below are `GET`, use the existing loopback guard, and return data from the PostgreSQL catalog plus the Phase 2 calculation engine. No browser-side indicator calculation is authoritative.
+
+- `GET /api/v1/workstation/context?manifest_id=...&as_of=...` resolves the exact published manifest, availability cutoff, five pilot mappings and coverage, provider status, and display policy. Omit both selectors for the current head; include `manifest_id` to pin; add an offset-aware `as_of` for a historical cutoff.
+- `GET /api/v1/workstation/overview?manifest_id=...&as_of=...` composes the current five-member table and real `MarketStateSnapshot`, with explicit incomplete-universe state.
+- `GET /api/v1/workstation/instrument/{id}?from=YYYY-MM-DD&to=YYYY-MM-DD&manifest_id=...&as_of=...` returns stored raw OHLCV, observation lineage, missing sessions and backend-derived indicator series. Only a pilot instrument ID is accepted.
+- `GET /api/v1/workstation/comparison?instrument_ids=id1&instrument_ids=id2&from=...&to=...&window=60&manifest_id=...&as_of=...` returns backend cumulative returns and same-session correlation cells with sample count, coverage, missingness, stability and calculation version. Select two to five distinct pilot IDs.
+- `GET /api/v1/workstation/manifest/{id}` returns manifest ancestry metadata, immutable file hashes and row counts, source-batch counts and storage inventory.
+
+The Next.js `/api/v1/*` proxy accepts only the workstation's read-route allowlist and targets loopback FastAPI. It sends no database connection or provider secret to the browser. Details and startup steps are in [the workstation guide](workstation/PHASE_3_WORKSTATION.md).

@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-10-03 — Phase 3 research workstation
+
+Added a loopback-only Next.js research workstation and five read-only FastAPI workstation read models. The interface exposes real Binance pilot bars, Phase 2 features and MarketStateSnapshot, manifest/as-of context, correlation and breadth, coverage, lineage, local watchlists and notes. It does not calculate canonical indicators in the browser or expose execution controls. See the [workstation guide](workstation/PHASE_3_WORKSTATION.md) and [Phase 3 exit matrix](planning/PHASE_3_EXIT_MATRIX_2026-10-03.md).
+
 ## 2026-10-03 — Phase 2 deterministic analytics and market state
 
 Added 38 versioned daily feature definitions, manifest-pinned analytical series, explicit same-session and UTC cutoff alignment, relative strength/correlation with sample coverage, five-member breadth, a vector market-state snapshot, transparent regime rules, read-only Phase 2 API/CLI, golden and point-in-time tests, and a bounded live Binance backfill/validation. [Calculation rules](analytics/PHASE_2_ANALYTICS.md) and the [exit report](planning/PHASE_2_EXIT_MATRIX_2026-10-03.md) record exact scope and evidence. Upstox/Alpaca live coverage remains deferred; no execution path was added.

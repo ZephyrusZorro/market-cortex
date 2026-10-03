@@ -27,3 +27,9 @@ runtime/
 data/probes/
 data/lake/
 backups/
+apps/workstation/node_modules/
+apps/workstation/.next/
+apps/workstation/.turbo/
+apps/workstation/coverage/
+apps/workstation/*.tsbuildinfo
+src/market_cortex/storage.py.bak
