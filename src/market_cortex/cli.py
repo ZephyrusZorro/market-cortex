@@ -64,6 +64,8 @@ def main(argv: list[str] | None = None) -> int:
     research.add_argument("--older-manifest-id", type=UUID)
     research.add_argument("--candidate-id", type=UUID, help="Review a recorded opportunity candidate")
     research.add_argument("--thesis-id", type=UUID, help="Review a recorded structured thesis")
+    research.add_argument("--prediction-id", type=UUID, help="Explain a frozen prediction and its outcome")
+    research.add_argument("--journal-entry-id", type=UUID, help="Inspect a private journal revision")
     research.add_argument("--portfolio-id", type=UUID, help="Ground a local portfolio risk question")
     research.add_argument("--scenario-shocks", type=json.loads, help="JSON object of explicit symbol: fractional shock")
     research.add_argument("--overlay-quantity", type=str, help="Hypothetical thesis units for research overlay")
@@ -115,6 +117,20 @@ def main(argv: list[str] | None = None) -> int:
     budget.add_argument("--risk-percent")
     budget.add_argument("--risk-amount")
     sizing.add_argument("--target")
+    prediction = sub.add_parser("create-prediction", help="Register an explicit machine-evaluable expectation")
+    prediction.add_argument("--definition", type=Path, required=True, help="Local JSON PredictionDefinition")
+    evaluate = sub.add_parser("evaluate-prediction", help="Evaluate a prediction using an explicit immutable manifest")
+    evaluate.add_argument("prediction_id", type=UUID)
+    evaluate.add_argument("--manifest-id", type=UUID, required=True)
+    evaluate.add_argument("--as-of", type=datetime.fromisoformat, required=True)
+    due = sub.add_parser("evaluate-due-predictions", help="Idempotent, explicitly invoked evaluation queue")
+    due.add_argument("--manifest-id", type=UUID, required=True)
+    due.add_argument("--as-of", type=datetime.fromisoformat, required=True)
+    inspect_prediction = sub.add_parser("inspect-prediction", help="Inspect frozen expectation and outcome revisions")
+    inspect_prediction.add_argument("prediction_id", type=UUID)
+    learning = sub.add_parser("learning-performance", help="Descriptive detector/version/registration statistics")
+    learning.add_argument("--eligible-only", action="store_true")
+    sub.add_parser("review-queue", help="List local predictions requiring human review")
     args = parser.parse_args(argv)
     try:
         settings = Settings.load()
@@ -143,12 +159,35 @@ def main(argv: list[str] | None = None) -> int:
                             "compute-feature", "compute-market-state", "research", "research-runs",
                             "inspect-research-run", "replay-research-run", "scan-opportunities",
                             "inspect-candidate", "create-thesis", "inspect-thesis", "monitor-thesis",
-                            "portfolios", "portfolio-risk", "portfolio-scenario"):
+                            "portfolios", "portfolio-risk", "portfolio-scenario", "create-prediction",
+                            "evaluate-prediction", "evaluate-due-predictions", "inspect-prediction",
+                            "learning-performance", "review-queue"):
             if not settings.database_url:
                 print("DATABASE_NOT_CONFIGURED", file=sys.stderr)
                 return 2
             from .storage import ArtifactStore, PostgresCatalog
             catalog = PostgresCatalog(settings.database_url, ArtifactStore(settings.data_root))
+            if args.command in ("create-prediction", "evaluate-prediction", "evaluate-due-predictions",
+                                "inspect-prediction", "learning-performance", "review-queue"):
+                from .learning import LearningService
+                from .learning_contracts import PredictionDefinition, EvaluationRequest
+                service = LearningService(catalog,settings.environment)
+                if args.command == "create-prediction":
+                    result = service.create_prediction(PredictionDefinition.model_validate_json(args.definition.read_text(encoding="utf-8-sig")))
+                elif args.command in ("evaluate-prediction", "evaluate-due-predictions"):
+                    request = EvaluationRequest(manifest_id=args.manifest_id,as_of=args.as_of)
+                    result = service.evaluate(args.prediction_id,request) if args.command=="evaluate-prediction" else service.evaluate_due(request)
+                elif args.command == "inspect-prediction":
+                    item = service.store.prediction(args.prediction_id)
+                    if item is None:
+                        raise LookupError("PREDICTION_NOT_FOUND")
+                    result = {"prediction":item.model_dump(mode="json"),"revisions":service.store.prediction_history(args.prediction_id)}
+                elif args.command == "learning-performance":
+                    result = service.performance(as_of=datetime.now(timezone.utc),eligible_only=args.eligible_only)
+                else:
+                    result = service.review_queue(datetime.now(timezone.utc))
+                print(json.dumps(result.model_dump(mode="json") if hasattr(result,"model_dump") else result,default=str))
+                return 0
             if args.command in ("portfolios", "portfolio-risk", "portfolio-scenario"):
                 from .risk import RiskService, run_scenario
                 from .risk_contracts import RiskRequest, ScenarioDefinition
@@ -203,6 +242,7 @@ def main(argv: list[str] | None = None) -> int:
                         manifest_id=args.manifest_id, as_of=args.as_of, symbol=args.symbol,
                         compare_symbol=args.compare_symbol, older_manifest_id=args.older_manifest_id,
                         candidate_id=args.candidate_id, thesis_id=args.thesis_id,
+                        prediction_id=args.prediction_id, journal_entry_id=args.journal_entry_id,
                         portfolio_id=args.portfolio_id, scenario_shocks=args.scenario_shocks,
                         overlay_quantity=args.overlay_quantity,
                         overlay_reference_price=args.overlay_reference_price,

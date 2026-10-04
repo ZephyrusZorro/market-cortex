@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Activity, ArrowRight, BookOpenText, CheckCircle2, CircleAlert, FileClock, Microscope } from 'lucide-react';
 import { ApiError, getJson, postJson, shortId, type Context, type Mode } from '@/lib/api';
+import { LearningLinksPanel } from './LearningPane';
 
 type Evidence = { evidence_id: string; tool_id: string; kind: string; label: string; symbol: string | null;
   value: string | number | null; unit: string | null; session_date: string | null; manifest_id: string;
@@ -34,6 +35,8 @@ export default function CortexPane({ context, mode, symbol }: { context: Context
   const [depth, setDepth] = useState<'quick' | 'deep'>('deep');
   const [other, setOther] = useState('');
   const [olderManifest, setOlderManifest] = useState('');
+  const [predictionId, setPredictionId] = useState('');
+  const [journalEntryId, setJournalEntryId] = useState('');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [status, setStatus] = useState<Status | null>(null);
@@ -56,7 +59,8 @@ export default function CortexPane({ context, mode, symbol }: { context: Context
     try {
       const payload = { question: question.trim(), mode, manifest_id: context.source_manifest_id,
         as_of: context.as_of, symbol: symbol ?? undefined, compare_symbol: other || undefined,
-        older_manifest_id: olderManifest || undefined, depth };
+        older_manifest_id: olderManifest || undefined, prediction_id:predictionId||undefined,
+        journal_entry_id:journalEntryId||undefined, depth };
       const result = await postJson<ResearchRun>('cortex/research', payload);
       setRun(result); setActiveEvidence(result.tools.flatMap((item) => item.evidence)[0]?.evidence_id ?? null);
       getJson<{ items: SavedRun[] }>('cortex/runs', symbol ? new URLSearchParams({ symbol }) : undefined)
@@ -108,6 +112,7 @@ export default function CortexPane({ context, mode, symbol }: { context: Context
               <option value={item.manifest_id} key={item.manifest_id}>{shortId(item.manifest_id)} · {item.created_at.slice(0, 10)}</option>)}</select></label>
           <button className="button primary" disabled={busy || question.trim().length < 3} onClick={ask}>{busy ? 'Researching…' : 'Ask CORTEX'} <ArrowRight size={14}/></button></div>
         <div className="callout mt12">The active {mode} manifest and cutoff are sent with this question. For an earlier cutoff, change the workstation research context first. Stored daily data can be stale.</div>
+        <div className="row wrap mt12"><label className="small muted">Prediction ID <input className="input" aria-label="CORTEX prediction ID" value={predictionId} onChange={e=>setPredictionId(e.target.value)} placeholder="Optional ledger UUID"/></label><label className="small muted">Journal entry ID <input className="input" aria-label="CORTEX journal entry ID" value={journalEntryId} onChange={e=>setJournalEntryId(e.target.value)} placeholder="Optional private entry UUID"/></label></div>
         {error && <div className="callout error mt12"><strong>{error.replaceAll('_', ' ')}</strong><p>No market value was substituted for the failed request.</p></div>}</div></section>
       {run && <><section className="panel"><div className="panel-head"><div><h2>Research answer</h2><span className="sub">Saved run {shortId(run.run_id)} · {formatDate(run.created_at)}</span></div>
         <span className={`badge ${run.evidence_strength === 'weak' ? 'warn' : 'good'}`}>{run.evidence_strength} evidence</span></div>
@@ -133,6 +138,7 @@ export default function CortexPane({ context, mode, symbol }: { context: Context
         'Null reason': selected.reason }).map(([label, value]) => <div className="data-row" key={label}><span className="label">{label}</span>
           <span className="value cortex-value" title={display(value)}>{display(value)}</span></div>)}</div> :
           <div className="empty"><BookOpenText size={20}/><strong>No evidence selected</strong><span>Ask a question or open a saved run.</span></div>}</div></section>
+      {run && <LearningLinksPanel runId={run.run_id} />}
       {run && <section className="panel"><div className="panel-head"><div><h2>Tool activity</h2><span className="sub">Approved deterministic reads</span></div><Activity size={16}/></div>
         <div className="panel-body"><div className="data-list">{run.tools.map((tool, index) => <div className="data-row" key={`${tool.tool_id}-${index}`}><span className="label">{tool.tool_id}</span>
           <span className="value">{tool.status} · {tool.evidence.length} refs · {tool.elapsed_ms.toFixed(0)} ms</span></div>)}</div>

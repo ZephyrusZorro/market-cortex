@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-10-04 — Phase 7 journal, prediction and learning foundation
+
+Added private journal revisions, immutable falsifiable predictions with frozen context, explicit pre-registered versus retrospective history, exact-session deterministic evaluations and idempotent outcome revisions. Added detector/version/rule-separated descriptive statistics, rejection coverage, sample and quality limits, explicit lesson memory, hypothesis-only Edge Library, evidence-based post-mortems, six read-only CORTEX learning tools and a Journal & Learning workstation with thesis/run links. Stored Binance outcomes and a pending pre-registered fixture use the isolated test catalog. See the [learning guide](learning/PHASE_7_JOURNAL_PREDICTION_LEARNING.md) and [exit matrix](planning/PHASE_7_EXIT_MATRIX_2026-10-04.md). No execution, fabricated probabilities or automatic rule changes were added.
+
 ## 2026-10-03 — Phase 6 deterministic portfolio and risk research
 
 Added auditable local portfolio versions, pinned risk snapshots, Phase 2-based position volatility/ATR/drawdown and 60-return correlation, explicit R and research sizing, portfolio heat, native-currency exposures, concentration and BTC sensitivity proxy, what-if shocks, and hypothetical thesis overlays. Added bounded local API/CLI routes, three read-only CORTEX risk tools and a Portfolio & Risk workstation. Synthetic Pilot 5 validation stays in a dedicated `_test` catalog; stale data, missing invalidation/FX and unavailable portfolio equity drawdown are visible. See the [risk guide](risk/PHASE_6_RISK_AND_PORTFOLIO.md) and [exit matrix](planning/PHASE_6_EXIT_MATRIX_2026-10-03.md). No execution path was added.

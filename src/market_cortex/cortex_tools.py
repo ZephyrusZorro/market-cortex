@@ -84,6 +84,14 @@ class PortfolioArguments(BaseModel):
     portfolio_id: UUID
 
 
+class PredictionArguments(NoArguments):
+    prediction_id: UUID
+
+
+class JournalArguments(NoArguments):
+    entry_id: UUID
+
+
 class RiskScenarioArguments(PortfolioArguments):
     shocks: dict[str, Decimal]
 
@@ -120,6 +128,12 @@ SPECS = {
     "risk.portfolio": ToolSpec("risk.portfolio", "1.0.0", "Pinned local portfolio heat, exposure and correlation", PortfolioArguments),
     "risk.scenario": ToolSpec("risk.scenario", "1.0.0", "Explicit what-if shock over pinned portfolio risk", RiskScenarioArguments),
     "risk.overlay": ToolSpec("risk.overlay", "1.0.0", "Hypothetical thesis addition under pinned portfolio risk", RiskOverlayArguments),
+    "learning.predictions": ToolSpec("learning.predictions", "1.0.0", "Private prediction ledger visible at cutoff", NoArguments),
+    "learning.prediction": ToolSpec("learning.prediction", "1.0.0", "Frozen expectation versus deterministic outcome", PredictionArguments),
+    "learning.performance": ToolSpec("learning.performance", "1.0.0", "Versioned, registration-separated learning statistics", NoArguments),
+    "learning.journal": ToolSpec("learning.journal", "1.0.0", "Private journal revisions and explicit lesson categories", NoArguments),
+    "learning.entry": ToolSpec("learning.entry", "1.0.0", "Private journal entry at the research cutoff", JournalArguments),
+    "learning.edges": ToolSpec("learning.edges", "1.0.0", "Owner edge hypotheses with frozen supporting statistics", NoArguments),
 }
 
 
@@ -173,7 +187,13 @@ class ToolRegistry:
             "opportunity.thesis": self._opportunity_thesis,
             "risk.portfolio": self._risk_portfolio,
             "risk.scenario": self._risk_scenario,
-            "risk.overlay": self._risk_overlay}
+            "risk.overlay": self._risk_overlay,
+            "learning.predictions":self._learning_predictions,
+            "learning.prediction":self._learning_prediction,
+            "learning.performance":self._learning_performance,
+            "learning.journal":self._learning_journal,
+            "learning.entry":self._learning_entry,
+            "learning.edges":self._learning_edges}
         evidence = action[tool_id](parsed)
         status = "ok" if evidence and any(item.value is not None for item in evidence) else "insufficient"
         values = [item.model_dump(mode="json") for item in evidence]
@@ -532,4 +552,120 @@ class ToolRegistry:
                 "HYPOTHETICAL_INCREMENTAL_HEAT_UNKNOWN", value="present",
                 source_id=after["snapshot_id"], source_manifest_id=self.context.manifest_id,
                 source_as_of=self.context.as_of, reason="MISSING_INVALIDATION_PRICE_OR_FX"))
+        return result
+
+    def _learning(self):
+        from .learning import LearningService
+        return LearningService(self.catalog,self.context.environment)
+
+    def _learning_predictions(self, _: NoArguments) -> list[Evidence]:
+        rows = self._learning().store.predictions(as_of=self.context.as_of,limit=None)
+        counts = {}
+        for item in rows:
+            counts[item.status]=counts.get(item.status,0)+1
+        result = [self._evidence("learning.predictions","learning_metric","Prediction ledger N",
+            value=len(rows),unit="records",reason="At cutoff; record detail bounded to 12; registration labels kept separate")]
+        for status,value in sorted(counts.items()):
+            result.append(self._evidence("learning.predictions","learning_metric",f"{status} predictions N",value=value,unit="records"))
+        for item in rows[:12]:
+            result.append(self._evidence("learning.predictions","learning_record",item.title,
+                value=f"{item.status}; {item.registration}; {item.classification}; due {item.due_session}",
+                symbol=item.symbol,source_id=str(item.prediction_id),source_manifest_id=item.manifest_id,
+                source_as_of=item.as_of,source_recorded_at=item.created_at,version=item.schema_version))
+        return result
+
+    def _learning_prediction(self, args: PredictionArguments) -> list[Evidence]:
+        from .risk import RiskService
+        service = self._learning()
+        item = service.store.prediction(args.prediction_id,self.context.as_of)
+        if item is None:
+            raise LookupError("PREDICTION_NOT_VISIBLE_AT_CUTOFF")
+        source = dict(source_id=str(item.prediction_id),symbol=item.symbol,
+            source_manifest_id=item.manifest_id,source_as_of=item.as_of,
+            source_recorded_at=item.created_at,version=item.schema_version)
+        result = [self._evidence("learning.prediction","learning_record","Frozen expectation",
+            value=f"{item.prediction_type} {item.comparator} {item.threshold} over {item.horizon_sessions} sessions; {item.registration}; {item.classification}",**source),
+            self._evidence("learning.prediction","learning_record","Prediction status",value=item.status,**source)]
+        if item.evaluation_id:
+            outcome = service.store.evaluation(item.evaluation_id)
+            if outcome.evaluated_at<=self.context.as_of and outcome.evaluation_manifest_id in \
+                RiskService(self.catalog,self.context.environment)._manifest_ancestors(self.context.manifest_id):
+                for label,value,unit in (("Observed evaluation metric",outcome.metric_value,"rule metric"),
+                    ("Forward return",outcome.forward_return,"fraction"),
+                    ("Evaluation usable sessions",outcome.observed_sessions,"sessions")):
+                    result.append(self._evidence("learning.prediction","learning_metric",label,
+                        value=str(value) if value is not None else None,unit=unit,
+                        source_id=str(outcome.evaluation_id),symbol=item.symbol,
+                        source_manifest_id=outcome.evaluation_manifest_id,source_as_of=outcome.as_of,
+                        source_recorded_at=outcome.evaluated_at,version=outcome.calculation_version,
+                        freshness=outcome.prediction_freshness,quality=outcome.evaluation_quality,
+                        reason=f"{outcome.registration}; {outcome.status}; original={outcome.original_context_hash}"))
+                for warning in outcome.warnings:
+                    result.append(self._evidence("learning.prediction","learning_limit",warning,value="present",**source))
+        result.append(self._evidence("learning.prediction","learning_limit","One outcome does not establish an edge",
+                                    value="N=1; no probability calibration or inferred trade",**source))
+        run = item.original_context.get("linked",{}).get("research_run")
+        if run:
+            counters = [claim["text"] for claim in run["claims"] if claim["stance"] in ("counter","limitation")]
+            result.append(self._evidence("learning.prediction","learning_record","Stored skeptic/counter-evidence",
+                value="; ".join(counters)[:2000] or "None recorded",reason="Presence is measured; correctness of free-form prose is not scored",**source))
+        return result
+
+    def _learning_performance(self, _: NoArguments) -> list[Evidence]:
+        report = self._learning().performance(as_of=self.context.as_of)
+        source = dict(source_id=report["report_id"],version=report["calculation_version"],source_as_of=self.context.as_of)
+        result = [self._evidence("learning.performance","learning_metric",label,value=value,unit="records",**source)
+            for label,value in (("Learning prediction N",report["prediction_N"]),
+                ("Learning usable outcome N",report["usable_N"]),("Candidate and rejection ledger N",report["candidate_ledger_N"]))]
+        for group in report["groups"][:12]:
+            label = f"{group['detector_id']} v{group['detector_version']} {group['registration']} {group['prediction_type']} {group['horizon_sessions']} sessions"
+            result.append(self._evidence("learning.performance","learning_record",label,
+                value=f"N={group['N']}; usable N={group['usable_N']}; mean forward return={group['forward_return']['mean']}; {group['classification']}",
+                reason="; ".join(group["warnings"])+f"; source manifests={group['source_manifests']}; evaluation manifests={group['evaluation_manifests']}",**source))
+            for dimension in ("evidence_strength","regime","volatility_regime"):
+                for category,segment in sorted(group[dimension].items()):
+                    result.append(self._evidence("learning.performance","learning_record",f"{label}: {dimension}={category}",
+                        value=f"N={segment['N']}; confirmed N={segment['confirmed_N']}; mean forward return={segment['forward_return']['mean']}",
+                        reason="Descriptive segment; small and overlapping samples do not establish causation",**source))
+        for warning in report["warnings"]+["SMALL_SAMPLES_ARE_DESCRIPTIVE_NOT_CALIBRATED_PROBABILITIES"]:
+            result.append(self._evidence("learning.performance","learning_limit",warning,value="present",**source))
+        return result
+
+    def _learning_journal(self, _: NoArguments) -> list[Evidence]:
+        entries = self._learning().store.journals(as_of=self.context.as_of,limit=None)
+        result = [self._evidence("learning.journal","learning_metric","Private journal entries N",value=len(entries),unit="records")]
+        patterns = {}
+        for item in entries:
+            if item.failure_category:
+                key = f"{item.classification}: {item.failure_category}"
+                patterns[key] = patterns.get(key,0)+1
+        for category,count in sorted(patterns.items()):
+            result.append(self._evidence("learning.journal","learning_metric",f"Recorded lesson pattern {category} N",
+                value=count,unit="explicit notes",reason="Owner notes/accepted templates; not an inferred mistake or causal claim"))
+        for item in entries[:12]:
+            result.append(self._evidence("learning.journal","learning_record",item.title,
+                value=f"{item.category}; revision {item.revision}; {item.failure_category or 'no recorded failure category'}; author {item.author}",
+                source_id=str(item.entry_id),source_manifest_id=item.manifest_id,
+                source_as_of=item.as_of,source_recorded_at=item.recorded_at,version=item.schema_version))
+        result.append(self._evidence("learning.journal","learning_limit","Lessons are explicit notes",
+            value="No unrecorded mistake, unsupported prose score, or automatic rule change is inferred"))
+        return result
+
+    def _learning_entry(self, args: JournalArguments) -> list[Evidence]:
+        entries = self._learning().store.journals(as_of=self.context.as_of,limit=None)
+        item = next((entry for entry in entries if entry.entry_id==args.entry_id),None)
+        if item is None:
+            raise LookupError("JOURNAL_NOT_VISIBLE_AT_CUTOFF")
+        return [self._evidence("learning.entry","learning_record",f"Journal entry: {item.title}",value=item.notes[:2000],
+            source_id=str(item.entry_id),source_manifest_id=item.manifest_id,
+            source_as_of=item.as_of,source_recorded_at=item.recorded_at,version=item.schema_version,
+            reason=f"Private {item.author} note; revision={item.revision}; not canonical market arithmetic")]
+
+    def _learning_edges(self, _: NoArguments) -> list[Evidence]:
+        rows = self._learning().store.edges(self.context.as_of)
+        result = [self._evidence("learning.edges","learning_metric","Edge hypotheses N",value=len(rows),unit="records")]
+        for item in rows[:12]:
+            result.append(self._evidence("learning.edges","learning_record",item["title"],
+                value=f"{item['status']}; usable N={item['usable_N']}; {item['registration']}",
+                source_id=item["edge_id"],version=item["schema_version"],reason="NOT_A_PROVEN_EDGE"))
         return result

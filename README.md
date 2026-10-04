@@ -1,6 +1,6 @@
 # MARKET CORTEX
 
-Private, local-first market research software. **Phases 1–6 are implemented for the five-pair Binance pilot.** The [Phase 0 blueprint](docs/architecture/PHASE_0_BASELINE_2026-09-26.md), [Phase 1 evidence](docs/planning/PHASE_1_EXIT_MATRIX_2026-10-03.md), [Phase 2 rules](docs/analytics/PHASE_2_ANALYTICS.md), [workstation guide](docs/workstation/PHASE_3_WORKSTATION.md), [CORTEX v1 guide](docs/cortex/PHASE_4_CORTEX_V1.md), [opportunity guide](docs/opportunity/PHASE_5_OPPORTUNITY_AND_THESIS.md), and [risk guide](docs/risk/PHASE_6_RISK_AND_PORTFOLIO.md) describe the validated scope.
+Private, local-first market research software. **Phases 1–7 are implemented for the five-pair Binance pilot.** The [Phase 0 blueprint](docs/architecture/PHASE_0_BASELINE_2026-09-26.md), [Phase 1 evidence](docs/planning/PHASE_1_EXIT_MATRIX_2026-10-03.md), [Phase 2 rules](docs/analytics/PHASE_2_ANALYTICS.md), [workstation guide](docs/workstation/PHASE_3_WORKSTATION.md), [CORTEX v1 guide](docs/cortex/PHASE_4_CORTEX_V1.md), [opportunity guide](docs/opportunity/PHASE_5_OPPORTUNITY_AND_THESIS.md), [risk guide](docs/risk/PHASE_6_RISK_AND_PORTFOLIO.md), and [learning guide](docs/learning/PHASE_7_JOURNAL_PREDICTION_LEARNING.md) describe the validated scope.
 
 ## What runs now
 
@@ -14,6 +14,7 @@ Private, local-first market research software. **Phases 1–6 are implemented fo
 - CORTEX v1 research uses allowlisted deterministic tools, manifest-pinned evidence, typed claims, a skeptic/limitations pass, inspectable citations, saved research runs and evidence replay. A local model can curate existing claims; a deterministic fallback works without one. See the [Phase 4 guide](docs/cortex/PHASE_4_CORTEX_V1.md).
 - Phase 5 adds eight versioned daily-bar opportunity detectors, recorded candidate and rejection events, structured versioned theses, deterministic monitoring, CORTEX candidate review and an integrated workstation scanner/board. See the [Phase 5 guide](docs/opportunity/PHASE_5_OPPORTUNITY_AND_THESIS.md).
 - Phase 6 adds local versioned research portfolios, pinned position risk/R/heat/exposure/correlation, explicit what-if scenarios, hypothetical thesis overlays, grounded CORTEX risk tools and a Portfolio & Risk workspace. Native-currency and stale-data limits remain explicit. See the [Phase 6 guide](docs/risk/PHASE_6_RISK_AND_PORTFOLIO.md).
+- Phase 7 adds an append-only private journal, frozen prediction definitions, deterministic session-aware outcomes, separate pre-registered/retrospective cohorts, detector/rejection statistics with sample limits, explicit lessons, hypothesis-only Edge Library, CORTEX evidence tools and Journal & Learning workstation. See the [Phase 7 guide](docs/learning/PHASE_7_JOURNAL_PREDICTION_LEARNING.md) and [exit matrix](docs/planning/PHASE_7_EXIT_MATRIX_2026-10-04.md).
 
 There are **no order endpoints or automated trade execution paths**. Advanced feeds, strategies, and ML are subsequent work. Live India/US coverage remains deferred.
 
@@ -37,7 +38,7 @@ Install local PostgreSQL and create a **dedicated empty database** with a dedica
 .\.venv\Scripts\python.exe scripts\market_cortex.py serve
 ```
 
-The server binds to `127.0.0.1:8765`. `GET /api/v1/health` is available even before PostgreSQL is configured and reports `not_configured`. The `migrate` command also applies `0003_cortex_research.sql`, `0004_opportunity_theses.sql` and `0005_portfolio_risk.sql` for local research persistence. Provider probes are separate: `python scripts\probe_sources.py --run --output data\probes\phase_0_6_local.json`.
+The server binds to `127.0.0.1:8765`. `GET /api/v1/health` is available even before PostgreSQL is configured and reports `not_configured`. The `migrate` command also applies `0003_cortex_research.sql`, `0004_opportunity_theses.sql`, `0005_portfolio_risk.sql` and `0006_journal_learning.sql` for local research persistence. Provider probes are separate: `python scripts\probe_sources.py --run --output data\probes\phase_0_6_local.json`.
 
 In a second PowerShell window, start the workstation. Node.js and npm must be installed; `npm ci` is needed only on first setup or after dependency changes.
 

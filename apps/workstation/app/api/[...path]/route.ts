@@ -9,10 +9,13 @@ function backendUrl() {
   return backend;
 }
 
+const learningGet = /^v1\/learning\/(?:journal(?:\/[0-9a-f-]{36}(?:\/revisions)?)?|predictions(?:\/[0-9a-f-]{36}(?:\/postmortem)?)?|evaluations\/[0-9a-f-]{36}|review-queue|performance|failures|edges|links)$/;
+const learningPost = /^v1\/learning\/(?:journal(?:\/[0-9a-f-]{36}\/revisions)?|predictions(?:\/[0-9a-f-]{36}\/(?:evaluate|cancel))?|evaluate-due|edges)$/;
+
 export async function GET(request: NextRequest, context: { params: Promise<{ path: string[] }> }) {
   const { path } = await context.params;
   const route = path.join('/');
-  if (!allowed.test(route)) return NextResponse.json({ code: 'ROUTE_NOT_AVAILABLE' }, { status: 404 });
+  if (!allowed.test(route) && !learningGet.test(route)) return NextResponse.json({ code: 'ROUTE_NOT_AVAILABLE' }, { status: 404 });
   const backend = backendUrl();
   if (!backend) {
     return NextResponse.json({ code: 'BACKEND_MUST_BE_LOOPBACK' }, { status: 503 });
@@ -32,11 +35,11 @@ export async function GET(request: NextRequest, context: { params: Promise<{ pat
 export async function POST(request: NextRequest, context: { params: Promise<{ path: string[] }> }) {
   const { path } = await context.params;
   const route = path.join('/');
-  if (!postAllowed.test(route)) return NextResponse.json({ code: 'ROUTE_NOT_AVAILABLE' }, { status: 404 });
+  if (!postAllowed.test(route) && !learningPost.test(route)) return NextResponse.json({ code: 'ROUTE_NOT_AVAILABLE' }, { status: 404 });
   const backend = backendUrl();
   if (!backend) return NextResponse.json({ code: 'BACKEND_MUST_BE_LOOPBACK' }, { status: 503 });
   const body = await request.text();
-  if (body.length > 8192) return NextResponse.json({ code: 'REQUEST_TOO_LARGE' }, { status: 413 });
+  if (body.length > (route.startsWith('v1/learning/') ? 48000 : 8192)) return NextResponse.json({ code: 'REQUEST_TOO_LARGE' }, { status: 413 });
   try {
     const response = await fetch(new URL(`/api/${route}`, backend), {
       method: 'POST', headers: { 'Content-Type': 'application/json' }, body,

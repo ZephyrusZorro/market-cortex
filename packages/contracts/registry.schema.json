@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://market-cortex.local/contracts/registry/1.0.0-draft",
   "title": "MARKET CORTEX contract registry",
-  "description": "Architecture-only schemas; runtime validators and migrations arrive in Phase 1. Semantic cross-field checks documented in data dictionary.",
+  "description": "Foundation schemas and finalized runtime learning contracts. Semantic cross-field checks are enforced by typed Python domain validators.",
   "contract_version": "1.0.0-draft",
   "$defs": {
     "Instrument": {
@@ -1557,275 +1557,388 @@
       }
     },
     "JournalEntry": {
-      "type": "object",
       "additionalProperties": false,
-      "required": [
-        "schema_version",
-        "entry_id",
-        "revision",
-        "category"
-      ],
       "properties": {
-        "schema_version": {
-          "const": "1.0.0-draft"
-        },
-        "entry_id": {
-          "type": "string",
-          "format": "uuid"
-        },
-        "revision": {
-          "type": "integer",
-          "minimum": 1
-        },
         "category": {
           "enum": [
-            "idea",
+            "observation",
+            "research_note",
+            "thesis_note",
             "decision",
-            "manual_trade",
-            "paper_trade",
-            "no_trade",
-            "review"
-          ]
+            "review",
+            "mistake",
+            "lesson",
+            "hypothesis",
+            "outcome_review"
+          ],
+          "title": "Category",
+          "type": "string"
         },
-        "instrument_id": {
-          "anyOf": [
-            {
-              "type": "string",
-              "format": "uuid"
-            },
-            {
-              "type": "null"
-            }
-          ]
+        "title": {
+          "maxLength": 180,
+          "minLength": 3,
+          "title": "Title",
+          "type": "string"
         },
-        "idea_at": {
-          "anyOf": [
-            {
-              "type": "string",
-              "format": "date-time",
-              "description": "UTC RFC3339 instant; runtime requires Z offset"
-            },
-            {
-              "type": "null"
-            }
-          ]
+        "notes": {
+          "default": "",
+          "maxLength": 12000,
+          "title": "Notes",
+          "type": "string"
         },
-        "decision_at": {
-          "anyOf": [
-            {
-              "type": "string",
-              "format": "date-time",
-              "description": "UTC RFC3339 instant; runtime requires Z offset"
-            },
-            {
-              "type": "null"
-            }
-          ]
+        "structured_content": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "maxProperties": 20,
+          "title": "Structured Content",
+          "type": "object"
         },
-        "execution_at": {
-          "anyOf": [
-            {
-              "type": "string",
-              "format": "date-time",
-              "description": "UTC RFC3339 instant; runtime requires Z offset"
-            },
-            {
-              "type": "null"
-            }
-          ]
+        "tags": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 20,
+          "title": "Tags",
+          "type": "array"
         },
-        "review_at": {
-          "anyOf": [
-            {
-              "type": "string",
-              "format": "date-time",
-              "description": "UTC RFC3339 instant; runtime requires Z offset"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "thesis_id": {
-          "anyOf": [
-            {
-              "type": "string",
-              "format": "uuid"
-            },
-            {
-              "type": "null"
-            }
-          ]
+        "links": {
+          "$ref": "#/$defs/LearningLinks"
         },
         "manifest_id": {
-          "anyOf": [
-            {
-              "type": "string",
-              "format": "uuid"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "note_ref": {
-          "anyOf": [
-            {
-              "type": "string",
-              "minLength": 1,
-              "description": "Private local artifact"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "amends_revision": {
-          "anyOf": [
-            {
-              "type": "integer",
-              "minimum": 1
-            },
-            {
-              "type": "null"
-            }
-          ]
-        }
-      }
-    },
-    "PredictionRecord": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "schema_version",
-        "prediction_id",
-        "revision",
-        "created_at",
-        "as_of",
-        "manifest_id",
-        "model_version",
-        "prompt_version",
-        "tool_versions",
-        "event_definition",
-        "deadline_at",
-        "outcome_metric",
-        "expected_scenario",
-        "invalidation",
-        "evidence_refs"
-      ],
-      "properties": {
-        "schema_version": {
-          "const": "1.0.0-draft"
-        },
-        "prediction_id": {
-          "type": "string",
-          "format": "uuid"
-        },
-        "revision": {
-          "type": "integer",
-          "minimum": 1
-        },
-        "created_at": {
-          "type": "string",
-          "format": "date-time",
-          "description": "UTC RFC3339 instant; runtime requires Z offset"
+          "format": "uuid",
+          "title": "Manifest Id",
+          "type": "string"
         },
         "as_of": {
-          "type": "string",
           "format": "date-time",
-          "description": "UTC RFC3339 instant; runtime requires Z offset"
+          "title": "As Of",
+          "type": "string"
+        },
+        "classification": {
+          "default": "OWNER_RESEARCH",
+          "enum": [
+            "OWNER_RESEARCH",
+            "SYNTHETIC_TEST"
+          ],
+          "title": "Classification",
+          "type": "string"
+        },
+        "author": {
+          "default": "owner",
+          "enum": [
+            "owner",
+            "cortex_template"
+          ],
+          "title": "Author",
+          "type": "string"
+        },
+        "failure_category": {
+          "anyOf": [
+            {
+              "enum": [
+                "stale_data",
+                "insufficient_history",
+                "contradiction_ignored",
+                "invalidation_undefined",
+                "overconcentration",
+                "late_thesis",
+                "participation_missing",
+                "correlation_overlooked",
+                "other_owner_observation"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Failure Category"
+        },
+        "schema_version": {
+          "default": "journal_entry_v1",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "entry_id": {
+          "format": "uuid",
+          "title": "Entry Id",
+          "type": "string"
+        },
+        "revision": {
+          "title": "Revision",
+          "type": "integer"
+        },
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        },
+        "recorded_at": {
+          "format": "date-time",
+          "title": "Recorded At",
+          "type": "string"
+        },
+        "frozen_links": {
+          "additionalProperties": true,
+          "title": "Frozen Links",
+          "type": "object"
+        }
+      },
+      "required": [
+        "category",
+        "title",
+        "manifest_id",
+        "as_of",
+        "entry_id",
+        "revision",
+        "created_at",
+        "recorded_at",
+        "frozen_links"
+      ],
+      "title": "JournalEntry",
+      "type": "object"
+    },
+    "PredictionRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "title": {
+          "maxLength": 180,
+          "minLength": 5,
+          "title": "Title",
+          "type": "string"
+        },
+        "prediction_type": {
+          "enum": [
+            "forward_return",
+            "relative_performance",
+            "thesis_survival",
+            "breakout_hold",
+            "invalidation",
+            "relative_strength_persistence",
+            "volatility_state"
+          ],
+          "title": "Prediction Type",
+          "type": "string"
+        },
+        "symbol": {
+          "title": "Symbol",
+          "type": "string"
+        },
+        "benchmark_symbol": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Benchmark Symbol"
+        },
+        "horizon_sessions": {
+          "maximum": 20,
+          "minimum": 2,
+          "title": "Horizon Sessions",
+          "type": "integer"
+        },
+        "comparator": {
+          "enum": [
+            "gt",
+            "gte",
+            "lt",
+            "lte"
+          ],
+          "title": "Comparator",
+          "type": "string"
+        },
+        "threshold": {
+          "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+          "title": "Threshold",
+          "type": "string"
+        },
+        "invalidation_price": {
+          "anyOf": [
+            {
+              "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Invalidation Price"
+        },
+        "notes": {
+          "default": "",
+          "maxLength": 4000,
+          "title": "Notes",
+          "type": "string"
+        },
+        "links": {
+          "$ref": "#/$defs/LearningLinks"
         },
         "manifest_id": {
-          "type": "string",
-          "format": "uuid"
+          "format": "uuid",
+          "title": "Manifest Id",
+          "type": "string"
         },
-        "model_version": {
-          "type": "string",
-          "minLength": 1,
-          "description": "Model ID and version"
-        },
-        "prompt_version": {
-          "type": "string",
-          "minLength": 1,
-          "description": "Prompt"
-        },
-        "tool_versions": {
-          "type": "array",
-          "items": {
-            "type": "string",
-            "minLength": 1,
-            "description": "Tool"
-          }
-        },
-        "event_definition": {
-          "type": "string",
-          "minLength": 1,
-          "description": "Observable outcome definition"
-        },
-        "deadline_at": {
-          "type": "string",
+        "as_of": {
           "format": "date-time",
-          "description": "UTC RFC3339 instant; runtime requires Z offset"
+          "title": "As Of",
+          "type": "string"
         },
-        "outcome_metric": {
-          "type": "string",
-          "minLength": 1,
-          "description": "Metric"
+        "baseline_session": {
+          "format": "date",
+          "title": "Baseline Session",
+          "type": "string"
         },
-        "expected_scenario": {
-          "type": "string",
-          "minLength": 1,
-          "description": "Scenario"
+        "registration": {
+          "default": "PRE_REGISTERED",
+          "enum": [
+            "PRE_REGISTERED",
+            "RETROSPECTIVE_EVALUATION"
+          ],
+          "title": "Registration",
+          "type": "string"
         },
-        "invalidation": {
-          "type": "string",
-          "minLength": 1,
-          "description": "Rule"
+        "classification": {
+          "default": "OWNER_RESEARCH",
+          "enum": [
+            "OWNER_RESEARCH",
+            "SYNTHETIC_TEST"
+          ],
+          "title": "Classification",
+          "type": "string"
         },
-        "calibrated_probability": {
-          "anyOf": [
-            {
-              "type": "number",
-              "minimum": 0,
-              "maximum": 1
-            },
-            {
-              "type": "null"
-            }
-          ]
+        "creation_source": {
+          "default": "owner_action",
+          "enum": [
+            "owner_action",
+            "accepted_cortex_suggestion",
+            "thesis_milestone"
+          ],
+          "title": "Creation Source",
+          "type": "string"
         },
-        "evidence_refs": {
-          "type": "array",
+        "schema_version": {
+          "default": "prediction_record_v1",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "prediction_id": {
+          "format": "uuid",
+          "title": "Prediction Id",
+          "type": "string"
+        },
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        },
+        "due_session": {
+          "format": "date",
+          "title": "Due Session",
+          "type": "string"
+        },
+        "due_at": {
+          "format": "date-time",
+          "title": "Due At",
+          "type": "string"
+        },
+        "horizon_dates": {
           "items": {
-            "type": "string",
-            "minLength": 1,
-            "description": "Refs"
-          }
+            "format": "date",
+            "type": "string"
+          },
+          "title": "Horizon Dates",
+          "type": "array"
         },
-        "evaluation_ref": {
+        "original_context": {
+          "additionalProperties": true,
+          "title": "Original Context",
+          "type": "object"
+        },
+        "original_context_hash": {
+          "title": "Original Context Hash",
+          "type": "string"
+        },
+        "evidence_strength": {
+          "enum": [
+            "weak",
+            "moderate",
+            "strong"
+          ],
+          "title": "Evidence Strength",
+          "type": "string"
+        },
+        "detector_id": {
+          "title": "Detector Id",
+          "type": "string"
+        },
+        "detector_version": {
+          "title": "Detector Version",
+          "type": "string"
+        },
+        "revision": {
+          "default": 1,
+          "title": "Revision",
+          "type": "integer"
+        },
+        "status": {
+          "default": "OPEN",
+          "enum": [
+            "OPEN",
+            "PENDING_EVALUATION",
+            "CONFIRMED",
+            "INVALIDATED",
+            "INCONCLUSIVE",
+            "UNMEASURABLE",
+            "CANCELLED"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "evaluation_id": {
           "anyOf": [
             {
-              "type": "string",
-              "minLength": 1,
-              "description": "Append-only evaluation"
+              "format": "uuid",
+              "type": "string"
             },
             {
               "type": "null"
             }
-          ]
-        },
-        "amends_revision": {
-          "anyOf": [
-            {
-              "type": "integer",
-              "minimum": 1
-            },
-            {
-              "type": "null"
-            }
-          ]
+          ],
+          "default": null,
+          "title": "Evaluation Id"
         }
-      }
+      },
+      "required": [
+        "title",
+        "prediction_type",
+        "symbol",
+        "horizon_sessions",
+        "comparator",
+        "threshold",
+        "manifest_id",
+        "as_of",
+        "baseline_session",
+        "prediction_id",
+        "created_at",
+        "due_session",
+        "due_at",
+        "horizon_dates",
+        "original_context",
+        "original_context_hash",
+        "evidence_strength",
+        "detector_id",
+        "detector_version"
+      ],
+      "title": "PredictionRecord",
+      "type": "object"
     },
     "ResearchRunManifest": {
       "type": "object",
@@ -2278,6 +2391,585 @@
           }
         }
       }
+    },
+    "LearningLinks": {
+      "additionalProperties": false,
+      "properties": {
+        "instrument_ids": {
+          "items": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "maxItems": 5,
+          "title": "Instrument Ids",
+          "type": "array"
+        },
+        "candidate_id": {
+          "anyOf": [
+            {
+              "format": "uuid",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Candidate Id"
+        },
+        "thesis_id": {
+          "anyOf": [
+            {
+              "format": "uuid",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Thesis Id"
+        },
+        "research_run_id": {
+          "anyOf": [
+            {
+              "format": "uuid",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Research Run Id"
+        },
+        "risk_snapshot_id": {
+          "anyOf": [
+            {
+              "format": "uuid",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Risk Snapshot Id"
+        },
+        "prediction_id": {
+          "anyOf": [
+            {
+              "format": "uuid",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Prediction Id"
+        },
+        "portfolio_id": {
+          "anyOf": [
+            {
+              "format": "uuid",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Portfolio Id"
+        },
+        "position_id": {
+          "anyOf": [
+            {
+              "format": "uuid",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Position Id"
+        }
+      },
+      "title": "LearningLinks",
+      "type": "object"
+    },
+    "PredictionEvaluation": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "default": "prediction_evaluation_v1",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "calculation_version": {
+          "default": "daily_expectation_v1",
+          "title": "Calculation Version",
+          "type": "string"
+        },
+        "calculation_code_hash": {
+          "title": "Calculation Code Hash",
+          "type": "string"
+        },
+        "evaluation_id": {
+          "format": "uuid",
+          "title": "Evaluation Id",
+          "type": "string"
+        },
+        "prediction_id": {
+          "format": "uuid",
+          "title": "Prediction Id",
+          "type": "string"
+        },
+        "original_context_hash": {
+          "title": "Original Context Hash",
+          "type": "string"
+        },
+        "source_manifest_id": {
+          "format": "uuid",
+          "title": "Source Manifest Id",
+          "type": "string"
+        },
+        "evaluation_manifest_id": {
+          "format": "uuid",
+          "title": "Evaluation Manifest Id",
+          "type": "string"
+        },
+        "as_of": {
+          "format": "date-time",
+          "title": "As Of",
+          "type": "string"
+        },
+        "evaluated_at": {
+          "format": "date-time",
+          "title": "Evaluated At",
+          "type": "string"
+        },
+        "registration": {
+          "enum": [
+            "PRE_REGISTERED",
+            "RETROSPECTIVE_EVALUATION"
+          ],
+          "title": "Registration",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "OPEN",
+            "PENDING_EVALUATION",
+            "CONFIRMED",
+            "INVALIDATED",
+            "INCONCLUSIVE",
+            "UNMEASURABLE",
+            "CANCELLED"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "metric_value": {
+          "anyOf": [
+            {
+              "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Metric Value"
+        },
+        "forward_return": {
+          "anyOf": [
+            {
+              "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Forward Return"
+        },
+        "benchmark_return": {
+          "anyOf": [
+            {
+              "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Benchmark Return"
+        },
+        "mae_close": {
+          "anyOf": [
+            {
+              "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Mae Close"
+        },
+        "mfe_close": {
+          "anyOf": [
+            {
+              "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Mfe Close"
+        },
+        "hypothetical_forward_r": {
+          "anyOf": [
+            {
+              "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Hypothetical Forward R"
+        },
+        "expected_sessions": {
+          "title": "Expected Sessions",
+          "type": "integer"
+        },
+        "observed_sessions": {
+          "title": "Observed Sessions",
+          "type": "integer"
+        },
+        "observation_ids": {
+          "items": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "title": "Observation Ids",
+          "type": "array"
+        },
+        "feature_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Feature Ids",
+          "type": "array"
+        },
+        "source_quality": {
+          "title": "Source Quality",
+          "type": "string"
+        },
+        "evaluation_quality": {
+          "title": "Evaluation Quality",
+          "type": "string"
+        },
+        "prediction_freshness": {
+          "title": "Prediction Freshness",
+          "type": "string"
+        },
+        "warnings": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Warnings",
+          "type": "array"
+        }
+      },
+      "required": [
+        "calculation_code_hash",
+        "evaluation_id",
+        "prediction_id",
+        "original_context_hash",
+        "source_manifest_id",
+        "evaluation_manifest_id",
+        "as_of",
+        "evaluated_at",
+        "registration",
+        "status",
+        "metric_value",
+        "forward_return",
+        "benchmark_return",
+        "mae_close",
+        "mfe_close",
+        "hypothetical_forward_r",
+        "expected_sessions",
+        "observed_sessions",
+        "observation_ids",
+        "feature_ids",
+        "source_quality",
+        "evaluation_quality",
+        "prediction_freshness",
+        "warnings"
+      ],
+      "title": "PredictionEvaluation",
+      "type": "object"
+    },
+    "JournalDraft": {
+      "additionalProperties": false,
+      "properties": {
+        "category": {
+          "enum": [
+            "observation",
+            "research_note",
+            "thesis_note",
+            "decision",
+            "review",
+            "mistake",
+            "lesson",
+            "hypothesis",
+            "outcome_review"
+          ],
+          "title": "Category",
+          "type": "string"
+        },
+        "title": {
+          "maxLength": 180,
+          "minLength": 3,
+          "title": "Title",
+          "type": "string"
+        },
+        "notes": {
+          "default": "",
+          "maxLength": 12000,
+          "title": "Notes",
+          "type": "string"
+        },
+        "structured_content": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "maxProperties": 20,
+          "title": "Structured Content",
+          "type": "object"
+        },
+        "tags": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 20,
+          "title": "Tags",
+          "type": "array"
+        },
+        "links": {
+          "$ref": "#/$defs/LearningLinks"
+        },
+        "manifest_id": {
+          "format": "uuid",
+          "title": "Manifest Id",
+          "type": "string"
+        },
+        "as_of": {
+          "format": "date-time",
+          "title": "As Of",
+          "type": "string"
+        },
+        "classification": {
+          "default": "OWNER_RESEARCH",
+          "enum": [
+            "OWNER_RESEARCH",
+            "SYNTHETIC_TEST"
+          ],
+          "title": "Classification",
+          "type": "string"
+        },
+        "author": {
+          "default": "owner",
+          "enum": [
+            "owner",
+            "cortex_template"
+          ],
+          "title": "Author",
+          "type": "string"
+        },
+        "failure_category": {
+          "anyOf": [
+            {
+              "enum": [
+                "stale_data",
+                "insufficient_history",
+                "contradiction_ignored",
+                "invalidation_undefined",
+                "overconcentration",
+                "late_thesis",
+                "participation_missing",
+                "correlation_overlooked",
+                "other_owner_observation"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Failure Category"
+        }
+      },
+      "required": [
+        "category",
+        "title",
+        "manifest_id",
+        "as_of"
+      ],
+      "title": "JournalDraft",
+      "type": "object"
+    },
+    "PredictionDefinition": {
+      "additionalProperties": false,
+      "properties": {
+        "title": {
+          "maxLength": 180,
+          "minLength": 5,
+          "title": "Title",
+          "type": "string"
+        },
+        "prediction_type": {
+          "enum": [
+            "forward_return",
+            "relative_performance",
+            "thesis_survival",
+            "breakout_hold",
+            "invalidation",
+            "relative_strength_persistence",
+            "volatility_state"
+          ],
+          "title": "Prediction Type",
+          "type": "string"
+        },
+        "symbol": {
+          "title": "Symbol",
+          "type": "string"
+        },
+        "benchmark_symbol": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Benchmark Symbol"
+        },
+        "horizon_sessions": {
+          "maximum": 20,
+          "minimum": 2,
+          "title": "Horizon Sessions",
+          "type": "integer"
+        },
+        "comparator": {
+          "enum": [
+            "gt",
+            "gte",
+            "lt",
+            "lte"
+          ],
+          "title": "Comparator",
+          "type": "string"
+        },
+        "threshold": {
+          "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+          "title": "Threshold",
+          "type": "string"
+        },
+        "invalidation_price": {
+          "anyOf": [
+            {
+              "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Invalidation Price"
+        },
+        "notes": {
+          "default": "",
+          "maxLength": 4000,
+          "title": "Notes",
+          "type": "string"
+        },
+        "links": {
+          "$ref": "#/$defs/LearningLinks"
+        },
+        "manifest_id": {
+          "format": "uuid",
+          "title": "Manifest Id",
+          "type": "string"
+        },
+        "as_of": {
+          "format": "date-time",
+          "title": "As Of",
+          "type": "string"
+        },
+        "baseline_session": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Baseline Session"
+        },
+        "registration": {
+          "default": "PRE_REGISTERED",
+          "enum": [
+            "PRE_REGISTERED",
+            "RETROSPECTIVE_EVALUATION"
+          ],
+          "title": "Registration",
+          "type": "string"
+        },
+        "classification": {
+          "default": "OWNER_RESEARCH",
+          "enum": [
+            "OWNER_RESEARCH",
+            "SYNTHETIC_TEST"
+          ],
+          "title": "Classification",
+          "type": "string"
+        },
+        "creation_source": {
+          "default": "owner_action",
+          "enum": [
+            "owner_action",
+            "accepted_cortex_suggestion",
+            "thesis_milestone"
+          ],
+          "title": "Creation Source",
+          "type": "string"
+        }
+      },
+      "required": [
+        "title",
+        "prediction_type",
+        "symbol",
+        "horizon_sessions",
+        "comparator",
+        "threshold",
+        "manifest_id",
+        "as_of"
+      ],
+      "title": "PredictionDefinition",
+      "type": "object"
     }
   }
 }

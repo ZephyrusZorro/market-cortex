@@ -91,7 +91,16 @@ class CortexService:
         question = request.question.lower()
         opportunity_question = any(term in question for term in
             ("opportunit", "candidate", "no-edge", "no edge", "rejected", "scanner"))
+        learning_question = bool(request.prediction_id or request.journal_entry_id) or any(term in question for term in
+            ("prediction", "journal", "lesson", "mistake", "learning", "performed", "performance",
+             "outcome", "actually happened", "expect from", "thesis failed", "skeptic was right", "edge library"))
         plan = [("dataset.context", {}, context)]
+        if learning_question:
+            plan.extend((tool,{},context) for tool in ("learning.predictions","learning.performance","learning.journal","learning.edges"))
+            if request.prediction_id:
+                plan.append(("learning.prediction",{"prediction_id":request.prediction_id},context))
+            if request.journal_entry_id:
+                plan.append(("learning.entry",{"entry_id":request.journal_entry_id},context))
         if context.symbol:
             plan.append(("instrument.features", {"symbol": context.symbol}, context))
         if request.candidate_id:
@@ -111,7 +120,7 @@ class CortexService:
                 any(term in question for term in ("add", "adding", "incremental")) and
                 request.overlay_quantity is None):
             raise ValueError("HYPOTHETICAL_QUANTITY_AND_ENTRY_REQUIRED")
-        if risk_question:
+        if risk_question and (not learning_question or request.portfolio_id):
             from .portfolio_store import PortfolioStore
             portfolio_id = request.portfolio_id
             if portfolio_id is None:
@@ -325,6 +334,12 @@ class CortexService:
             if item.kind == "risk_metric" and item.value is not None:
                 claims.append(_claim("CALCULATION", f"Pinned {item.label.replace('_', ' ')} is {item.value} {item.unit}.",
                     [item], "neutral"))
+            if item.kind in ("learning_metric", "learning_record", "learning_limit"):
+                claims.append(_claim("LIMITATION" if item.kind=="learning_limit" else
+                    "CALCULATION" if item.kind=="learning_metric" else "OBSERVATION",
+                    f"{item.label}: {item.value if item.value is not None else 'unavailable'}." +
+                    (f" {item.reason}." if item.reason else ""), [item],
+                    "limitation" if item.kind=="learning_limit" else "neutral"))
             if item.kind == "position_risk":
                 claims.append(_claim("CALCULATION" if item.value is not None else "LIMITATION",
                     f"{item.label}: {item.value if item.value is not None else 'unavailable'} {item.unit}." +
@@ -407,6 +422,16 @@ class CortexService:
         question = request.question.lower()
         def priority(item: Claim) -> int:
             value = item.text.lower()
+            if any(term in question for term in ("lesson", "mistake", "recurring")) and "recorded lesson pattern" in value:
+                return -4
+            if request.prediction_id and any(term in value for term in
+                    ("prediction status:", "observed evaluation metric:", "frozen expectation:")):
+                return -3
+            if request.journal_entry_id and "journal entry:" in value:
+                return -3
+            if any(term in question for term in ("learning", "performance", "performed", "prediction", "lesson", "mistake", "actually happened")) and \
+                    any(term in value for term in ("learning usable outcome n", "learning prediction n", "predictions n", "usable n=", "private journal entries n")):
+                return -2
             if request.candidate_id and "recorded candidate" in value:
                 return 0
             if request.overlay_quantity is not None and "hypothetical incremental" in value:
@@ -443,7 +468,11 @@ class CortexService:
         title = (f"{context.symbol} research" if context.symbol else "Binance Pilot 5 research")
         header = (f"{title} | {context.mode} | manifest {context.manifest_id} | "
                   f"as of {context.as_of.isoformat()} | evidence strength: {strength}")
-        if request.candidate_id:
+        if request.prediction_id:
+            conclusion = next((item for item in support if "Prediction status:" in item.text),None)
+        elif request.journal_entry_id:
+            conclusion = next((item for item in support if "Journal entry:" in item.text),None)
+        elif request.candidate_id:
             conclusion = next((item for item in support if "Recorded candidate" in item.text), None)
         elif request.thesis_id:
             conclusion = (next((item for item in support if "hypothetical incremental portfolio heat" in item.text), None)
@@ -514,7 +543,8 @@ class CortexService:
         answer = self._synthesize(request, context, claims, selected, strength)
         evidence_hash = digest([{"tool_id": item.tool_id, "inputs": item.inputs,
                                  "output_hash": item.output_hash} for item in tools])
-        has_observation = any(item.kind == "observation" for run in tools for item in run.evidence)
+        has_observation = any(item.kind in ("observation", "learning_metric", "learning_record", "risk_metric")
+                              and item.value is not None for run in tools for item in run.evidence)
         run = ResearchRun(run_id=uuid4(), created_at=datetime.now(timezone.utc),
             request=request, context=context, tools=tools, claims=claims,
             evidence_strength=strength, answer=answer, warnings=warnings,

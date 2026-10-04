@@ -24,6 +24,8 @@ class ResearchRequest(BaseModel):
     older_manifest_id: UUID | None = None
     candidate_id: UUID | None = None
     thesis_id: UUID | None = None
+    prediction_id: UUID | None = None
+    journal_entry_id: UUID | None = None
     portfolio_id: UUID | None = None
     scenario_shocks: dict[str, Decimal] | None = Field(default=None, max_length=5)
     overlay_quantity: Decimal | None = Field(default=None, gt=0)

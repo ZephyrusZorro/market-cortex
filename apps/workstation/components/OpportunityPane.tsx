@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { ApiError, appendParams, category, getJson, number, postJson, shortId,
   type Context, type InstrumentView, type Mode } from '@/lib/api';
 import { PriceChart } from './charts';
+import { LearningLinksPanel } from './LearningPane';
 
 type Condition = { condition_id: string; kind: string; metric: string; operator: string;
   threshold: number | number[] | string; observed: number | string | null; met: boolean | null;
@@ -296,6 +297,7 @@ export default function OpportunityPane({ context, mode, watchlistIds }: {
           {review && <div className="callout op-review">{review}</div>}
           <div className="grid two"><ConditionList title="Confirmation" rows={thesis.confirmation_conditions} /><ConditionList title="Invalidation" rows={thesis.invalidation_conditions} /></div>
           <ThesisRiskPanel thesis={thesis} context={context} />
+          <LearningLinksPanel thesisId={thesis.thesis_id} />
           <div className="grid two"><div><h3 className="op-subhead">Risk / contradictions</h3>{thesis.risk_factors.map((item) => <div className="data-row" key={item}>{item}</div>)}</div>
             <div><h3 className="op-subhead">Data limitations</h3>{thesis.data_limitations.map((item) => <div className="data-row" key={item}>{item}</div>)}</div></div>
           <div><h3 className="op-subhead">Owner decision · audited</h3><div className="op-controls"><select className="select" aria-label="Owner status" value={ownerStatus} onChange={(e) => setOwnerStatus(e.target.value)}>

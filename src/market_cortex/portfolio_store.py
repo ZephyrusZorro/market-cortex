@@ -113,8 +113,9 @@ class PortfolioStore:
                  risk["source_manifest_id"], risk["as_of"], risk["calculation_version"],
                  json.dumps(risk, default=str)))
 
-    def risk_snapshot(self, snapshot_id: UUID) -> dict | None:
+    def risk_snapshot(self, snapshot_id: UUID, known_at: datetime | None = None) -> dict | None:
         with connect(self.dsn) as connection:
-            row = connection.execute("SELECT payload FROM portfolio_risk_snapshots WHERE snapshot_id=%s",
-                                     (snapshot_id,)).fetchone()
+            row = connection.execute("""SELECT payload FROM portfolio_risk_snapshots WHERE snapshot_id=%s
+                AND (%s::timestamptz IS NULL OR recorded_at<=%s)""",
+                                     (snapshot_id,known_at,known_at)).fetchone()
         return row[0] if row else None

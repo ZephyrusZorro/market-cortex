@@ -1,4 +1,4 @@
-# API Contracts (Phases 1–6)
+# API Contracts (Phases 1–7)
 
 **Baseline:** [Phase 0 §5](architecture/PHASE_0_BASELINE_2026-09-26.md). [Registry](../packages/contracts/registry.schema.json).
 
@@ -39,3 +39,9 @@ The Next.js `/api/v1/*` proxy accepts only the workstation's read-route allowlis
 ## Phase 6 local portfolio and deterministic risk
 
 `GET/POST /api/v1/risk/portfolios` list/create local research portfolios. `GET /api/v1/risk/portfolios/{id}` accepts an optional immutable version; `/versions` returns the audit sequence. `POST /api/v1/risk/portfolios/{id}/positions` validates and appends an add/update/close portfolio version with an owner reason. `POST /api/v1/risk/portfolios/{id}/calculate` accepts a pinned manifest, offset-aware as-of and optional portfolio version; `persist=true` saves an idempotent immutable `RiskSnapshot`, retrievable by `GET /api/v1/risk/snapshots/{id}`. `POST /api/v1/risk/portfolios/{id}/scenario` applies explicit bounded fractional shocks; `/overlay` compares before/after hypothetical positions without writing them. `POST /api/v1/risk/theses/{id}/risk` performs a structured thesis overlay and `POST /api/v1/risk/sizing` returns research-only hypothetical size. Missing invalidation, price, FX, correlation or portfolio equity history remains unknown rather than zero. The Next.js proxy allows only these fixed local paths; no broker or order route exists. CORTEX offers read-only `risk.portfolio`, `risk.scenario` and `risk.overlay` tools grounded in the same pinned engine; the overlay requires explicit thesis, portfolio, quantity and entry assumptions. The [risk guide](risk/PHASE_6_RISK_AND_PORTFOLIO.md) defines the calculations and privacy boundary.
+
+## Phase 7 journal and learning
+
+`/api/v1/learning` exposes validated local journal creation/revisions/history, immutable prediction definitions, explicit deterministic evaluation/cancellation, historical ledger reads, due queue and batch evaluation, versioned descriptive performance, explicit failure/lesson records and owner edge hypotheses. Thesis and research-run link reads close the evidence chain. Recent list views are bounded; due/performance/failure/link queries include all matching records. Evaluation writes require a pinned descendant manifest and aware cutoff, preserve original context, and reject a backward current cutoff. Retries return the original evaluation ID without extra revisions. Synthetic records require a guarded `_test` catalog.
+
+The workstation proxy allows only fixed learning paths and bounded JSON requests. CORTEX adds six read-only `learning.*` tools and explicit prediction/journal IDs on `ResearchRequest`; private context cannot pass the cloud privacy gate. Exact route tables, typed metrics, registration rules, lifecycle and limitations are in the [Phase 7 guide](learning/PHASE_7_JOURNAL_PREDICTION_LEARNING.md).
