@@ -1,4 +1,4 @@
-"""Local read API. No provider credentials, broker operations, or write routes."""
+"""Loopback market-data reads and bounded local research writes; no broker operations."""
 
 from __future__ import annotations
 
@@ -20,7 +20,7 @@ logger = logging.getLogger("market_cortex.api")
 
 def create_app(settings: Settings | None = None, catalog: PostgresCatalog | None = None) -> FastAPI:
     settings = settings or Settings.load()
-    app = FastAPI(title="MARKET CORTEX", version="0.4.0", docs_url="/docs", redoc_url=None)
+    app = FastAPI(title="MARKET CORTEX", version="0.6.0", docs_url="/docs", redoc_url=None)
     store = catalog or (PostgresCatalog(settings.database_url, ArtifactStore(settings.data_root)) if settings.database_url else None)
 
     @app.middleware("http")
@@ -307,6 +307,8 @@ def create_app(settings: Settings | None = None, catalog: PostgresCatalog | None
             app.include_router(cortex_router(store, settings))
             from .opportunity_api import router_for as opportunity_router
             app.include_router(opportunity_router(store, settings))
+            from .risk_api import router_for as risk_router
+            app.include_router(risk_router(store, settings))
     return app
 
 

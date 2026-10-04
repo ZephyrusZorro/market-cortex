@@ -8,10 +8,11 @@ import re
 import time
 from dataclasses import dataclass
 from datetime import date
+from decimal import Decimal
 from typing import Callable
-from uuid import UUID
+from uuid import UUID, NAMESPACE_URL, uuid5
 
-from pydantic import BaseModel, ConfigDict, field_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 from .alignment import compare
 from .cortex_contracts import Evidence, ResearchContext, ToolRun
@@ -78,6 +79,23 @@ class ThesisArguments(BaseModel):
     version: int
 
 
+class PortfolioArguments(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    portfolio_id: UUID
+
+
+class RiskScenarioArguments(PortfolioArguments):
+    shocks: dict[str, Decimal]
+
+
+class RiskOverlayArguments(PortfolioArguments):
+    thesis_id: UUID
+    quantity: Decimal = Field(gt=0)
+    reference_price: Decimal = Field(gt=0)
+    invalidation_price: Decimal | None = Field(default=None, gt=0)
+    shocks: dict[str, Decimal] | None = Field(default=None, max_length=5)
+
+
 @dataclass(frozen=True)
 class ToolSpec:
     tool_id: str
@@ -99,6 +117,9 @@ SPECS = {
     "opportunity.scan": ToolSpec("opportunity.scan", "1.0.0", "Ephemeral deterministic Pilot 5 scan", OpportunityScanArguments),
     "opportunity.candidate": ToolSpec("opportunity.candidate", "1.0.0", "Recorded candidate and machine-readable rules", CandidateArguments),
     "opportunity.thesis": ToolSpec("opportunity.thesis", "1.0.0", "Recorded thesis status and transition history", ThesisArguments),
+    "risk.portfolio": ToolSpec("risk.portfolio", "1.0.0", "Pinned local portfolio heat, exposure and correlation", PortfolioArguments),
+    "risk.scenario": ToolSpec("risk.scenario", "1.0.0", "Explicit what-if shock over pinned portfolio risk", RiskScenarioArguments),
+    "risk.overlay": ToolSpec("risk.overlay", "1.0.0", "Hypothetical thesis addition under pinned portfolio risk", RiskOverlayArguments),
 }
 
 
@@ -108,6 +129,7 @@ class ToolRegistry:
         self.context = context
         self.engine = FeatureEngine(catalog)
         self._loaded = {}
+        self._risk_cache = {}
 
     def _evidence(self, tool_id: str, kind: str, label: str, *, value=None, symbol=None,
                   unit=None, session_date=None, source_id=None, version=None,
@@ -148,7 +170,10 @@ class ToolRegistry:
             "dataset.manifest": self._manifest, "research.prior": self._prior,
             "opportunity.scan": self._opportunity_scan,
             "opportunity.candidate": self._opportunity_candidate,
-            "opportunity.thesis": self._opportunity_thesis}
+            "opportunity.thesis": self._opportunity_thesis,
+            "risk.portfolio": self._risk_portfolio,
+            "risk.scenario": self._risk_scenario,
+            "risk.overlay": self._risk_overlay}
         evidence = action[tool_id](parsed)
         status = "ok" if evidence and any(item.value is not None for item in evidence) else "insufficient"
         values = [item.model_dump(mode="json") for item in evidence]
@@ -363,4 +388,148 @@ class ToolRegistry:
                 source_id=str(thesis.thesis_id), version=str(thesis.version),
                 source_manifest_id=event.source_manifest_id, source_as_of=event.as_of,
                 source_recorded_at=event.at))
+        return result
+
+    def _portfolio_snapshot(self, portfolio_id: UUID):
+        from .risk import RiskService
+        from .risk_contracts import RiskRequest
+
+        if portfolio_id not in self._risk_cache:
+            self._risk_cache[portfolio_id] = RiskService(self.catalog, self.context.environment).snapshot(
+                portfolio_id, RiskRequest(manifest_id=self.context.manifest_id,
+                                          as_of=self.context.as_of, persist=False))
+        return self._risk_cache[portfolio_id]
+
+    def _risk_portfolio(self, args: PortfolioArguments) -> list[Evidence]:
+        snapshot = self._portfolio_snapshot(args.portfolio_id)
+        result = []
+        facts = (("gross_exposure", snapshot.exposure.gross, snapshot.base_currency),
+                 ("portfolio_heat", snapshot.heat_amount, snapshot.base_currency),
+                 ("heat_fraction", snapshot.heat_percent, "fraction"),
+                 ("btc_sensitivity_proxy", snapshot.btc_sensitivity_proxy, "capital_fraction"),
+                 ("risk_coverage", snapshot.coverage, "fraction"))
+        for label, value, unit in facts:
+            result.append(self._evidence("risk.portfolio", "risk_metric", label,
+                value=str(value) if value is not None else None, unit=unit,
+                source_id=str(snapshot.snapshot_id), version=snapshot.calculation_version,
+                source_manifest_id=snapshot.source_manifest_id, source_as_of=snapshot.as_of,
+                freshness=snapshot.price_freshness,
+                reason="; ".join(snapshot.warnings) if value is None else None))
+        for item in snapshot.positions:
+            result.append(self._evidence("risk.portfolio", "position_risk",
+                f"{item.symbol} risk to invalidation", symbol=item.symbol,
+                value=str(item.risk_to_invalidation) if item.risk_to_invalidation is not None else None,
+                unit=item.native_currency, source_id=str(snapshot.snapshot_id),
+                version=snapshot.calculation_version, observation_id=item.price_observation_id,
+                source_manifest_id=snapshot.source_manifest_id, source_as_of=snapshot.as_of,
+                freshness=item.freshness, coverage=item.coverage,
+                reason="; ".join(item.warnings) or None))
+        for row in snapshot.correlations:
+            result.append(self._evidence("risk.portfolio", "risk_correlation",
+                f"{row['left']}/{row['right']} 60-return Pearson correlation",
+                value=row["correlation"], unit="coefficient",
+                source_id=row["result_id"], version="aligned_daily_v1",
+                source_manifest_id=snapshot.source_manifest_id, source_as_of=snapshot.as_of,
+                coverage=row["coverage"], reason=row["unknown_reason"]))
+        for flag in snapshot.exposure.concentration_flags:
+            result.append(self._evidence("risk.portfolio", "risk_concentration",
+                f"Concentration at or above {snapshot.exposure.concentration_threshold}: {flag}",
+                value=str(snapshot.exposure.concentration_weights.get(flag)), unit="gross_fraction",
+                source_id=str(snapshot.snapshot_id), version=snapshot.calculation_version,
+                source_manifest_id=snapshot.source_manifest_id, source_as_of=snapshot.as_of))
+        for warning in snapshot.warnings:
+            result.append(self._evidence("risk.portfolio", "risk_warning", warning,
+                value="present", source_id=str(snapshot.snapshot_id),
+                source_manifest_id=snapshot.source_manifest_id, source_as_of=snapshot.as_of))
+        return result
+
+    def _risk_scenario(self, args: RiskScenarioArguments) -> list[Evidence]:
+        from .risk import run_scenario
+        from .risk_contracts import ScenarioDefinition
+
+        snapshot = self._portfolio_snapshot(args.portfolio_id)
+        scenario = ScenarioDefinition(name="CORTEX explicit what-if", shocks=args.shocks)
+        result = run_scenario(snapshot, scenario)
+        assumptions = "; ".join(f"{symbol}:{shock}" for symbol, shock in sorted(args.shocks.items()))
+        return [self._evidence("risk.scenario", "scenario_pnl", "What-if portfolio P/L",
+            value=str(result.portfolio_pnl) if result.portfolio_pnl is not None else None,
+            unit=snapshot.base_currency, source_id=str(snapshot.snapshot_id),
+            version=result.schema_version, source_manifest_id=snapshot.source_manifest_id,
+            source_as_of=snapshot.as_of, freshness=snapshot.price_freshness,
+            coverage=result.coverage, reason=f"WHAT_IF_NOT_FORECAST; {assumptions}; " +
+                "; ".join(result.warnings))]
+
+    def _risk_overlay(self, args: RiskOverlayArguments) -> list[Evidence]:
+        from .opportunity_store import OpportunityStore
+        from .risk import RiskService
+        from .risk_contracts import (OverlayRequest, PositionInput, RiskRequest,
+                                     ScenarioDefinition)
+
+        service = RiskService(self.catalog, self.context.environment)
+        visible_manifests = service._manifest_ancestors(self.context.manifest_id)
+        versions = OpportunityStore(self.catalog.dsn).versions(args.thesis_id)
+        visible = [item for item in versions if item.updated_at <= self.context.as_of and
+                   item.as_of <= self.context.as_of and item.source_manifest_id in visible_manifests]
+        if not visible:
+            raise LookupError("THESIS_NOT_VISIBLE_IN_RISK_CONTEXT")
+        thesis = visible[-1]
+        identities, _ = self.catalog.load_identity()
+        instrument = next((item for item in identities if item.instrument_id == thesis.instrument_id), None)
+        if instrument is None:
+            raise LookupError("INSTRUMENT_NOT_FOUND")
+        position = PositionInput(position_id=uuid5(NAMESPACE_URL, digest({
+            "tool":"risk.overlay", "portfolio_id":str(args.portfolio_id),
+            "thesis_id":str(args.thesis_id), "quantity":str(args.quantity),
+            "entry":str(args.reference_price), "invalidation":str(args.invalidation_price),
+            "manifest_id":str(self.context.manifest_id), "as_of":self.context.as_of.isoformat()})),
+            instrument_id=thesis.instrument_id,
+            quantity=args.quantity, average_cost=args.reference_price,
+            native_currency=instrument.trading_currency, opened_at=self.context.as_of,
+            thesis_id=args.thesis_id, invalidation_price=args.invalidation_price,
+            source_type="manual")
+        scenario = ScenarioDefinition(name="CORTEX explicit overlay what-if", shocks=args.shocks) \
+            if args.shocks else None
+        overlay = service.overlay(
+            args.portfolio_id, OverlayRequest(risk=RiskRequest(
+                manifest_id=self.context.manifest_id, as_of=self.context.as_of),
+                hypothetical_position=position, scenario=scenario))
+        after = overlay["after"]
+        assumptions = (f"HYPOTHETICAL_NOT_ADDED; thesis={args.thesis_id}; "
+                       f"thesis_version={thesis.version}; thesis_manifest={thesis.source_manifest_id}; "
+                       f"quantity={args.quantity}; "
+                       f"entry={args.reference_price}; invalidation={args.invalidation_price or 'unavailable'}")
+        result = []
+        for label, value, unit in (
+            ("hypothetical incremental gross exposure", overlay["delta_gross_exposure"], after["base_currency"]),
+            ("hypothetical incremental portfolio heat", overlay["delta_heat"], after["base_currency"]),
+            ("hypothetical BTC sensitivity proxy change", overlay["delta_btc_sensitivity_proxy"], "capital_fraction")):
+            result.append(self._evidence("risk.overlay", "risk_metric", label,
+                value=str(value) if value is not None else None, unit=unit,
+                source_id=after["snapshot_id"], version=after["calculation_version"],
+                source_manifest_id=self.context.manifest_id, source_as_of=self.context.as_of,
+                freshness=after["price_freshness"], coverage=after["coverage"], reason=assumptions))
+        result.append(self._evidence("risk.overlay", "risk_overlay_concentration",
+            "Hypothetical concentration after addition",
+            value=", ".join(after["exposure"]["concentration_flags"]) or "none",
+            source_id=after["snapshot_id"], version=after["calculation_version"],
+            source_manifest_id=self.context.manifest_id, source_as_of=self.context.as_of,
+            reason=assumptions))
+        if scenario is not None:
+            shocks = "; ".join(f"{key}:{value}" for key, value in sorted(args.shocks.items()))
+            for label, key, snapshot_key in (
+                    ("hypothetical scenario P/L before addition", "before_scenario", "before"),
+                    ("hypothetical scenario P/L after addition", "after_scenario", "after")):
+                value = overlay[key]["portfolio_pnl"]
+                result.append(self._evidence("risk.overlay", "risk_metric", label,
+                    value=str(value) if value is not None else None,
+                    unit=after["base_currency"], source_id=overlay[snapshot_key]["snapshot_id"],
+                    version=after["calculation_version"],
+                    source_manifest_id=self.context.manifest_id, source_as_of=self.context.as_of,
+                    freshness=after["price_freshness"], coverage=overlay[key]["coverage"],
+                    reason=f"WHAT_IF_NOT_FORECAST; {shocks}; {assumptions}"))
+        if overlay["delta_heat"] is None:
+            result.append(self._evidence("risk.overlay", "risk_warning",
+                "HYPOTHETICAL_INCREMENTAL_HEAT_UNKNOWN", value="present",
+                source_id=after["snapshot_id"], source_manifest_id=self.context.manifest_id,
+                source_as_of=self.context.as_of, reason="MISSING_INVALIDATION_PRICE_OR_FX"))
         return result

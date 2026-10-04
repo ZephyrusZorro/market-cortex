@@ -64,6 +64,11 @@ def main(argv: list[str] | None = None) -> int:
     research.add_argument("--older-manifest-id", type=UUID)
     research.add_argument("--candidate-id", type=UUID, help="Review a recorded opportunity candidate")
     research.add_argument("--thesis-id", type=UUID, help="Review a recorded structured thesis")
+    research.add_argument("--portfolio-id", type=UUID, help="Ground a local portfolio risk question")
+    research.add_argument("--scenario-shocks", type=json.loads, help="JSON object of explicit symbol: fractional shock")
+    research.add_argument("--overlay-quantity", type=str, help="Hypothetical thesis units for research overlay")
+    research.add_argument("--overlay-reference-price", type=str, help="Explicit hypothetical entry price")
+    research.add_argument("--overlay-invalidation-price", type=str, help="Optional explicit invalidation price")
     research.add_argument("--depth", choices=["quick", "deep"], default="deep")
     runs = sub.add_parser("research-runs", help="List recent local CORTEX research runs")
     runs.add_argument("--symbol")
@@ -90,6 +95,26 @@ def main(argv: list[str] | None = None) -> int:
     monitor_thesis.add_argument("--mode", choices=["latest", "pinned", "historical"], default="latest")
     monitor_thesis.add_argument("--manifest-id", type=UUID)
     monitor_thesis.add_argument("--as-of", type=datetime.fromisoformat)
+    sub.add_parser("portfolios", help="List local research portfolios")
+    risk = sub.add_parser("portfolio-risk", help="Calculate pinned portfolio risk")
+    risk.add_argument("portfolio_id", type=UUID)
+    risk.add_argument("--manifest-id", type=UUID)
+    risk.add_argument("--as-of", type=datetime.fromisoformat)
+    risk.add_argument("--version", type=int)
+    risk.add_argument("--persist", action="store_true")
+    scenario = sub.add_parser("portfolio-scenario", help="Run explicit what-if shocks over a portfolio")
+    scenario.add_argument("portfolio_id", type=UUID)
+    scenario.add_argument("--manifest-id", type=UUID)
+    scenario.add_argument("--as-of", type=datetime.fromisoformat)
+    scenario.add_argument("--shocks", type=json.loads, required=True)
+    sizing = sub.add_parser("risk-sizing", help="Hypothetical research sizing without any order path")
+    sizing.add_argument("--capital", required=True)
+    sizing.add_argument("--entry", required=True)
+    sizing.add_argument("--invalidation", required=True)
+    budget = sizing.add_mutually_exclusive_group(required=True)
+    budget.add_argument("--risk-percent")
+    budget.add_argument("--risk-amount")
+    sizing.add_argument("--target")
     args = parser.parse_args(argv)
     try:
         settings = Settings.load()
@@ -103,15 +128,43 @@ def main(argv: list[str] | None = None) -> int:
             root = Path(__file__).resolve().parents[2]
             print(json.dumps({"applied_migrations": migrate(settings.database_url, root)}))
             return 0
+        if args.command == "risk-sizing":
+            from decimal import Decimal
+            from .risk import research_sizing
+            from .risk_contracts import SizingRequest
+            result = research_sizing(SizingRequest(capital=Decimal(args.capital),
+                entry_price=Decimal(args.entry), invalidation_price=Decimal(args.invalidation),
+                risk_percent=Decimal(args.risk_percent) if args.risk_percent else None,
+                risk_amount=Decimal(args.risk_amount) if args.risk_amount else None,
+                target_price=Decimal(args.target) if args.target else None))
+            print(json.dumps(result, default=str))
+            return 0
         if args.command in ("bootstrap-crypto", "sync-daily", "inspect-manifest", "scan-storage",
                             "compute-feature", "compute-market-state", "research", "research-runs",
                             "inspect-research-run", "replay-research-run", "scan-opportunities",
-                            "inspect-candidate", "create-thesis", "inspect-thesis", "monitor-thesis"):
+                            "inspect-candidate", "create-thesis", "inspect-thesis", "monitor-thesis",
+                            "portfolios", "portfolio-risk", "portfolio-scenario"):
             if not settings.database_url:
                 print("DATABASE_NOT_CONFIGURED", file=sys.stderr)
                 return 2
             from .storage import ArtifactStore, PostgresCatalog
             catalog = PostgresCatalog(settings.database_url, ArtifactStore(settings.data_root))
+            if args.command in ("portfolios", "portfolio-risk", "portfolio-scenario"):
+                from .risk import RiskService, run_scenario
+                from .risk_contracts import RiskRequest, ScenarioDefinition
+                service = RiskService(catalog, settings.environment)
+                if args.command == "portfolios":
+                    result = {"items": [item.model_dump(mode="json") for item in service.store.list()]}
+                else:
+                    snapshot = service.snapshot(args.portfolio_id, RiskRequest(
+                        manifest_id=args.manifest_id, as_of=args.as_of,
+                        portfolio_version=args.version if args.command == "portfolio-risk" else None,
+                        persist=args.persist if args.command == "portfolio-risk" else False))
+                    result = snapshot.model_dump(mode="json") if args.command == "portfolio-risk" else \
+                        run_scenario(snapshot, ScenarioDefinition(name="CLI explicit what-if",
+                            shocks=args.shocks)).model_dump(mode="json")
+                print(json.dumps(result))
+                return 0
             if args.command in ("scan-opportunities", "inspect-candidate", "create-thesis",
                                 "inspect-thesis", "monitor-thesis"):
                 from .opportunity import OpportunityService
@@ -149,7 +202,12 @@ def main(argv: list[str] | None = None) -> int:
                     request = ResearchRequest(question=args.question, mode=args.mode,
                         manifest_id=args.manifest_id, as_of=args.as_of, symbol=args.symbol,
                         compare_symbol=args.compare_symbol, older_manifest_id=args.older_manifest_id,
-                        candidate_id=args.candidate_id, thesis_id=args.thesis_id, depth=args.depth)
+                        candidate_id=args.candidate_id, thesis_id=args.thesis_id,
+                        portfolio_id=args.portfolio_id, scenario_shocks=args.scenario_shocks,
+                        overlay_quantity=args.overlay_quantity,
+                        overlay_reference_price=args.overlay_reference_price,
+                        overlay_invalidation_price=args.overlay_invalidation_price,
+                        depth=args.depth)
                     result = service.research(request)
                     print(json.dumps({"run_id": str(result.run_id), "answer": result.answer,
                         "evidence_strength": result.evidence_strength,

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import re
 import time
+from decimal import Decimal
 from datetime import date, datetime, time as daytime, timedelta, timezone
 from uuid import UUID, uuid4
 from zoneinfo import ZoneInfo
@@ -104,6 +105,39 @@ class CortexService:
                                                 "version": thesis.version}, context))
         if not request.candidate_id and not request.thesis_id and opportunity_question:
             plan.append(("opportunity.scan", {"symbol": context.symbol}, context))
+        risk_question = any(term in question for term in
+            ("portfolio", "risk", "exposure", "concentration", "correlat", "heat", "scenario", "shock"))
+        if (risk_question and request.thesis_id and request.portfolio_id and
+                any(term in question for term in ("add", "adding", "incremental")) and
+                request.overlay_quantity is None):
+            raise ValueError("HYPOTHETICAL_QUANTITY_AND_ENTRY_REQUIRED")
+        if risk_question:
+            from .portfolio_store import PortfolioStore
+            portfolio_id = request.portfolio_id
+            if portfolio_id is None:
+                available = PortfolioStore(self.catalog.dsn, context.environment).list(limit=2)
+                if not available:
+                    raise LookupError("PORTFOLIO_NOT_CONFIGURED")
+                if len(available) > 1:
+                    raise ValueError("PORTFOLIO_ID_REQUIRED")
+                portfolio_id = available[0].portfolio_id
+            if portfolio_id is not None:
+                plan.append(("risk.portfolio", {"portfolio_id": portfolio_id}, context))
+                shocks = request.scenario_shocks
+                if shocks is None:
+                    match = re.search(r"\b(btc|eth|sol|bnb|xrp|crypto)\s+(?:drops?|falls?|declines?)\s+([0-9]+(?:\.[0-9]+)?)\s*%", question)
+                    if match:
+                        shock = -(Decimal(match.group(2)) / Decimal(100))
+                        shocks = ({symbol:shock for symbol in PILOT_SYMBOLS} if match.group(1) == "crypto"
+                                  else {match.group(1).upper()+"USDT":shock})
+                if shocks:
+                    plan.append(("risk.scenario", {"portfolio_id": portfolio_id, "shocks": shocks}, context))
+        if request.overlay_quantity is not None:
+            plan.append(("risk.overlay", {"portfolio_id":request.portfolio_id,
+                "thesis_id":request.thesis_id, "quantity":request.overlay_quantity,
+                "reference_price":request.overlay_reference_price,
+                "invalidation_price":request.overlay_invalidation_price,
+                "shocks":request.scenario_shocks}, context))
         market_question = any(term in question for term in ("market state", "regime", "breadth", "pilot", "trend", "volatility", "evidence"))
         if market_question or not context.symbol or request.depth == "deep":
             plan.append(("market.state", {}, context))
@@ -288,6 +322,27 @@ class CortexService:
                     [item], "neutral"))
             if item.kind == "thesis_transition":
                 claims.append(_claim("OBSERVATION", f"{item.label}: {item.value}.", [item], "neutral"))
+            if item.kind == "risk_metric" and item.value is not None:
+                claims.append(_claim("CALCULATION", f"Pinned {item.label.replace('_', ' ')} is {item.value} {item.unit}.",
+                    [item], "neutral"))
+            if item.kind == "position_risk":
+                claims.append(_claim("CALCULATION" if item.value is not None else "LIMITATION",
+                    f"{item.label}: {item.value if item.value is not None else 'unavailable'} {item.unit}." +
+                    (f" {item.reason}." if item.reason else ""), [item],
+                    "neutral" if item.value is not None else "limitation"))
+            if item.kind == "risk_concentration":
+                claims.append(_claim("CLASSIFICATION", f"{item.label}; weight {item.value}.", [item], "neutral"))
+            if item.kind == "risk_overlay_concentration":
+                claims.append(_claim("CLASSIFICATION", f"{item.label}: {item.value}.", [item], "neutral"))
+            if item.kind == "risk_correlation":
+                claims.append(_claim("CALCULATION", f"{item.label}: {item.value if item.value is not None else 'unavailable'}.",
+                    [item], "neutral"))
+            if item.kind == "scenario_pnl":
+                claims.append(_claim("CALCULATION" if item.value is not None else "LIMITATION",
+                    f"Explicit what-if portfolio P/L is {item.value if item.value is not None else 'unavailable'} {item.unit}; {item.reason}.",
+                    [item], "neutral" if item.value is not None else "limitation"))
+            if item.kind == "risk_warning":
+                claims.append(_claim("LIMITATION", f"Risk limitation: {item.label}.", [item], "limitation"))
         return claims
 
     def _challenge(self, context: ResearchContext, tools: list[ToolRun], claims: list[Claim]) -> list[Claim]:
@@ -354,7 +409,18 @@ class CortexService:
             value = item.text.lower()
             if request.candidate_id and "recorded candidate" in value:
                 return 0
+            if request.overlay_quantity is not None and "hypothetical incremental" in value:
+                return 0
             if request.thesis_id and "recorded thesis" in value:
+                return 0
+            if "portfolio" in question and any(term in value for term in
+                    ("pinned portfolio heat", "pinned gross exposure", "explicit what-if portfolio")):
+                return 0
+            if any(term in question for term in ("drops", "shock", "scenario")) and "explicit what-if portfolio" in value:
+                return 0
+            if "heat" in question and "pinned portfolio heat" in value:
+                return 0
+            if "concentration" in question and "concentration" in value:
                 return 0
             if "opportunit" in question and "candidate: " in value:
                 return 0
@@ -380,7 +446,11 @@ class CortexService:
         if request.candidate_id:
             conclusion = next((item for item in support if "Recorded candidate" in item.text), None)
         elif request.thesis_id:
-            conclusion = next((item for item in support if "Recorded thesis" in item.text), None)
+            conclusion = (next((item for item in support if "hypothetical incremental portfolio heat" in item.text), None)
+                          if request.overlay_quantity is not None else None) or \
+                         (next((item for item in limits if "HYPOTHETICAL_INCREMENTAL_HEAT_UNKNOWN" in item.text), None)
+                          if request.overlay_quantity is not None else None) or \
+                         next((item for item in support if "Recorded thesis" in item.text), None)
         elif any(term in question for term in ("contradict", "bearish", "counter-evidence", "no edge", "no-edge", "rejected")) and counter:
             conclusion = counter[0]
         elif any(term in question for term in ("missing", "insufficient", "unavailable")) and limits:

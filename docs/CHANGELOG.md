@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-10-03 — Phase 6 deterministic portfolio and risk research
+
+Added auditable local portfolio versions, pinned risk snapshots, Phase 2-based position volatility/ATR/drawdown and 60-return correlation, explicit R and research sizing, portfolio heat, native-currency exposures, concentration and BTC sensitivity proxy, what-if shocks, and hypothetical thesis overlays. Added bounded local API/CLI routes, three read-only CORTEX risk tools and a Portfolio & Risk workstation. Synthetic Pilot 5 validation stays in a dedicated `_test` catalog; stale data, missing invalidation/FX and unavailable portfolio equity drawdown are visible. See the [risk guide](risk/PHASE_6_RISK_AND_PORTFOLIO.md) and [exit matrix](planning/PHASE_6_EXIT_MATRIX_2026-10-03.md). No execution path was added.
+
 ## 2026-10-03 — Phase 5 Opportunity Engine and structured theses
 
 Added eight deterministic Binance Pilot 5 daily-bar detectors, explicit unsupported detector records, manifest/cutoff-pinned candidate evidence, a deduplicated candidate and rejection ledger, append-only thesis versions and controlled lifecycle transitions. Added CORTEX opportunity tools and candidate review, local CLI/API routes, and a workstation scanner, detail and thesis board with watchlist badges. Synthetic detector and lifecycle tests, pilot PostgreSQL replay tests, frontend tests and visual UI validation cover the implementation. See the [Phase 5 guide](opportunity/PHASE_5_OPPORTUNITY_AND_THESIS.md) and [exit matrix](planning/PHASE_5_EXIT_MATRIX_2026-10-03.md). No trade execution or win probabilities were added.

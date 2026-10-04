@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from datetime import date, datetime
+from decimal import Decimal
 from typing import Literal
 from uuid import UUID
 
@@ -23,6 +24,11 @@ class ResearchRequest(BaseModel):
     older_manifest_id: UUID | None = None
     candidate_id: UUID | None = None
     thesis_id: UUID | None = None
+    portfolio_id: UUID | None = None
+    scenario_shocks: dict[str, Decimal] | None = Field(default=None, max_length=5)
+    overlay_quantity: Decimal | None = Field(default=None, gt=0)
+    overlay_reference_price: Decimal | None = Field(default=None, gt=0)
+    overlay_invalidation_price: Decimal | None = Field(default=None, gt=0)
     depth: Literal["quick", "deep"] = "deep"
 
     @field_validator("as_of")
@@ -45,6 +51,12 @@ class ResearchRequest(BaseModel):
             raise ValueError("HISTORICAL_CUTOFF_REQUIRED")
         if self.mode == "latest" and (self.manifest_id is None) != (self.as_of is None):
             raise ValueError("LATEST_CONTEXT_NEEDS_MANIFEST_AND_CUTOFF")
+        if (self.overlay_quantity is None) != (self.overlay_reference_price is None):
+            raise ValueError("OVERLAY_QUANTITY_AND_ENTRY_REQUIRED_TOGETHER")
+        if self.overlay_quantity is not None and (self.thesis_id is None or self.portfolio_id is None):
+            raise ValueError("OVERLAY_REQUIRES_THESIS_AND_PORTFOLIO_IDS")
+        if self.overlay_invalidation_price is not None and self.overlay_quantity is None:
+            raise ValueError("OVERLAY_QUANTITY_AND_ENTRY_REQUIRED_TOGETHER")
         return self
 
 

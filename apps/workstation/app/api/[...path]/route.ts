@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-const allowed = /^v1\/(health|features(?:\/(?:series|compute))?|workstation\/(?:context|overview|comparison|instrument\/[0-9a-f-]{36}|manifest\/[0-9a-f-]{36})|cortex\/(?:status|tools|runs(?:\/[0-9a-f-]{36}(?:\/replay)?)?)|opportunities\/(?:detectors|candidates(?:\/[0-9a-f-]{36})?|theses(?:\/[0-9a-f-]{36}(?:\/(?:versions|comparison))?)?))$/;
-const postAllowed = /^v1\/(?:cortex\/research|opportunities\/(?:scan|theses(?:\/[0-9a-f-]{36}\/(?:monitor|decision|review))?))$/;
+const allowed = /^v1\/(health|features(?:\/(?:series|compute))?|workstation\/(?:context|overview|comparison|instrument\/[0-9a-f-]{36}|manifest\/[0-9a-f-]{36})|cortex\/(?:status|tools|runs(?:\/[0-9a-f-]{36}(?:\/replay)?)?)|opportunities\/(?:detectors|candidates(?:\/[0-9a-f-]{36})?|theses(?:\/[0-9a-f-]{36}(?:\/(?:versions|comparison))?)?)|risk\/(?:portfolios(?:\/[0-9a-f-]{36}(?:\/versions)?)?|snapshots\/[0-9a-f-]{36}))$/;
+const postAllowed = /^v1\/(?:cortex\/research|opportunities\/(?:scan|theses(?:\/[0-9a-f-]{36}\/(?:monitor|decision|review))?)|risk\/(?:portfolios(?:\/[0-9a-f-]{36}\/(?:positions|calculate|scenario|overlay))?|sizing|theses\/[0-9a-f-]{36}\/risk))$/;
 
 function backendUrl() {
   const backend = new URL(process.env.MARKET_CORTEX_API_URL ?? 'http://127.0.0.1:8765');
