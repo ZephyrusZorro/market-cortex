@@ -1,0 +1,1094 @@
+{
+  "$defs": {
+    "BacktestDefinition": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "backtest_v1",
+          "default": "backtest_v1",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "strategy_id": {
+          "enum": [
+            "momentum",
+            "breakout",
+            "trend_continuation",
+            "pullback",
+            "buy_hold",
+            "equal_weight"
+          ],
+          "title": "Strategy Id",
+          "type": "string"
+        },
+        "strategy_version": {
+          "const": "1.0.0",
+          "default": "1.0.0",
+          "title": "Strategy Version",
+          "type": "string"
+        },
+        "manifest_id": {
+          "format": "uuid",
+          "title": "Manifest Id",
+          "type": "string"
+        },
+        "source_as_of": {
+          "format": "date-time",
+          "title": "Source As Of",
+          "type": "string"
+        },
+        "start": {
+          "format": "date",
+          "title": "Start",
+          "type": "string"
+        },
+        "end": {
+          "format": "date",
+          "title": "End",
+          "type": "string"
+        },
+        "symbols": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 5,
+          "minItems": 1,
+          "title": "Symbols",
+          "type": "array"
+        },
+        "replay_policy": {
+          "default": "AS_RECORDED",
+          "enum": [
+            "AS_RECORDED",
+            "HISTORICAL_RECONSTRUCTION"
+          ],
+          "title": "Replay Policy",
+          "type": "string"
+        },
+        "publication_lag_seconds": {
+          "default": 60,
+          "maximum": 86400,
+          "minimum": 1,
+          "title": "Publication Lag Seconds",
+          "type": "integer"
+        },
+        "interval": {
+          "const": "P1D",
+          "default": "P1D",
+          "title": "Interval",
+          "type": "string"
+        },
+        "adjustment_basis": {
+          "const": "raw",
+          "default": "raw",
+          "title": "Adjustment Basis",
+          "type": "string"
+        },
+        "universe": {
+          "const": "binance_pilot_5_selected_survivors",
+          "default": "binance_pilot_5_selected_survivors",
+          "title": "Universe",
+          "type": "string"
+        },
+        "capital": {
+          "default": 10000,
+          "exclusiveMinimum": 0,
+          "maximum": 1000000000000.0,
+          "title": "Capital",
+          "type": "number"
+        },
+        "max_positions": {
+          "default": 5,
+          "maximum": 5,
+          "minimum": 1,
+          "title": "Max Positions",
+          "type": "integer"
+        },
+        "parameters": {
+          "$ref": "#/$defs/StrategyParameters"
+        },
+        "execution": {
+          "$ref": "#/$defs/ExecutionPolicy"
+        },
+        "costs": {
+          "$ref": "#/$defs/CostModel"
+        },
+        "sizing": {
+          "$ref": "#/$defs/SizingPolicy"
+        },
+        "benchmark": {
+          "default": "same_universe_equal_weight",
+          "enum": [
+            "BTCUSDT",
+            "same_universe_equal_weight",
+            "cash"
+          ],
+          "title": "Benchmark",
+          "type": "string"
+        },
+        "annualization": {
+          "const": 365,
+          "default": 365,
+          "title": "Annualization",
+          "type": "integer"
+        },
+        "risk_free_rate": {
+          "default": 0,
+          "maximum": 0.5,
+          "minimum": -0.1,
+          "title": "Risk Free Rate",
+          "type": "number"
+        },
+        "classification": {
+          "default": "OWNER_RESEARCH",
+          "enum": [
+            "OWNER_RESEARCH",
+            "SYNTHETIC_TEST"
+          ],
+          "title": "Classification",
+          "type": "string"
+        }
+      },
+      "required": [
+        "strategy_id",
+        "manifest_id",
+        "source_as_of",
+        "start",
+        "end"
+      ],
+      "title": "BacktestDefinition",
+      "type": "object"
+    },
+    "BacktestManifest": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "default": "backtest_manifest_v1",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "source_hash": {
+          "title": "Source Hash",
+          "type": "string"
+        },
+        "manifest_id": {
+          "format": "uuid",
+          "title": "Manifest Id",
+          "type": "string"
+        },
+        "source_as_of": {
+          "format": "date-time",
+          "title": "Source As Of",
+          "type": "string"
+        },
+        "engine_version": {
+          "title": "Engine Version",
+          "type": "string"
+        },
+        "code_hash": {
+          "title": "Code Hash",
+          "type": "string"
+        },
+        "detector_code_hash": {
+          "title": "Detector Code Hash",
+          "type": "string"
+        },
+        "feature_code_hash": {
+          "title": "Feature Code Hash",
+          "type": "string"
+        },
+        "calendar_versions": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Calendar Versions",
+          "type": "object"
+        },
+        "environment": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Environment",
+          "type": "object"
+        },
+        "definition_hash": {
+          "title": "Definition Hash",
+          "type": "string"
+        },
+        "input_hash": {
+          "title": "Input Hash",
+          "type": "string"
+        }
+      },
+      "required": [
+        "source_hash",
+        "manifest_id",
+        "source_as_of",
+        "engine_version",
+        "code_hash",
+        "detector_code_hash",
+        "feature_code_hash",
+        "calendar_versions",
+        "environment",
+        "definition_hash",
+        "input_hash"
+      ],
+      "title": "BacktestManifest",
+      "type": "object"
+    },
+    "BacktestRun": {
+      "additionalProperties": false,
+      "properties": {
+        "run_id": {
+          "format": "uuid",
+          "title": "Run Id",
+          "type": "string"
+        },
+        "status": {
+          "const": "completed",
+          "default": "completed",
+          "title": "Status",
+          "type": "string"
+        },
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        },
+        "definition": {
+          "$ref": "#/$defs/BacktestDefinition"
+        },
+        "manifest": {
+          "$ref": "#/$defs/BacktestManifest"
+        },
+        "decisions": {
+          "items": {
+            "$ref": "#/$defs/Decision"
+          },
+          "title": "Decisions",
+          "type": "array"
+        },
+        "trades": {
+          "items": {
+            "$ref": "#/$defs/SimulatedTrade"
+          },
+          "title": "Trades",
+          "type": "array"
+        },
+        "equity": {
+          "items": {
+            "$ref": "#/$defs/EquityPoint"
+          },
+          "title": "Equity",
+          "type": "array"
+        },
+        "metrics": {
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "integer"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "title": "Metrics",
+          "type": "object"
+        },
+        "drawdown": {
+          "additionalProperties": true,
+          "title": "Drawdown",
+          "type": "object"
+        },
+        "regime_performance": {
+          "items": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "title": "Regime Performance",
+          "type": "array"
+        },
+        "controls": {
+          "additionalProperties": true,
+          "title": "Controls",
+          "type": "object"
+        },
+        "warnings": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Warnings",
+          "type": "array"
+        },
+        "result_hash": {
+          "title": "Result Hash",
+          "type": "string"
+        },
+        "elapsed_ms": {
+          "title": "Elapsed Ms",
+          "type": "number"
+        }
+      },
+      "required": [
+        "run_id",
+        "created_at",
+        "definition",
+        "manifest",
+        "decisions",
+        "trades",
+        "equity",
+        "metrics",
+        "drawdown",
+        "regime_performance",
+        "controls",
+        "warnings",
+        "result_hash",
+        "elapsed_ms"
+      ],
+      "title": "BacktestRun",
+      "type": "object"
+    },
+    "CompareRequest": {
+      "additionalProperties": false,
+      "properties": {
+        "run_ids": {
+          "items": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "maxItems": 12,
+          "minItems": 2,
+          "title": "Run Ids",
+          "type": "array"
+        }
+      },
+      "required": [
+        "run_ids"
+      ],
+      "title": "CompareRequest",
+      "type": "object"
+    },
+    "CostModel": {
+      "additionalProperties": false,
+      "properties": {
+        "version": {
+          "const": "bps_proxy_v1",
+          "default": "bps_proxy_v1",
+          "title": "Version",
+          "type": "string"
+        },
+        "entry_fee_bps": {
+          "default": 10,
+          "maximum": 500,
+          "minimum": 0,
+          "title": "Entry Fee Bps",
+          "type": "number"
+        },
+        "exit_fee_bps": {
+          "default": 10,
+          "maximum": 500,
+          "minimum": 0,
+          "title": "Exit Fee Bps",
+          "type": "number"
+        },
+        "slippage_bps": {
+          "default": 5,
+          "maximum": 500,
+          "minimum": 0,
+          "title": "Slippage Bps",
+          "type": "number"
+        },
+        "spread_bps": {
+          "default": 0,
+          "maximum": 500,
+          "minimum": 0,
+          "title": "Spread Bps",
+          "type": "number"
+        },
+        "fixed_fee": {
+          "default": 0,
+          "maximum": 100,
+          "minimum": 0,
+          "title": "Fixed Fee",
+          "type": "number"
+        }
+      },
+      "title": "CostModel",
+      "type": "object"
+    },
+    "Decision": {
+      "additionalProperties": false,
+      "properties": {
+        "symbol": {
+          "title": "Symbol",
+          "type": "string"
+        },
+        "session": {
+          "format": "date",
+          "title": "Session",
+          "type": "string"
+        },
+        "cutoff": {
+          "format": "date-time",
+          "title": "Cutoff",
+          "type": "string"
+        },
+        "candidate": {
+          "anyOf": [
+            {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Candidate"
+        },
+        "state": {
+          "anyOf": [
+            {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "State"
+        },
+        "outcome": {
+          "title": "Outcome",
+          "type": "string"
+        },
+        "status": {
+          "title": "Status",
+          "type": "string"
+        },
+        "enter": {
+          "title": "Enter",
+          "type": "boolean"
+        },
+        "reason": {
+          "title": "Reason",
+          "type": "string"
+        },
+        "observation_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Observation Ids",
+          "type": "array"
+        },
+        "evidence_hash": {
+          "title": "Evidence Hash",
+          "type": "string"
+        }
+      },
+      "required": [
+        "symbol",
+        "session",
+        "cutoff",
+        "outcome",
+        "status",
+        "enter",
+        "reason",
+        "observation_ids",
+        "evidence_hash"
+      ],
+      "title": "Decision",
+      "type": "object"
+    },
+    "EdgeEvidenceRequest": {
+      "additionalProperties": false,
+      "properties": {
+        "edge_id": {
+          "format": "uuid",
+          "title": "Edge Id",
+          "type": "string"
+        },
+        "run_ids": {
+          "items": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "maxItems": 12,
+          "minItems": 1,
+          "title": "Run Ids",
+          "type": "array"
+        },
+        "study_ids": {
+          "items": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "maxItems": 12,
+          "title": "Study Ids",
+          "type": "array"
+        },
+        "status": {
+          "default": "HYPOTHESIS",
+          "enum": [
+            "HYPOTHESIS",
+            "EARLY_EVIDENCE",
+            "SUPPORTED",
+            "WEAKENED",
+            "REJECTED"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "expected_revision": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Expected Revision",
+          "type": "integer"
+        },
+        "reason": {
+          "maxLength": 1000,
+          "minLength": 12,
+          "title": "Reason",
+          "type": "string"
+        }
+      },
+      "required": [
+        "edge_id",
+        "run_ids",
+        "reason"
+      ],
+      "title": "EdgeEvidenceRequest",
+      "type": "object"
+    },
+    "EquityPoint": {
+      "additionalProperties": false,
+      "properties": {
+        "session": {
+          "format": "date",
+          "title": "Session",
+          "type": "string"
+        },
+        "cash": {
+          "title": "Cash",
+          "type": "number"
+        },
+        "position_value": {
+          "title": "Position Value",
+          "type": "number"
+        },
+        "net": {
+          "title": "Net",
+          "type": "number"
+        },
+        "gross": {
+          "title": "Gross",
+          "type": "number"
+        },
+        "benchmark": {
+          "title": "Benchmark",
+          "type": "number"
+        },
+        "realized_pnl": {
+          "title": "Realized Pnl",
+          "type": "number"
+        },
+        "unrealized_pnl": {
+          "title": "Unrealized Pnl",
+          "type": "number"
+        },
+        "exposure": {
+          "title": "Exposure",
+          "type": "number"
+        },
+        "heat": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Heat"
+        },
+        "concurrent_positions": {
+          "title": "Concurrent Positions",
+          "type": "integer"
+        },
+        "turnover_notional": {
+          "title": "Turnover Notional",
+          "type": "number"
+        },
+        "drawdown": {
+          "default": 0,
+          "title": "Drawdown",
+          "type": "number"
+        }
+      },
+      "required": [
+        "session",
+        "cash",
+        "position_value",
+        "net",
+        "gross",
+        "benchmark",
+        "realized_pnl",
+        "unrealized_pnl",
+        "exposure",
+        "heat",
+        "concurrent_positions",
+        "turnover_notional"
+      ],
+      "title": "EquityPoint",
+      "type": "object"
+    },
+    "ExecutionPolicy": {
+      "additionalProperties": false,
+      "properties": {
+        "version": {
+          "const": "daily_execution_v1",
+          "default": "daily_execution_v1",
+          "title": "Version",
+          "type": "string"
+        },
+        "timing": {
+          "default": "next_open",
+          "enum": [
+            "next_open",
+            "next_close"
+          ],
+          "title": "Timing",
+          "type": "string"
+        },
+        "delay_sessions": {
+          "default": 0,
+          "maximum": 5,
+          "minimum": 0,
+          "title": "Delay Sessions",
+          "type": "integer"
+        },
+        "ambiguity": {
+          "default": "stop_first",
+          "enum": [
+            "stop_first",
+            "target_first"
+          ],
+          "title": "Ambiguity",
+          "type": "string"
+        }
+      },
+      "title": "ExecutionPolicy",
+      "type": "object"
+    },
+    "GridRequest": {
+      "additionalProperties": false,
+      "properties": {
+        "definition": {
+          "$ref": "#/$defs/BacktestDefinition"
+        },
+        "holding_sessions": {
+          "items": {
+            "type": "integer"
+          },
+          "maxItems": 6,
+          "minItems": 1,
+          "title": "Holding Sessions",
+          "type": "array"
+        },
+        "stop_fraction": {
+          "items": {
+            "type": "number"
+          },
+          "maxItems": 6,
+          "minItems": 1,
+          "title": "Stop Fraction",
+          "type": "array"
+        }
+      },
+      "required": [
+        "definition"
+      ],
+      "title": "GridRequest",
+      "type": "object"
+    },
+    "MonteCarloRequest": {
+      "additionalProperties": false,
+      "properties": {
+        "run_id": {
+          "format": "uuid",
+          "title": "Run Id",
+          "type": "string"
+        },
+        "seed": {
+          "default": 42,
+          "maximum": 4294967295,
+          "minimum": 0,
+          "title": "Seed",
+          "type": "integer"
+        },
+        "simulations": {
+          "default": 500,
+          "maximum": 10000,
+          "minimum": 10,
+          "title": "Simulations",
+          "type": "integer"
+        },
+        "method": {
+          "default": "bootstrap",
+          "enum": [
+            "bootstrap",
+            "permutation"
+          ],
+          "title": "Method",
+          "type": "string"
+        }
+      },
+      "required": [
+        "run_id"
+      ],
+      "title": "MonteCarloRequest",
+      "type": "object"
+    },
+    "SimulatedTrade": {
+      "additionalProperties": false,
+      "properties": {
+        "trade_id": {
+          "format": "uuid",
+          "title": "Trade Id",
+          "type": "string"
+        },
+        "symbol": {
+          "title": "Symbol",
+          "type": "string"
+        },
+        "signal_session": {
+          "format": "date",
+          "title": "Signal Session",
+          "type": "string"
+        },
+        "signal_at": {
+          "format": "date-time",
+          "title": "Signal At",
+          "type": "string"
+        },
+        "decision_hash": {
+          "title": "Decision Hash",
+          "type": "string"
+        },
+        "entry_session": {
+          "format": "date",
+          "title": "Entry Session",
+          "type": "string"
+        },
+        "entry_at": {
+          "format": "date-time",
+          "title": "Entry At",
+          "type": "string"
+        },
+        "exit_session": {
+          "format": "date",
+          "title": "Exit Session",
+          "type": "string"
+        },
+        "exit_at": {
+          "format": "date-time",
+          "title": "Exit At",
+          "type": "string"
+        },
+        "exit_time_basis": {
+          "default": "DAILY_BOUNDARY_PROXY; STOP_TARGET_TIME_IS_SESSION_UPPER_BOUND",
+          "title": "Exit Time Basis",
+          "type": "string"
+        },
+        "excursion_basis": {
+          "default": "WHOLE_DAILY_BAR_BOUNDS; MAY_INCLUDE_POST_EXIT_EXTREMA",
+          "title": "Excursion Basis",
+          "type": "string"
+        },
+        "quantity": {
+          "title": "Quantity",
+          "type": "number"
+        },
+        "entry_reference": {
+          "title": "Entry Reference",
+          "type": "number"
+        },
+        "exit_reference": {
+          "title": "Exit Reference",
+          "type": "number"
+        },
+        "entry_price": {
+          "title": "Entry Price",
+          "type": "number"
+        },
+        "exit_price": {
+          "title": "Exit Price",
+          "type": "number"
+        },
+        "entry_fee": {
+          "title": "Entry Fee",
+          "type": "number"
+        },
+        "exit_fee": {
+          "title": "Exit Fee",
+          "type": "number"
+        },
+        "friction": {
+          "title": "Friction",
+          "type": "number"
+        },
+        "gross_pnl": {
+          "title": "Gross Pnl",
+          "type": "number"
+        },
+        "net_pnl": {
+          "title": "Net Pnl",
+          "type": "number"
+        },
+        "return_fraction": {
+          "title": "Return Fraction",
+          "type": "number"
+        },
+        "r_multiple": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "R Multiple"
+        },
+        "holding_sessions": {
+          "title": "Holding Sessions",
+          "type": "integer"
+        },
+        "exit_reason": {
+          "title": "Exit Reason",
+          "type": "string"
+        },
+        "ambiguous": {
+          "title": "Ambiguous",
+          "type": "boolean"
+        },
+        "mae": {
+          "title": "Mae",
+          "type": "number"
+        },
+        "mfe": {
+          "title": "Mfe",
+          "type": "number"
+        },
+        "regime": {
+          "title": "Regime",
+          "type": "string"
+        },
+        "source_observation_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Source Observation Ids",
+          "type": "array"
+        }
+      },
+      "required": [
+        "trade_id",
+        "symbol",
+        "signal_session",
+        "signal_at",
+        "decision_hash",
+        "entry_session",
+        "entry_at",
+        "exit_session",
+        "exit_at",
+        "quantity",
+        "entry_reference",
+        "exit_reference",
+        "entry_price",
+        "exit_price",
+        "entry_fee",
+        "exit_fee",
+        "friction",
+        "gross_pnl",
+        "net_pnl",
+        "return_fraction",
+        "r_multiple",
+        "holding_sessions",
+        "exit_reason",
+        "ambiguous",
+        "mae",
+        "mfe",
+        "regime",
+        "source_observation_ids"
+      ],
+      "title": "SimulatedTrade",
+      "type": "object"
+    },
+    "SizingPolicy": {
+      "additionalProperties": false,
+      "properties": {
+        "version": {
+          "const": "cash_capped_v1",
+          "default": "cash_capped_v1",
+          "title": "Version",
+          "type": "string"
+        },
+        "mode": {
+          "default": "equal_weight",
+          "enum": [
+            "equal_weight",
+            "fixed_notional",
+            "fixed_quantity",
+            "fractional_risk"
+          ],
+          "title": "Mode",
+          "type": "string"
+        },
+        "value": {
+          "default": 0.01,
+          "exclusiveMinimum": 0,
+          "title": "Value",
+          "type": "number"
+        }
+      },
+      "title": "SizingPolicy",
+      "type": "object"
+    },
+    "StrategyParameters": {
+      "additionalProperties": false,
+      "properties": {
+        "holding_sessions": {
+          "default": 10,
+          "maximum": 60,
+          "minimum": 1,
+          "title": "Holding Sessions",
+          "type": "integer"
+        },
+        "stop_fraction": {
+          "default": 0.08,
+          "exclusiveMinimum": 0,
+          "maximum": 0.5,
+          "title": "Stop Fraction",
+          "type": "number"
+        },
+        "target_r": {
+          "default": 2,
+          "exclusiveMinimum": 0,
+          "maximum": 10,
+          "title": "Target R",
+          "type": "number"
+        }
+      },
+      "title": "StrategyParameters",
+      "type": "object"
+    },
+    "WalkForwardDefinition": {
+      "additionalProperties": false,
+      "properties": {
+        "definition": {
+          "$ref": "#/$defs/BacktestDefinition"
+        },
+        "holding_sessions": {
+          "items": {
+            "type": "integer"
+          },
+          "maxItems": 6,
+          "minItems": 1,
+          "title": "Holding Sessions",
+          "type": "array"
+        },
+        "stop_fraction": {
+          "items": {
+            "type": "number"
+          },
+          "maxItems": 6,
+          "minItems": 1,
+          "title": "Stop Fraction",
+          "type": "array"
+        },
+        "mode": {
+          "default": "rolling",
+          "enum": [
+            "rolling",
+            "expanding"
+          ],
+          "title": "Mode",
+          "type": "string"
+        },
+        "train_sessions": {
+          "default": 120,
+          "maximum": 1000,
+          "minimum": 60,
+          "title": "Train Sessions",
+          "type": "integer"
+        },
+        "validation_sessions": {
+          "default": 60,
+          "maximum": 365,
+          "minimum": 10,
+          "title": "Validation Sessions",
+          "type": "integer"
+        },
+        "step_sessions": {
+          "default": 60,
+          "maximum": 365,
+          "minimum": 10,
+          "title": "Step Sessions",
+          "type": "integer"
+        },
+        "max_folds": {
+          "default": 6,
+          "maximum": 12,
+          "minimum": 1,
+          "title": "Max Folds",
+          "type": "integer"
+        },
+        "objective": {
+          "const": "net_total_return",
+          "default": "net_total_return",
+          "title": "Objective",
+          "type": "string"
+        }
+      },
+      "required": [
+        "definition"
+      ],
+      "title": "WalkForwardDefinition",
+      "type": "object"
+    }
+  },
+  "anyOf": [
+    {
+      "$ref": "#/$defs/BacktestDefinition"
+    },
+    {
+      "$ref": "#/$defs/BacktestRun"
+    },
+    {
+      "$ref": "#/$defs/GridRequest"
+    },
+    {
+      "$ref": "#/$defs/WalkForwardDefinition"
+    },
+    {
+      "$ref": "#/$defs/MonteCarloRequest"
+    },
+    {
+      "$ref": "#/$defs/CompareRequest"
+    },
+    {
+      "$ref": "#/$defs/EdgeEvidenceRequest"
+    }
+  ],
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "MARKET CORTEX reviewed Quant Lab contracts v0.8.0"
+}

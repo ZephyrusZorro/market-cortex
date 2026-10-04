@@ -198,4 +198,7 @@ class LearningStore:
     def edges(self, as_of: datetime) -> list[dict]:
         with connect(self.dsn) as connection:
             rows = connection.execute("SELECT payload FROM edge_library WHERE created_at<=%s ORDER BY created_at DESC,edge_id LIMIT 100", (as_of,)).fetchall()
-        return [row[0] for row in rows]
+            revisions = connection.execute("SELECT DISTINCT ON(edge_id) edge_id,payload FROM quant_edge_evidence WHERE recorded_at<=%s ORDER BY edge_id,revision DESC",(as_of,)).fetchall()
+        evidence={str(k):p for k,p in revisions}
+        return [{**row[0],**({"status":evidence[str(row[0]["edge_id"])]["status"],"quant_evidence":evidence[str(row[0]["edge_id"]) ]}
+                               if str(row[0]["edge_id"]) in evidence else {})} for row in rows]

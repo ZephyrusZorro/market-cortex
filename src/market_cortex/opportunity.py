@@ -74,6 +74,10 @@ class OpportunityService:
     def detector_definitions():
         return definitions()
 
+    def compute_state(self, request: MarketStateRequest):
+        """Shared hook for canonical scans and frozen quant replay."""
+        return MarketStateEngine(self.catalog).compute(request)
+
     def _context(self, request: ScanRequest) -> tuple[dict, UUID, datetime]:
         cutoff = request.as_of or datetime.now(timezone.utc)
         if request.mode == "latest" and request.manifest_id and request.manifest_id != self.catalog.head():
@@ -243,7 +247,7 @@ class OpportunityService:
         common_day = date.fromisoformat(context["evaluation_date"]) if context["evaluation_date"] else None
         regime, state_id = None, None
         if common_day and context["history_start"]:
-            snapshot = MarketStateEngine(self.catalog).compute(MarketStateRequest(
+            snapshot = self.compute_state(MarketStateRequest(
                 history_start=max(date.fromisoformat(context["history_start"]), common_day-timedelta(days=180)),
                 evaluation_date=common_day, as_of=cutoff, manifest_id=manifest_id))
             regime, state_id = snapshot.regime.category, snapshot.snapshot_id

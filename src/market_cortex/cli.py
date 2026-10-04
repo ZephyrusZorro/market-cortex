@@ -66,6 +66,8 @@ def main(argv: list[str] | None = None) -> int:
     research.add_argument("--thesis-id", type=UUID, help="Review a recorded structured thesis")
     research.add_argument("--prediction-id", type=UUID, help="Explain a frozen prediction and its outcome")
     research.add_argument("--journal-entry-id", type=UUID, help="Inspect a private journal revision")
+    research.add_argument("--backtest-run-id", type=UUID)
+    research.add_argument("--quant-study-id", type=UUID)
     research.add_argument("--portfolio-id", type=UUID, help="Ground a local portfolio risk question")
     research.add_argument("--scenario-shocks", type=json.loads, help="JSON object of explicit symbol: fractional shock")
     research.add_argument("--overlay-quantity", type=str, help="Hypothetical thesis units for research overlay")
@@ -131,9 +133,35 @@ def main(argv: list[str] | None = None) -> int:
     learning = sub.add_parser("learning-performance", help="Descriptive detector/version/registration statistics")
     learning.add_argument("--eligible-only", action="store_true")
     sub.add_parser("review-queue", help="List local predictions requiring human review")
+    sub.add_parser("quant-strategies", help="List reviewed deterministic strategy definitions")
+    for name in ("quant-backtest","quant-walk-forward","quant-sensitivity","quant-robustness","quant-monte-carlo","quant-compare"):
+        command=sub.add_parser(name,help="Run bounded deterministic quant research from a strict JSON definition")
+        command.add_argument("--input",type=Path,required=True)
+    for name in ("quant-inspect","quant-replay"):
+        command=sub.add_parser(name)
+        command.add_argument("artifact_id",type=UUID)
     args = parser.parse_args(argv)
     try:
         settings = Settings.load()
+        if args.command.startswith("quant-"):
+            from .quant import QuantService,strategies
+            from .quant_api import MODELS
+            from .storage import ArtifactStore,PostgresCatalog
+            if args.command=="quant-strategies":
+                result={"items":[s.model_dump(mode="json") for s in strategies()]}
+            else:
+                service=QuantService(PostgresCatalog(settings.database_url,ArtifactStore(settings.data_root)),settings.environment)
+                if args.command=="quant-inspect":
+                    result=service.store.get(args.artifact_id)
+                elif args.command=="quant-replay":
+                    result=service.replay(args.artifact_id)
+                else:
+                    operation=args.command.removeprefix("quant-").replace("-","_")
+                    operation="comparison" if operation=="compare" else operation
+                    request=MODELS[operation].model_validate_json(args.input.read_text(encoding="utf-8"))
+                    result=getattr(service,"run" if operation=="backtest" else "compare" if operation=="comparison" else operation)(request)
+            print(json.dumps(result.model_dump(mode="json") if hasattr(result,"model_dump") else result,default=str))
+            return 0
         if args.command == "doctor":
             print(json.dumps(settings.safe_summary(), indent=2))
             return 0
@@ -243,6 +271,7 @@ def main(argv: list[str] | None = None) -> int:
                         compare_symbol=args.compare_symbol, older_manifest_id=args.older_manifest_id,
                         candidate_id=args.candidate_id, thesis_id=args.thesis_id,
                         prediction_id=args.prediction_id, journal_entry_id=args.journal_entry_id,
+                        backtest_run_id=args.backtest_run_id, quant_study_id=args.quant_study_id,
                         portfolio_id=args.portfolio_id, scenario_shocks=args.scenario_shocks,
                         overlay_quantity=args.overlay_quantity,
                         overlay_reference_price=args.overlay_reference_price,

@@ -95,6 +95,22 @@ class CortexService:
             ("prediction", "journal", "lesson", "mistake", "learning", "performed", "performance",
              "outcome", "actually happened", "expect from", "thesis failed", "skeptic was right", "edge library"))
         plan = [("dataset.context", {}, context)]
+        strategy_matches=[k for k in ("momentum","breakout","trend_continuation","pullback","buy_hold","equal_weight")
+                          if k in question or k.replace("_"," ") in question]
+        quant_question=bool(request.backtest_run_id or request.quant_study_id) or any(term in question for term in
+            ("backtest","quant", "walk-forward", "walk forward", "out-of-sample", "out of sample", "strategy", "slippage", "overfit", "monte carlo"))
+        quant_question=quant_question or (any(term in question for term in ("performed","performance")) and
+            any(term in question for term in ("momentum","breakout","pullback","trend continuation")))
+        quant_question=quant_question or ("compare" in question and len(strategy_matches)>=2)
+        if quant_question:
+            if request.backtest_run_id:
+                plan.append(("quant.run",{"run_id":request.backtest_run_id},context))
+            elif not request.quant_study_id:
+                for strategy in strategy_matches or [None]:
+                    plan.append(("quant.runs",{"strategy_id":strategy},context))
+            if request.quant_study_id:
+                plan.append(("quant.study",{"study_id":request.quant_study_id},context))
+            return plan
         if learning_question:
             plan.extend((tool,{},context) for tool in ("learning.predictions","learning.performance","learning.journal","learning.edges"))
             if request.prediction_id:
@@ -334,12 +350,12 @@ class CortexService:
             if item.kind == "risk_metric" and item.value is not None:
                 claims.append(_claim("CALCULATION", f"Pinned {item.label.replace('_', ' ')} is {item.value} {item.unit}.",
                     [item], "neutral"))
-            if item.kind in ("learning_metric", "learning_record", "learning_limit"):
-                claims.append(_claim("LIMITATION" if item.kind=="learning_limit" else
-                    "CALCULATION" if item.kind=="learning_metric" else "OBSERVATION",
+            if item.kind in ("learning_metric", "learning_record", "learning_limit", "quant_metric", "quant_record", "quant_limit"):
+                claims.append(_claim("LIMITATION" if item.kind in ("learning_limit","quant_limit") else
+                    "CALCULATION" if item.kind in ("learning_metric","quant_metric") else "OBSERVATION",
                     f"{item.label}: {item.value if item.value is not None else 'unavailable'}." +
                     (f" {item.reason}." if item.reason else ""), [item],
-                    "limitation" if item.kind=="learning_limit" else "neutral"))
+                    "limitation" if item.kind in ("learning_limit","quant_limit") else "neutral"))
             if item.kind == "position_risk":
                 claims.append(_claim("CALCULATION" if item.value is not None else "LIMITATION",
                     f"{item.label}: {item.value if item.value is not None else 'unavailable'} {item.unit}." +
@@ -465,7 +481,11 @@ class CortexService:
         support.sort(key=priority)
         counter = [item for item in claims if item.stance == "counter"]
         limits = [item for item in claims if item.stance == "limitation"]
-        title = (f"{context.symbol} research" if context.symbol else "Binance Pilot 5 research")
+        # A model can curate claims but cannot omit the sample, assumptions or
+        # results of the other named strategy in a quant comparison.
+        quant_audit=[item for item in claims if item.text.startswith("Quant ") and
+                     any(marker in item.text for marker in (" context:"," total_return:"," max_drawdown:"," stored result:"))]
+        title = "Quant Lab research" if quant_audit else (f"{context.symbol} research" if context.symbol else "Binance Pilot 5 research")
         header = (f"{title} | {context.mode} | manifest {context.manifest_id} | "
                   f"as of {context.as_of.isoformat()} | evidence strength: {strength}")
         if request.prediction_id:
@@ -493,9 +513,12 @@ class CortexService:
                  render(conclusion) if conclusion else "- Insufficient visible deterministic evidence for a market conclusion.",
                  "", "Evidence"]
         lines += [render(item) for item in support[:10]] or ["- Insufficient visible deterministic evidence for a directional conclusion."]
+        extra=[item for item in quant_audit if item.claim_id not in {c.claim_id for c in support[:10]}]
+        if extra:
+            lines += ["", "Quant research context"]+[render(item) for item in extra]
         lines += ["", "Counter-evidence"] + ([render(item) for item in counter] or ["- No direct indicator conflict was detected in the retrieved evidence."])
         lines += ["", "Limits"] + ([render(item) for item in limits] or ["- No additional scoped limitation was identified."])
-        if context.symbol:
+        if context.symbol and not quant_audit:
             sma = next((item for item in claims if "closed above" in item.text or "closed below" in item.text), None)
             lines += ["", "Invalidation", "- Recheck the interpretation if the next stored daily close crosses SMA20 or momentum/state evidence changes."
                       + (" " + " ".join(f"[{e}]" for e in sma.evidence_ids) if sma else "")]
@@ -543,7 +566,7 @@ class CortexService:
         answer = self._synthesize(request, context, claims, selected, strength)
         evidence_hash = digest([{"tool_id": item.tool_id, "inputs": item.inputs,
                                  "output_hash": item.output_hash} for item in tools])
-        has_observation = any(item.kind in ("observation", "learning_metric", "learning_record", "risk_metric")
+        has_observation = any(item.kind in ("observation", "learning_metric", "learning_record", "risk_metric", "quant_metric", "quant_record")
                               and item.value is not None for run in tools for item in run.evidence)
         run = ResearchRun(run_id=uuid4(), created_at=datetime.now(timezone.utc),
             request=request, context=context, tools=tools, claims=claims,

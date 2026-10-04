@@ -18,16 +18,21 @@ class SessionCalendar:
         self.calendar_id = calendar_id
         self.version = version
         self._sessions = {s.session_date: s for s in sessions}
+        self._generated: dict[date, CalendarSession] = {}
         if any(s.calendar_id != calendar_id or s.venue_id != venue.venue_id or s.version != version
                for s in sessions):
             raise ValueError("calendar session identity mismatch")
 
     def session(self, session_date: date) -> CalendarSession:
         if self.venue.session_kind == "24x7":
+            if session_date in self._generated:
+                return self._generated[session_date].model_copy()
             start = datetime.combine(session_date, time.min, timezone.utc)
-            return CalendarSession(calendar_id=self.calendar_id, venue_id=self.venue.venue_id,
+            result = CalendarSession(calendar_id=self.calendar_id, venue_id=self.venue.venue_id,
                                    session_date=session_date, open_at=start, close_at=start + timedelta(days=1),
                                    status="open", version=self.version)
+            self._generated[session_date] = result
+            return result.model_copy()
         result = self._sessions.get(session_date)
         if result is None:
             raise CalendarMissing(f"calendar session unavailable for {session_date}")

@@ -37,20 +37,21 @@ class JobQueue:
                     RETURNING job_id""", (uuid4(), kind, key, Jsonb(payload))).fetchone()
                 return row[0]
 
-    def claim(self, lease_seconds: int = 60) -> Job | None:
+    def claim(self, lease_seconds: int = 60, *, kind: str | None = None, job_id: UUID | None = None) -> Job | None:
         if not 1 <= lease_seconds <= 3600:
             raise ValueError("invalid lease")
         with connect(self.dsn) as connection:
             with connection.transaction():
                 row = connection.execute("""WITH candidate AS (
-                    SELECT job_id FROM jobs WHERE (state = 'ready' AND next_attempt_at <= now())
-                       OR (state = 'leased' AND lease_until < now())
+                    SELECT job_id FROM jobs WHERE ((state = 'ready' AND next_attempt_at <= now())
+                       OR (state = 'leased' AND lease_until < now()))
+                       AND (%s::text IS NULL OR kind=%s) AND (%s::uuid IS NULL OR job_id=%s)
                     ORDER BY next_attempt_at, job_id FOR UPDATE SKIP LOCKED LIMIT 1)
                     UPDATE jobs SET state = 'leased', attempts = attempts + 1,
                       lease_until = now() + (%s * interval '1 second')
                     FROM candidate WHERE jobs.job_id = candidate.job_id
                     RETURNING jobs.job_id,jobs.kind,jobs.idempotency_key,jobs.attempts,jobs.payload""",
-                    (lease_seconds,)).fetchone()
+                    (kind,kind,job_id,job_id,lease_seconds)).fetchone()
                 return Job(*row) if row else None
 
     def finish(self, job_id: UUID, attempts: int, error_code: str | None = None,

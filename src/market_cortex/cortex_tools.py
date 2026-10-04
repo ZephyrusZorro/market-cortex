@@ -10,6 +10,7 @@ from dataclasses import dataclass
 from datetime import date
 from decimal import Decimal
 from typing import Callable
+from typing import Literal
 from uuid import UUID, NAMESPACE_URL, uuid5
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
@@ -92,6 +93,22 @@ class JournalArguments(NoArguments):
     entry_id: UUID
 
 
+class BacktestArguments(NoArguments):
+    run_id: UUID
+
+
+class QuantListArguments(NoArguments):
+    strategy_id: Literal["momentum","breakout","trend_continuation","pullback","buy_hold","equal_weight"] | None = None
+
+
+class QuantStudyArguments(NoArguments):
+    study_id: UUID
+
+
+class QuantTradeArguments(BacktestArguments):
+    trade_id: UUID
+
+
 class RiskScenarioArguments(PortfolioArguments):
     shocks: dict[str, Decimal]
 
@@ -116,6 +133,10 @@ class ToolSpec:
 
 
 SPECS = {
+    "quant.runs": ToolSpec("quant.runs","1.0.0","Stored quant run summaries with N and limitations",QuantListArguments),
+    "quant.run": ToolSpec("quant.run","1.0.0","Frozen backtest metrics, costs, regimes and controls",BacktestArguments),
+    "quant.study": ToolSpec("quant.study","1.0.0","Stored walk-forward, sensitivity, robustness, Monte Carlo or comparison",QuantStudyArguments),
+    "quant.trade": ToolSpec("quant.trade","1.0.0","Stored trade and execution evidence",QuantTradeArguments),
     "dataset.context": ToolSpec("dataset.context", "1.0.0", "Resolved manifest, cutoff and pilot coverage", NoArguments),
     "instrument.features": ToolSpec("instrument.features", "1.0.0", "Stored close and Phase 2 feature bundle", SymbolArguments),
     "market.state": ToolSpec("market.state", "1.0.0", "Phase 2 market state, regime and breadth", NoArguments),
@@ -179,6 +200,8 @@ class ToolRegistry:
         parsed = spec.input_schema.model_validate(arguments)
         started = time.perf_counter()
         action: dict[str, Callable] = {
+            "quant.runs":self._quant_runs,"quant.run":self._quant_run,
+            "quant.study":self._quant_study,"quant.trade":self._quant_trade,
             "dataset.context": self._context, "instrument.features": self._features,
             "market.state": self._state, "asset.compare": self._compare,
             "dataset.manifest": self._manifest, "research.prior": self._prior,
@@ -669,3 +692,68 @@ class ToolRegistry:
                 value=f"{item['status']}; usable N={item['usable_N']}; {item['registration']}",
                 source_id=item["edge_id"],version=item["schema_version"],reason="NOT_A_PROVEN_EDGE"))
         return result
+
+    def _quant_store(self):
+        from .quant_store import QuantStore
+        return QuantStore(self.catalog.dsn)
+
+    def _quant_runs(self,args):
+        from .database import connect
+        with connect(self.catalog.dsn) as c:
+            rows=c.execute("SELECT artifact_id FROM quant_artifacts WHERE kind='run' AND created_at<=%s AND (%s::text IS NULL OR payload->'definition'->>'strategy_id'=%s) ORDER BY created_at DESC LIMIT 4",
+                           (self.context.as_of,args.strategy_id,args.strategy_id)).fetchall()
+        result=[self._evidence("quant.runs","quant_metric",f"Stored {args.strategy_id or 'recent'} backtest runs N",value=len(rows),unit="runs"),
+                self._evidence("quant.runs","quant_limit","Run comparison boundary",
+                    value="Latest runs can differ in source, period, universe, costs and timing; use a saved comparison study to check direct comparability.")]
+        for row in rows:
+            result.extend(self._quant_run(BacktestArguments(run_id=row[0])))
+        return result
+
+    def _quant_run(self,args):
+        from .quant_contracts import BacktestRun
+        run=BacktestRun.model_validate(self._quant_store().get(args.run_id,"run",as_of=self.context.as_of))
+        source=dict(source_id=str(run.run_id),source_manifest_id=run.definition.manifest_id,
+            source_as_of=run.definition.source_as_of,source_recorded_at=run.created_at,version=run.manifest.engine_version)
+        prefix=f"Quant {run.definition.strategy_id} {str(run.run_id)[:8]}"
+        result=[self._evidence("quant.run","quant_record",prefix+" context",
+            value=f"N={run.metrics['N']}; period={run.definition.start}..{run.definition.end}; costs={run.definition.costs.model_dump()}; "
+                f"timing={run.definition.execution.model_dump()}; policy={run.definition.replay_policy}; OOS=single run in-sample; not a proven edge",**source)]
+        for name in ("total_return","gross_total_return","benchmark_return","max_drawdown","win_rate","profit_factor","r_expectancy","cost_drag"):
+            result.append(self._evidence("quant.run","quant_metric",prefix+" "+name,value=run.metrics[name],unit="stored_descriptive_metric",**source))
+        result.append(self._evidence("quant.run","quant_record",prefix+" regimes and rejected/NO_EDGE controls",
+            value=str({"regimes":run.regime_performance,"counterfactual":run.controls}),**source))
+        result.append(self._evidence("quant.run","quant_limit",prefix+" limitations",value="; ".join(run.warnings),**source))
+        return result
+
+    def _quant_study(self,args):
+        item=self._quant_store().get(args.study_id,as_of=self.context.as_of)
+        if item.get("kind") not in ("walk_forward","sensitivity","robustness","monte_carlo","comparison"):
+            raise ValueError("QUANT_STUDY_KIND_REQUIRED")
+        source=dict(source_id=str(args.study_id),source_recorded_at=__import__("datetime").datetime.fromisoformat(item["created_at"]),version=item["schema_version"])
+        result=item["result"]
+        if item["kind"]=="walk_forward":
+            summary={k:v for k,v in result.items() if k!="folds"}
+            summary["folds"]=[{k:v for k,v in f.items() if k not in ("search_results","oos_metrics")} |
+                {"oos_N":f["oos_metrics"]["N"],"oos_return":f["oos_metrics"]["total_return"]} for f in result["folds"]]
+        elif item["kind"] in ("sensitivity","robustness","comparison"):
+            summary={k:v for k,v in result.items() if k not in ("rows","winner")}
+            summary["rows"]=[{k:v for k,v in row.items() if k not in ("metrics","regimes","warnings")} |
+                {"N":row["metrics"]["N"],"net_return":row["metrics"]["total_return"],"drawdown":row["metrics"]["max_drawdown"]} for row in result["rows"]]
+        else:
+            summary=result
+        definition=item["definition"].get("definition",item["definition"])
+        if item["kind"]=="monte_carlo":
+            underlying=self._quant_store().get(UUID(definition["run_id"]),"run",as_of=self.context.as_of)
+            definition=underlying["definition"]
+        context={k:definition[k] for k in ("strategy_id","start","end","costs","replay_policy") if k in definition}
+        context["OOS"]="Temporal holdout; reconstruction is not prospective" if item["kind"]=="walk_forward" else "Descriptive study; no prospective OOS claim"
+        return [self._evidence("quant.study","quant_record",f"Quant {item['kind']} stored result",
+                value=str({"context":context,"result":summary}),**source),
+                self._evidence("quant.study","quant_limit","Quant study limitations",value="; ".join(item["warnings"]),**source)]
+
+    def _quant_trade(self,args):
+        run=self._quant_store().get(args.run_id,"run",as_of=self.context.as_of)
+        trade=next((t for t in run["trades"] if t["trade_id"]==str(args.trade_id)),None)
+        if trade is None:
+            raise LookupError("QUANT_TRADE_NOT_FOUND")
+        return [self._evidence("quant.trade","quant_record","Simulated daily trade; not a broker fill",value=str(trade),source_id=str(args.run_id))]
