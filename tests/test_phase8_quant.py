@@ -300,3 +300,14 @@ def test_quant_disclosure_survives_model_selection_and_includes_other_strategy()
     assert 'Quant Lab research' in answer and 'N=108' in answer and 'N=145' in answer
     assert 'costs=10bps' in answer and 'OOS=in-sample' in answer and '-0.21' in answer
     assert 'next stored daily close crosses SMA20' not in answer
+def test_completed_job_identity_changes_with_engine_and_runtime(monkeypatch):
+    import market_cortex.quant_api as api
+    request={"operation":"backtest","payload":{"strategy_id":"momentum"}}
+    original=api.job_key(request,"PILOT_TEST")
+    assert api.job_key(request,"PILOT_TEST")==original
+    assert api.job_key(request,"OWNER_MAIN")!=original
+    monkeypatch.setattr(api,"code_hash",lambda:"different-reviewed-implementation")
+    upgraded=api.job_key(request,"PILOT_TEST")
+    assert upgraded!=original
+    monkeypatch.setattr(api.np,"__version__","different-runtime")
+    assert api.job_key(request,"PILOT_TEST")!=upgraded

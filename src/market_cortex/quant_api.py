@@ -2,13 +2,15 @@
 from datetime import datetime,timezone
 from uuid import UUID
 import re
+import platform
+import numpy as np
 
 from fastapi import APIRouter,BackgroundTasks,HTTPException
 from pydantic import Field
 
 from .database import connect
 from .jobs import JobQueue
-from .quant import QuantService,strategies
+from .quant import QuantService,strategies,code_hash,DETECTOR_CODE_HASH,CALCULATION_CODE_HASH
 from .quant_contracts import (BacktestDefinition,CompareRequest,EdgeEvidenceRequest,GridRequest,
     MonteCarloRequest,Strict,WalkForwardDefinition)
 from .quant_store import digest
@@ -21,6 +23,13 @@ class QuantJobRequest(Strict):
 
 MODELS={"backtest":BacktestDefinition,"walk_forward":WalkForwardDefinition,"sensitivity":GridRequest,
         "robustness":BacktestDefinition,"monte_carlo":MonteCarloRequest,"comparison":CompareRequest}
+
+
+def job_key(value,environment):
+    # A completed job is also a cached result: an upgrade must not reuse it.
+    return f"quant:{digest({'request':value,'implementation':code_hash(),
+        'detector':DETECTOR_CODE_HASH,'features':CALCULATION_CODE_HASH,
+        'python':platform.python_version(),'numpy':np.__version__,'environment':environment})}"
 
 
 def run_job(service,job_id):
@@ -97,7 +106,7 @@ def router_for(catalog,settings):
         if hasattr(definition,"source_as_of") and definition.source_as_of>datetime.now(timezone.utc):
             raise HTTPException(422,detail={"code":"FUTURE_SOURCE_CUTOFF_FORBIDDEN"})
         value={"operation":request.operation,"payload":parsed.model_dump(mode="json")}
-        job_id=JobQueue(catalog.dsn).enqueue("quant_research",f"quant:{digest(value)}",value)
+        job_id=JobQueue(catalog.dsn).enqueue("quant_research",job_key(value,service.environment),value)
         background.add_task(run_job,service,job_id)
         return {"job_id":str(job_id),"status":"queued"}
 

@@ -5660,7 +5660,7 @@
     }
   ],
   "current_release_buy_hold": {
-    "run_id": "5200c74d-b1ed-5efb-907e-94e238fc1448",
+    "run_id": "01fb8111-b7e4-51d9-8c20-8e4a3a9a7dc1",
     "metrics": {
       "N": 1,
       "sessions": 1007,
@@ -5749,7 +5749,7 @@
       "manifest_id": "3bf002d2-15f2-4f9d-8c54-cc7eb3fb349c",
       "source_as_of": "2026-10-04T19:39:40.485437Z",
       "engine_version": "quant_daily_v1",
-      "code_hash": "5a2b6ddb60123572e1c12d52104cd2fe4f681190b08aefce41fcb8cca5c51353",
+      "code_hash": "b214781c93e40d085ad5ce2ee109c58e82cfb40537a1a28fe94fabc6b7c7ee7d",
       "detector_code_hash": "6bab21a517ce9fddfc109b42b15497143307ab28e116109be4da3fe5c7d0d169",
       "feature_code_hash": "e7093acb7d478e19b04330a0e54e416a572a251af7650f503101bf001ae8ae52",
       "calendar_versions": {
@@ -5761,18 +5761,24 @@
         "environment": "PILOT_TEST"
       },
       "definition_hash": "9b3360edfd4df78f76f4ee708247c809c39d66967f47909441d45a30e7cef294",
-      "input_hash": "ca650d1954caf7900837e917120cab16af24557ebc3583c901447fe558fe62f0"
+      "input_hash": "7297ebcebeb670b62bb26714f9e6212d419b73ecd1591204f370d604e7ea0873"
     },
     "replay": {
-      "run_id": "5200c74d-b1ed-5efb-907e-94e238fc1448",
+      "run_id": "01fb8111-b7e4-51d9-8c20-8e4a3a9a7dc1",
       "status": "MATCH",
       "saved_result_hash": "70b5d9dc7598b52c117311a319a188f3a37e1c724ce921132f9bce280dfe3187",
       "recomputed_result_hash": "70b5d9dc7598b52c117311a319a188f3a37e1c724ce921132f9bce280dfe3187"
     },
-    "elapsed_seconds": 21.78660430002492
+    "elapsed_seconds": 3.6021902000065893,
+    "comparison_to_summary_projection_commit": {
+      "commit": "7b24d70",
+      "previous_run_id": "5200c74d-b1ed-5efb-907e-94e238fc1448",
+      "metrics_identical": true,
+      "result_hash_identical": true
+    }
   },
   "computation_commit": "e2c9554",
-  "computation_commit_note": "Full detector studies use archived commit e2c9554. Final release adds a derived summary column and summary reads; all numerical calculator files remain identical. Current release buy_hold was freshly recomputed and replayed under the final storage implementation.",
+  "computation_commit_note": "Full detector studies use archived commit e2c9554. Summary projection and its BTC baseline are preserved at 7b24d70. Final release additionally fingerprints queued jobs by implementation/runtime/environment. All numerical calculator files remain identical. The final BTC run cold replay matches, with identical metrics/result hash to 7b24d70 at the same definition and frozen source.",
   "summary_browsing_validation": {
     "returned_items": 50,
     "elapsed_ms": 633,
@@ -5795,6 +5801,67 @@
     },
     "underlying_parquet_artifact_count": 0,
     "elapsed_seconds": 17.51252659992315,
-    "temporary_databases_removed": true
+    "temporary_databases_removed": true,
+    "validation_commit": "7b24d70"
+  },
+  "acceptance": {
+    "status": "COMPLETE",
+    "verified_at": "2026-10-04T20:35:24.796550+00:00",
+    "release_tag": "phase8-v0.8.0",
+    "release_commit_ref": "phase8-v0.8.0^{commit}",
+    "implementation_hash": "b214781c93e40d085ad5ce2ee109c58e82cfb40537a1a28fe94fabc6b7c7ee7d",
+    "gates": {
+      "A": "PASS",
+      "B": "PASS",
+      "C": "PASS",
+      "D": "PASS",
+      "E": "PASS",
+      "F": "PASS",
+      "G": "PASS",
+      "H": "PASS",
+      "I": "PASS",
+      "J": "PASS",
+      "K": "PASS",
+      "L": "PASS",
+      "M": "PASS",
+      "N": "PASS",
+      "O": "PASS",
+      "P": "PASS",
+      "Q": "PASS",
+      "R": "PASS",
+      "S": "PASS"
+    },
+    "backend_repeats": [
+      {
+        "passed": 151,
+        "subtests_passed": 13,
+        "skipped": 0,
+        "known_deprecation_warnings": 1,
+        "seconds": 490.9
+      },
+      {
+        "passed": 151,
+        "subtests_passed": 13,
+        "skipped": 0,
+        "known_deprecation_warnings": 1,
+        "seconds": 937.3
+      }
+    ],
+    "frontend_repeats": [
+      {
+        "passed": 21,
+        "seconds": 9.63
+      },
+      {
+        "passed": 21,
+        "seconds": 7.86
+      }
+    ],
+    "typecheck": "PASS",
+    "production_build": "PASS",
+    "authenticated_equity_validation": "DEFERRED_NOT_CONFIGURED",
+    "owner_main_untouched": true,
+    "phase9_started": false,
+    "supported_market_edge_established": false
   }
 }

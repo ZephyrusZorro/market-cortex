@@ -1,12 +1,12 @@
 # Phase 8 exit matrix — 2026-10-05
 
-**Status:** Final acceptance checks in progress. **Release target:** `phase8-v0.8.0`; commit reference `phase8-v0.8.0^{commit}` will resolve to the accepted implementation. Baseline `phase7-v0.7.0` at `2bcb33f` is preserved. No external push; Phase 9 has not begun. Development and public Binance validation use the isolated `PILOT_TEST` catalog ending `_test`; the owner main database and `C:\MarketCortexData` were not modified.
+**Status: COMPLETE — accepted 2026-10-05 (Asia/Kolkata).** **Release:** annotated local tag `phase8-v0.8.0`; commit reference `phase8-v0.8.0^{commit}` resolves to the accepted implementation. Baseline `phase7-v0.7.0` at `2bcb33f` and archived computation commits `e2c9554` / `7b24d70` are preserved. No external push; Phase 9 has not begun. Development and public Binance validation use the isolated `PILOT_TEST` catalog ending `_test`; the owner main database and `C:\MarketCortexData` were not modified. Acceptance covers the daily Binance research architecture, with authenticated India/US validation explicitly deferred.
 
 ## Acceptance A–S
 
 | Gate | Result | Evidence |
 | --- | --- | --- |
-| A — Phase 1–7 regression | Pending final repeats | All existing gates remain enabled, including PostgreSQL, encrypted backup/restore, API, analytics, CORTEX, opportunity, risk and learning pilot integrations. |
+| A — Phase 1–7 regression | Pass | All existing gates remain enabled, including PostgreSQL, encrypted backup/restore, API, analytics, CORTEX, opportunity, risk and learning pilot integrations; final-release complete suites passed 151 tests + 13 subtests twice without skips. |
 | B — Point-in-time replay | Pass | Default AS_RECORDED excludes unavailable/late ingestion, future manifest publication, future mapping, future candle and future correction. Real old history produces no entries. Separate labelled reconstruction assumes publication-lag freshness/mapping; original timestamps stay unchanged. |
 | C — Canonical detector parity | Pass | Actual known Binance manifest/as-of: full candidate payloads compare equal for live/pinned scan and strict replay, excluding wall-clock calculation metadata. No second detector implementation. |
 | D — Frozen reproducibility | Pass | Strict versioned definitions, source snapshot/file checksums, calendar/features/detector/engine/runtime hashes, immutable JSON artifacts, guarded result/definition/study hashes and recomputation. Future dataset-head changes do not replace pinned evidence. |
@@ -24,7 +24,7 @@
 | P — Quant Lab workstation | Pass | Browser QA covered typed creation/job completion, exact saved-run opening, costs/assumptions, curves/trade evidence, six fold timelines/all training rows and actual Monte Carlo sample/methodology. Repeated 21-test suites, production build and typecheck passed. Overview calculation is independent of Quant Lab loading. |
 | Q — Edge evidence quality | Pass | Explicit matching hypothesis/version/classification, append-only recording-time revision and optimistic conflict; SUPPORTED gate requires recorded OOS/sample/assets/regimes/costs/sensitivity/robustness. Reconstruction cannot promote SUPPORTED. Predictions remain untouched. |
 | R — Research-only boundary | Pass | Whitelisted typed strategies/operations; no eval/exec/uploaded Python; provider GET-only source adapters; no order, broker write, leverage or capital deployment. |
-| S — Repeated complete suites | Pending | Final backend/frontend repeat totals and build recorded below after completion. |
+| S — Repeated complete suites | Pass | Frozen final implementation: 151 backend tests + 13 subtests twice; 21 frontend tests twice; production build and separate TypeScript check passed. One known deprecation warning per backend run, no skipped integrations. |
 
 ## Implemented scope
 
@@ -114,7 +114,11 @@ An earlier saved baseline `c03dd9cb-a2af-59ea-9f29-5e2161ec7462` was created at 
 
 The complete detector studies and preserved-pin recomputation were produced with archived local commit **`e2c9554`**, implementation hash `484c408f18e06dddc648efd5b843eef9139af27eb9e1531f95aad007d7c3791b`. The stored momentum hash was checked against that commit's actual source bytes. Its preserved-pin run `4b72e3e7-b4a9-5a12-a89c-46d03feb8e67` recomputed MATCH while the actual catalog head was the descendant. This run was created after backfill at the old pin; the separate earlier baseline above proves preservation across actual ingestion.
 
-The final release adds a derived PostgreSQL summary projection for efficient browsing; numerical calculator files are identical to `e2c9554`. The broad implementation hash includes storage code, so older research remains inspectable and integrity-verifiable but correctly returns VERSION_UNAVAILABLE for recomputation under a different implementation. Recompute those studies using `e2c9554` and their recorded runtime/source. Fresh full-history BTC baseline `5200c74d-b1ed-5efb-907e-94e238fc1448` and cold replay returned **MATCH**, result hash `70b5d9dc7598b52c117311a319a188f3a37e1c724ce921132f9bce280dfe3187`, under final implementation hash `5a2b6ddb60123572e1c12d52104cd2fe4f681190b08aefce41fcb8cca5c51353`. Calculation plus cold replay took 21.79 seconds.
+The release adds a derived PostgreSQL summary projection for efficient browsing and implementation/runtime/environment fingerprints for queued-job identity; numerical calculator files are identical to `e2c9554`. The broad implementation hash includes storage/API code, so older research remains inspectable and integrity-verifiable but correctly returns VERSION_UNAVAILABLE for recomputation under a different implementation. Recompute those studies using `e2c9554` and their recorded runtime/source.
+
+Summary projection commit **`7b24d70`** preserves full-history BTC baseline `5200c74d-b1ed-5efb-907e-94e238fc1448`, its matching replay and the encrypted quant subset drill. Its implementation hash is `5a2b6ddb60123572e1c12d52104cd2fe4f681190b08aefce41fcb8cca5c51353`; capture/calculation/replay took 21.79 seconds.
+
+Final release BTC run **`01fb8111-b7e4-51d9-8c20-8e4a3a9a7dc1`**, at the same definition and frozen source, returned **MATCH** under implementation hash `b214781c93e40d085ad5ce2ee109c58e82cfb40537a1a28fe94fabc6b7c7ee7d`. Its metrics and complete result hash are identical to `7b24d70`: `70b5d9dc7598b52c117311a319a188f3a37e1c724ce921132f9bce280dfe3187`. Calculation plus cold replay from the already captured source took 3.60 seconds. This excludes a new SQL/Parquet source capture; the earlier 21.79-second measurement includes that capture.
 
 ## Edge Library and CORTEX
 
@@ -126,21 +130,25 @@ Actual saved deterministic explanations: `a4c406b8-1e87-4e56-9a5a-c04fcaf63778` 
 
 ## Verification and performance
 
-Final complete regression/build totals are recorded after their completion. Prior complete runs passed 149 tests + 13 subtests in 677.76 seconds and 150 tests + 13 subtests in 630.71 seconds as boundary/disclosure tests were added. Intermediate runs interrupted for implementation changes are excluded from acceptance evidence. One known Starlette/TestClient/httpx deprecation warning remains.
+Final complete regression/build totals are recorded below. Prior complete runs passed 149 tests + 13 subtests in 677.76 seconds and 150 tests + 13 subtests in 630.71 seconds as boundary/disclosure tests were added. Intermediate runs interrupted for implementation changes are excluded from acceptance evidence. One known Starlette/TestClient/httpx deprecation warning remains.
 
-The first full regression under the frozen final implementation passed **150 tests + 13 subtests**, no skips, in **672.17 seconds**. The identical final implementation is being repeated before acceptance.
+The summary-projection implementation passed **150 tests + 13 subtests twice**, no skips, in **672.17 and 370.42 seconds**. A final cache audit then added a queued-job version guard and an independent regression fixture.
+
+The identical final-release implementation passed **151 tests + 13 subtests twice**, no skips, in **490.90 and 937.30 seconds**. Each run enabled every PostgreSQL/restore/Phase 3–8 pilot gate and reported only the known deprecation warning. Recorded logs: `runtime/phase8-backend-final-9.log` and `runtime/phase8-backend-final-10.log` (local ignored runtime evidence). Local timing varies substantially with system/storage contention; correctness gates stayed green.
 
 The final frontend suite passed **21/21 tests twice** (9.63 s and 7.86 s, seven files). Next.js production build compiled successfully in 19.5 s, passed its TypeScript/static generation stages, and the separate `tsc --noEmit` check passed. Temporary localhost QA servers/tabs were stopped, and their generated development agent files were removed. The build restored the tracked production type imports.
 
 One later backend attempt exposed test setup contamination: migration checks had populated the explicitly disposable restore target, violating its empty-database precondition. That attempt was interrupted, both dedicated `_test` public schemas on port 55432 were reset after verifying database/role/port, and the complete final suite was restarted. This is recorded as a corrected test-environment failure, not a passing run; no owner data was involved.
 
-A separate encrypted **quant catalog subset** drill copied the actual 1,007-session BTC run and its captured immutable source into a fresh disposable catalog, backed up/restored it, verified identical full run/source/derived summary payloads, and cold-replayed MATCH with the same result hash. It took **17.51 seconds**. That subset has no underlying Parquet catalog files; it specifically validates quant record/summary survival and embedded-source recomputation. The complete regression's separate encrypted restore drill validates underlying immutable Parquet/as-of/identity/revision lineage. Both temporary quant databases and their files were removed; no owner catalog was used.
+A separate encrypted **quant catalog subset** drill at preserved commit `7b24d70` copied the actual 1,007-session BTC run and its captured immutable source into a fresh disposable catalog, backed up/restored it, verified identical full run/source/derived summary payloads, and cold-replayed MATCH with the same result hash. It took **17.51 seconds**. That subset has no underlying Parquet catalog files; it specifically validates quant record/summary survival and embedded-source recomputation. The final engine produces the identical result hash from that same source. The complete regression's separate encrypted restore drill validates underlying immutable Parquet/as-of/identity/revision lineage. Both temporary quant databases and their files were removed; no owner catalog was used.
 
 The complete full-history experiment took **3,437.07 seconds (57.28 minutes)** while regression work ran concurrently. The first momentum replay took 19.32 minutes; shared canonical scan caching reduced subsequent full-period detector runs to approximately 51.81–54.17 seconds and the equal-weight baseline to 38.85 seconds. These are measured workloads on this local machine, not guaranteed interactive latency. The final BTC baseline is measured separately in the JSON evidence.
 
 At the complete experiment measurement: 88 unique run combinations, five strategies examined, 24 captured source artifacts and one each of walk-forward/sensitivity/robustness/Monte Carlo/comparison. Later baseline/regression artifacts raise these counts; API search counts expose current totals. No multiple-testing correction is claimed. Storage verification found **185 referenced Parquet artifacts**, zero missing/corrupt/unreferenced files and zero staged files; no deletion was performed.
 
 Growing full decision ledgers exposed a list-request timeout. Migration `0009_quant_summaries.sql` builds a small derived browsing projection and new writes save it atomically with the immutable record. Detail/replay use the authoritative full payload and hashes. A loopback API request returned 50 summaries in **633 ms**, compared with the earlier request exceeding 40 seconds. Apply migrations and restart the local API before using the new summary schema.
+
+Queued-job deduplication fingerprints the validated request, implementation, detector/features, Python/NumPy runtime and environment. A completed job from an older implementation therefore cannot substitute for a newly requested calculation. The regression fixture checks unchanged-request idempotence and changed code/runtime/environment identity. Explicit retry still targets the original failed job.
 
 ## Limitations and readiness
 
@@ -152,4 +160,4 @@ Growing full decision ledgers exposed a list-request timeout. Migration `0009_qu
 - Monte Carlo is additive empirical trade-P/L research with fixed initial-capital contributions, ignoring allocation changes, overlap and serial dependence; block bootstrap deferred. Small samples explicitly warned.
 - Large historical studies run as bounded local jobs and may take minutes. Immutable development artifacts remain inspectable under their recorded implementation version; incompatible replay returns VERSION_UNAVAILABLE.
 
-Phase 9 must remain unstarted until final Phase 8 acceptance is recorded. The research capabilities can support later work; the pilot does not establish a proven market edge.
+Phase 8 acceptance A–S is complete. The research capabilities are ready to support planning of Phase 9; **Phase 9 has not begun**. The pilot establishes functional research and reproducibility capabilities, with no supported market edge.
