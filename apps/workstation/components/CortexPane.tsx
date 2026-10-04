@@ -37,6 +37,8 @@ export default function CortexPane({ context, mode, symbol }: { context: Context
   const [olderManifest, setOlderManifest] = useState('');
   const [predictionId, setPredictionId] = useState('');
   const [journalEntryId, setJournalEntryId] = useState('');
+  const [backtestRunId,setBacktestRunId]=useState('');
+  const [quantStudyId,setQuantStudyId]=useState('');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [status, setStatus] = useState<Status | null>(null);
@@ -60,7 +62,8 @@ export default function CortexPane({ context, mode, symbol }: { context: Context
       const payload = { question: question.trim(), mode, manifest_id: context.source_manifest_id,
         as_of: context.as_of, symbol: symbol ?? undefined, compare_symbol: other || undefined,
         older_manifest_id: olderManifest || undefined, prediction_id:predictionId||undefined,
-        journal_entry_id:journalEntryId||undefined, depth };
+        journal_entry_id:journalEntryId||undefined, backtest_run_id:backtestRunId||undefined,
+        quant_study_id:quantStudyId||undefined, depth };
       const result = await postJson<ResearchRun>('cortex/research', payload);
       setRun(result); setActiveEvidence(result.tools.flatMap((item) => item.evidence)[0]?.evidence_id ?? null);
       getJson<{ items: SavedRun[] }>('cortex/runs', symbol ? new URLSearchParams({ symbol }) : undefined)
@@ -113,6 +116,7 @@ export default function CortexPane({ context, mode, symbol }: { context: Context
           <button className="button primary" disabled={busy || question.trim().length < 3} onClick={ask}>{busy ? 'Researching…' : 'Ask CORTEX'} <ArrowRight size={14}/></button></div>
         <div className="callout mt12">The active {mode} manifest and cutoff are sent with this question. For an earlier cutoff, change the workstation research context first. Stored daily data can be stale.</div>
         <div className="row wrap mt12"><label className="small muted">Prediction ID <input className="input" aria-label="CORTEX prediction ID" value={predictionId} onChange={e=>setPredictionId(e.target.value)} placeholder="Optional ledger UUID"/></label><label className="small muted">Journal entry ID <input className="input" aria-label="CORTEX journal entry ID" value={journalEntryId} onChange={e=>setJournalEntryId(e.target.value)} placeholder="Optional private entry UUID"/></label></div>
+        <div className="row wrap mt12"><label className="small muted">Backtest run ID<input className="input" aria-label="CORTEX backtest run ID" value={backtestRunId} onChange={e=>setBacktestRunId(e.target.value)}/></label><label className="small muted">Quant study ID<input className="input" aria-label="CORTEX quant study ID" value={quantStudyId} onChange={e=>setQuantStudyId(e.target.value)}/></label></div>
         {error && <div className="callout error mt12"><strong>{error.replaceAll('_', ' ')}</strong><p>No market value was substituted for the failed request.</p></div>}</div></section>
       {run && <><section className="panel"><div className="panel-head"><div><h2>Research answer</h2><span className="sub">Saved run {shortId(run.run_id)} · {formatDate(run.created_at)}</span></div>
         <span className={`badge ${run.evidence_strength === 'weak' ? 'warn' : 'good'}`}>{run.evidence_strength} evidence</span></div>

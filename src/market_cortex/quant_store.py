@@ -20,9 +20,11 @@ class QuantStore:
     def save(self,kind,payload,content_hash=None,artifact_id=None):
         value_hash=content_hash or digest(payload)
         key=artifact_id or uuid5(NAMESPACE_URL,f"quant:{kind}:{value_hash}")
+        summary={"strategy_id":payload.get("definition",{}).get("strategy_id"),
+                 "metrics":payload.get("metrics"),"warnings":payload.get("warnings",[])} if kind!="source" else {}
         with connect(self.dsn) as c:
-            c.execute("INSERT INTO quant_artifacts VALUES (%s,%s,%s,%s,%s) ON CONFLICT DO NOTHING",
-                      (key,kind,value_hash,datetime.now(timezone.utc),Jsonb(payload)))
+            c.execute("INSERT INTO quant_artifacts (artifact_id,kind,content_hash,created_at,payload,summary) VALUES (%s,%s,%s,%s,%s,%s) ON CONFLICT DO NOTHING",
+                      (key,kind,value_hash,datetime.now(timezone.utc),Jsonb(payload),Jsonb(summary)))
             row=c.execute("SELECT content_hash,payload FROM quant_artifacts WHERE artifact_id=%s",(key,)).fetchone()
             if row is None or row[0]!=value_hash:
                 raise ValueError("IMMUTABLE_QUANT_ID_CONFLICT")
@@ -62,15 +64,15 @@ class QuantStore:
 
     def recent(self,kind="run",as_of=None):
         with connect(self.dsn) as c:
-            rows=c.execute("SELECT artifact_id,created_at,payload FROM quant_artifacts WHERE kind=%s AND created_at<=%s ORDER BY created_at DESC LIMIT 50",
+            rows=c.execute("SELECT artifact_id,created_at,summary->>'strategy_id',summary->'metrics',summary->'warnings' FROM quant_artifacts WHERE kind=%s AND created_at<=%s ORDER BY created_at DESC LIMIT 50",
                            (kind,as_of or datetime.now(timezone.utc))).fetchall()
         return [{"artifact_id":str(k),"created_at":at.isoformat(),
-                 "strategy_id":p.get("definition",{}).get("strategy_id"),"metrics":p.get("metrics"),
-                 "kind":kind,"warnings":p.get("warnings",[])} for k,at,p in rows]
+                 "strategy_id":strategy,"metrics":summary,
+                 "kind":kind,"warnings":warnings or []} for k,at,strategy,summary,warnings in rows]
 
     def search_counts(self):
         with connect(self.dsn) as c:
             rows=c.execute("SELECT kind,count(*) FROM quant_artifacts GROUP BY kind").fetchall()
-            strategies=c.execute("SELECT count(DISTINCT payload->'definition'->>'strategy_id') FROM quant_artifacts WHERE kind='run'").fetchone()[0]
+            strategies=c.execute("SELECT count(DISTINCT summary->>'strategy_id') FROM quant_artifacts WHERE kind='run'").fetchone()[0]
         return {"artifact_counts":dict(rows),"strategies_examined":strategies,
                 "unique_run_combinations":dict(rows).get("run",0),"warning":"MULTIPLE_TESTING; NO_SIGNIFICANCE_CORRECTION; DEPENDENT_TRADES"}

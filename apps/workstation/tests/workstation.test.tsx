@@ -61,7 +61,7 @@ function mockApi() {
       source_manifest_id: manifest, request: { as_of: context.as_of }, resolved_parameters: { period: 14 },
       expected_sessions: 396, observed_sessions: 396, freshness: 'current', missing_sessions: [],
       points: [{ session_date: '2026-10-01', value: 64.8, reason: null, observation_id: 'obs', input_quality: 'valid' }] };
-    else payload = {};
+    else payload = {items:[]};
     return { ok: true, status: 200, json: async () => payload };
   });
   vi.stubGlobal('fetch', fetcher);
@@ -69,6 +69,15 @@ function mockApi() {
 }
 
 describe('research workstation', () => {
+  it('opens Quant Lab without requesting an unrelated full-history overview', async () => {
+    window.history.replaceState({}, '', '/?view=quant');
+    try {
+      const fetcher=mockApi(); render(<Workstation />);
+      expect(await screen.findByRole('heading',{name:'Quant Lab'})).toBeInTheDocument();
+      expect(screen.getByRole('button',{name:'Queue backtest'})).toBeInTheDocument();
+      expect(fetcher.mock.calls.some(([url])=>String(url).includes('/overview'))).toBe(false);
+    } finally {window.history.replaceState({}, '', '/');}
+  });
   it('shows a loading state before the catalog responds', () => {
     vi.stubGlobal('fetch', vi.fn(() => new Promise(() => {})));
     render(<Workstation />);

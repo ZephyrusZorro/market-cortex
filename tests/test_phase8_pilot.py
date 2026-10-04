@@ -55,6 +55,10 @@ def test_persist_recompute_api_job_cortex_privacy_and_edge_gates(pilot):
     run=service.run(d)
     assert service.replay(run.run_id)['status']=='MATCH'
     assert client.get(f'/api/v1/quant/runs/{run.run_id}').json()['result_hash']==run.result_hash
+    recent=client.get('/api/v1/quant/runs').json()['items']
+    saved_summary=next(row for row in recent if row['artifact_id']==str(run.run_id))
+    assert saved_summary['metrics']==run.model_dump(mode='json')['metrics']
+    assert saved_summary['strategy_id']==run.definition.strategy_id and 'decisions' not in saved_summary
     assert client.post('/api/v1/quant/jobs',json={'operation':'exec_python','payload':{}}).status_code==422
     assert client.post('/api/v1/quant/jobs',json={'operation':'backtest','payload':{**d.model_dump(mode='json'),'code':'print(1)'}}).status_code==422
     queued=client.post('/api/v1/quant/jobs',json={'operation':'backtest','payload':d.model_dump(mode='json')})

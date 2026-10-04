@@ -15,6 +15,7 @@ Private, local-first market research software. **Phases 1–7 are implemented fo
 - Phase 5 adds eight versioned daily-bar opportunity detectors, recorded candidate and rejection events, structured versioned theses, deterministic monitoring, CORTEX candidate review and an integrated workstation scanner/board. See the [Phase 5 guide](docs/opportunity/PHASE_5_OPPORTUNITY_AND_THESIS.md).
 - Phase 6 adds local versioned research portfolios, pinned position risk/R/heat/exposure/correlation, explicit what-if scenarios, hypothetical thesis overlays, grounded CORTEX risk tools and a Portfolio & Risk workspace. Native-currency and stale-data limits remain explicit. See the [Phase 6 guide](docs/risk/PHASE_6_RISK_AND_PORTFOLIO.md).
 - Phase 7 adds an append-only private journal, frozen prediction definitions, deterministic session-aware outcomes, separate pre-registered/retrospective cohorts, detector/rejection statistics with sample limits, explicit lessons, hypothesis-only Edge Library, CORTEX evidence tools and Journal & Learning workstation. See the [Phase 7 guide](docs/learning/PHASE_7_JOURNAL_PREDICTION_LEARNING.md) and [exit matrix](docs/planning/PHASE_7_EXIT_MATRIX_2026-10-04.md).
+- Phase 8 adds Quant Lab: registered canonical detector strategies, strict historical replay, labelled reconstruction, daily execution/costs, reconciled portfolio paths, metrics/drawdowns, bounded parameter grids, train-only walk-forward selection, robustness, seeded Monte Carlo, immutable research artifacts and grounded CORTEX quant tools. See the [Quant Lab guide](docs/quant/PHASE_8_QUANT_LAB.md) and [pilot results](docs/quant/PHASE_8_PILOT_RESULTS.json). Backtests do not establish a proven edge.
 
 There are **no order endpoints or automated trade execution paths**. Advanced feeds, strategies, and ML are subsequent work. Live India/US coverage remains deferred.
 
@@ -38,7 +39,7 @@ Install local PostgreSQL and create a **dedicated empty database** with a dedica
 .\.venv\Scripts\python.exe scripts\market_cortex.py serve
 ```
 
-The server binds to `127.0.0.1:8765`. `GET /api/v1/health` is available even before PostgreSQL is configured and reports `not_configured`. The `migrate` command also applies `0003_cortex_research.sql`, `0004_opportunity_theses.sql`, `0005_portfolio_risk.sql` and `0006_journal_learning.sql` for local research persistence. Provider probes are separate: `python scripts\probe_sources.py --run --output data\probes\phase_0_6_local.json`.
+The server binds to `127.0.0.1:8765`. `GET /api/v1/health` is available even before PostgreSQL is configured and reports `not_configured`. The `migrate` command applies migrations through `0009_quant_summaries.sql` for local research persistence and efficient summary browsing. Provider probes are separate: `python scripts\probe_sources.py --run --output data\probes\phase_0_6_local.json`.
 
 In a second PowerShell window, start the workstation. Node.js and npm must be installed; `npm ci` is needed only on first setup or after dependency changes.
 

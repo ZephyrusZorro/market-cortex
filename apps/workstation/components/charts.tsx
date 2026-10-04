@@ -26,6 +26,19 @@ function CanvasChart({ option, height = 320, label }: { option: ChartOptions; he
 const palette = { text: '#98aaa8', grid: '#263431', up: '#7ccfa8', down: '#e68f82',
   cyan: '#78b9c5', lime: '#d2de9a', orange: '#e6b97a', violet: '#a7a0cc' };
 
+export function QuantChart({points,benchmarkAvailable=true}:{points:{session:string;net:number;gross:number;benchmark:number;drawdown:number}[];benchmarkAvailable?:boolean}) {
+  const option=useMemo(()=>({animation:false,backgroundColor:'transparent',
+    legend:{top:5,left:65,data:['Net after costs','Gross same quantities',...(benchmarkAvailable?['Gross benchmark']:[]),'Drawdown'],textStyle:{color:palette.text,fontSize:11}},
+    tooltip:{trigger:'axis',backgroundColor:'#182320',borderColor:palette.grid,textStyle:{color:'#e3e9df'}},grid:[{left:65,right:25,top:45,height:'58%'},{left:65,right:25,top:'76%',height:'15%'}],
+    xAxis:[0,1].map(gridIndex=>({type:'category',gridIndex,data:points.map(p=>p.session),axisLabel:{color:palette.text,show:gridIndex===1,fontSize:10}})),
+    yAxis:[0,1].map(gridIndex=>({type:'value',gridIndex,scale:true,splitNumber:gridIndex===1?3:5,
+      axisLabel:{color:palette.text,fontSize:10,formatter:(v:number)=>gridIndex===1?`${(v*100).toFixed(0)}%`:Intl.NumberFormat('en').format(v)},splitLine:{lineStyle:{color:palette.grid}}})),
+    series:[['Net after costs','net',palette.up],['Gross same quantities','gross',palette.cyan],['Gross benchmark','benchmark',palette.orange],['Drawdown','drawdown',palette.down]].filter(([,key])=>benchmarkAvailable||key!=='benchmark').map(([name,key,color])=>({
+      name,type:'line',showSymbol:false,xAxisIndex:key==='drawdown'?1:0,yAxisIndex:key==='drawdown'?1:0,
+      data:points.map(p=>p[key as keyof typeof p]),lineStyle:{color,width:1.5},itemStyle:{color}}))}),[points,benchmarkAvailable]);
+  return <CanvasChart option={option} height={400} label={`Quant equity: net, gross${benchmarkAvailable?', benchmark':''} and drawdown`}/>;
+}
+
 export function PriceChart({ bars, features, visibleFrom, visibleTo }: {
   bars: ChartBar[]; features: Record<string, ChartFeature>; visibleFrom?: string; visibleTo?: string
 }) {

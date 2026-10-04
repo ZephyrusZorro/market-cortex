@@ -10,12 +10,13 @@ import CortexPane from './CortexPane';
 import OpportunityPane from './OpportunityPane';
 import PortfolioPane from './PortfolioPane';
 import LearningPane from './LearningPane';
+import QuantPane from './QuantPane';
 import { ApiError, appendParams, category, contextParams, getJson, number, percent, pinnedParams, shortId,
   type ChartFeature, type Comparison, type Context, type Dimension, type FeatureDefinition, type FeatureSeries,
   type InstrumentView, type ManifestDetail, type MarketState, type Mode, type Overview, type OverviewItem,
   type ResearchSelection } from '@/lib/api';
 
-type View = 'overview' | 'instruments' | 'analytics' | 'market-state' | 'compare' | 'coverage' | 'research' | 'system' | 'cortex' | 'opportunities' | 'portfolio' | 'learning';
+type View = 'overview' | 'instruments' | 'analytics' | 'market-state' | 'compare' | 'coverage' | 'research' | 'system' | 'cortex' | 'opportunities' | 'portfolio' | 'learning' | 'quant';
 const NAV: { id: View; label: string; icon: typeof LayoutDashboard; key: string }[] = [
   { id: 'overview', label: 'Overview', icon: LayoutDashboard, key: '1' },
   { id: 'instruments', label: 'Instruments', icon: BarChart3, key: '2' },
@@ -28,7 +29,8 @@ const NAV: { id: View; label: string; icon: typeof LayoutDashboard; key: string 
   { id: 'cortex', label: 'CORTEX Research', icon: HeartPulse, key: '9' },
   { id: 'opportunities', label: 'Opportunities', icon: Lightbulb, key: '0' },
   { id: 'portfolio', label: 'Portfolio & Risk', icon: ShieldCheck, key: 'p' },
-  { id: 'learning', label: 'Journal & Learning', icon: FileClock, key: 'j' }
+  { id: 'learning', label: 'Journal & Learning', icon: FileClock, key: 'j' },
+  { id: 'quant', label: 'Quant Lab', icon: Activity, key: 'q' }
 ];
 type Watchlist = { id: string; name: string; instrumentIds: string[] };
 type WatchSignal = { symbol: string; detector_id: string; status: string; outcome?: string;
@@ -107,6 +109,7 @@ export default function Workstation() {
   const [contextOpen, setContextOpen] = useState(false);
   const [context, setContext] = useState<Context | null>(null);
   const [overview, setOverview] = useState<Overview | null>(null);
+  const [overviewError, setOverviewError] = useState<string | null>(null);
   const [health, setHealth] = useState<string>('checking');
   const [dataEnvironment, setDataEnvironment] = useState('UNLABELED');
   const [cortexFocus, setCortexFocus] = useState<'instrument' | 'market'>('instrument');
@@ -165,7 +168,7 @@ export default function Workstation() {
   const reload = () => setRefresh((n) => n + 1);
   useEffect(() => {
     let cancelled = false;
-    setLoading(true); setError(null); setOverview(null); setContext(null);
+    setLoading(true); setError(null); setOverviewError(null); setOverview(null); setContext(null);
     getJson<{ status: string; settings?: { environment?: string } }>('health').then((result) => {
       if (!cancelled) { setHealth(result.status); setDataEnvironment(result.settings?.environment ?? 'UNLABELED'); }
     })
@@ -176,12 +179,22 @@ export default function Workstation() {
       setInstrumentId((current) => ctx.members.some((member) => member.instrument_id === current) ? current :
         ctx.members.find((member) => member.symbol === 'BTCUSDT')?.instrument_id ?? null);
       setCompareIds(ctx.members.filter((member) => member.instrument_id).map((member) => member.instrument_id!));
-      const result = await getJson<Overview>('workstation/overview', pinnedParams(ctx));
-      if (!cancelled) setOverview(result);
     }).catch((problem) => { if (!cancelled) setError(problem instanceof ApiError ? problem.code : 'REQUEST_FAILED'); })
       .finally(() => { if (!cancelled) setLoading(false); });
     return () => { cancelled = true; };
   }, [selection, refresh]);
+
+  useEffect(() => {
+    if (!context || overview || !['overview','market-state','compare'].includes(view)) return;
+    let cancelled = false;
+    setOverviewError(null);
+    getJson<Overview>('workstation/overview', pinnedParams(context)).then((result) => {
+      if (!cancelled) setOverview(result);
+    }).catch((problem) => {
+      if (!cancelled) setOverviewError(problem instanceof ApiError ? problem.code : 'REQUEST_FAILED');
+    });
+    return () => { cancelled = true; };
+  }, [context, view, overview]);
 
   useEffect(() => {
     if (!context || !instrumentId || !context.evaluation_date || !context.history_start ||
@@ -607,7 +620,7 @@ export default function Workstation() {
       const Icon = item.icon; return <button key={item.id} onClick={() => { if (item.id === 'cortex') setCortexFocus(view === 'market-state' ? 'market' : 'instrument'); navigate(item.id); }} className={view === item.id ? 'active' : ''}>
         <Icon />{item.label}<span className="key">{item.key}</span></button>;
     })}</nav><div className="rail-spacer"/><div className="rail-bottom"><div><span className={`tiny-dot ${health === 'ready' ? 'good' : 'bad'}`}/><strong>{health === 'ready' ? 'LOCAL SYSTEM READY' : category(health).toUpperCase()}</strong></div>
-      <div>Research only · No execution</div><div>Phase 7 · v0.7.0</div></div></aside>
+      <div>Research only · No execution</div><div>Phase 8 · v0.8.0</div></div></aside>
     <main className="main"><header className="topbar"><button className="search-trigger" onClick={() => setCommandOpen(true)}><Search size={15} /> Search markets, features, pages <kbd>Ctrl K</kbd></button>
       <div className="top-grow" /><span className={`top-tag env-badge ${dataEnvironment === 'UNLABELED' ? 'warning' : ''}`}>{dataEnvironment.replaceAll('_', ' / ')}</span><span className="top-tag"><span className={`tiny-dot ${health === 'ready' ? 'good' : 'bad'}`} /> API {category(health)}</span>
       <span className="top-tag"><FileClock size={13} /> {selection.mode === 'latest' ? 'Latest head' : selection.mode === 'pinned' ? 'Pinned research' : 'Historical research'}</span>
@@ -631,7 +644,7 @@ export default function Workstation() {
           <div className="field"><label>Apply</label><button className="button primary" onClick={applyContext}>Open research context <ChevronRight size={14}/></button></div></div>
         <div className="callout mt12">Pinned mode keeps a published manifest fixed. Historical mode also cuts off observation availability at the selected instant. Every screen carries the resolved manifest and cutoff.</div>
       </Panel>}
-      {error ? <ErrorPanel error={error} retry={reload} /> : loading && !context ? <Loading /> : !context ?
+      {error || (['overview','market-state','compare'].includes(view) && overviewError) ? <ErrorPanel error={error??overviewError!} retry={reload} /> : loading && !context ? <Loading /> : !context ?
         <Empty title="No research context" body="The catalog has not returned a usable context." /> :
         view === 'overview' ? overviewPage() : view === 'instruments' ? instrumentPage() :
         view === 'analytics' ? analyticsPage() : view === 'market-state' ? statePage() :
@@ -640,7 +653,8 @@ export default function Workstation() {
           <OpportunityPane key={`${context.source_manifest_id}.${context.as_of}`} context={context}
             mode={selection.mode} watchlistIds={currentWatchlist?.instrumentIds ?? []} /> : view === 'portfolio' ?
           <PortfolioPane key={`${context.source_manifest_id}.${context.as_of}`} context={context} /> : view === 'learning' ?
-          <LearningPane key={`${context.source_manifest_id}.${context.as_of}`} context={context} /> : view === 'cortex' ?
+          <LearningPane key={`${context.source_manifest_id}.${context.as_of}`} context={context} /> : view === 'quant' ?
+          <QuantPane key={`${context.source_manifest_id}.${context.as_of}`} context={context} /> : view === 'cortex' ?
           <CortexPane key={`${context.source_manifest_id}.${context.as_of}.${cortexFocus}`} context={context}
             mode={selection.mode} symbol={cortexFocus === 'market' ? null : selectedMember?.symbol ?? null} /> : systemPage()}
       </div></main>
