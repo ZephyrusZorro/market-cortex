@@ -1,0 +1,68 @@
+{
+  "schema_version": "phase9_acceptance_v1",
+  "release_tag": "phase9-v0.9.0",
+  "backend_tests": 192,
+  "backend_subtests": 13,
+  "backend_runs": 2,
+  "backend_skips": 0,
+  "frontend_tests": 24,
+  "frontend_runs": 2,
+  "typecheck": "PASS",
+  "production_build": "PASS",
+  "known_warning": "Starlette/httpx TestClient deprecation",
+  "public_source_facts_visible": 649,
+  "stored_context_revisions": 1234,
+  "context_parquet_files": 3,
+  "encrypted_context_restore": {
+    "status": "MATCH",
+    "copied_real_fact_N": 649,
+    "artifact_count": 3,
+    "stored_revision_N": 1234,
+    "frozen_lineage_hash": "10ea7eac830d95783a724b463099c9ac609ac705f35a1eee41755d6227e5d4b1",
+    "scope": "complete pinned contextual lineage, original timestamps/revisions/manifests/files and accepted snapshot; foundation restore separately covered by regression",
+    "elapsed_seconds": 3.0571256000002904
+  },
+  "live_evidence_file_sha256": "e3bc3082f11575225d5b3931adf647037f4a1897f051ee9f4d07aa1233d371a0",
+  "checks": [
+    {
+      "log": "phase9-backend-final-1.log",
+      "sha256": "3d4f72e9dad99a705c2e9dc4ec1baab95ecc5c6b9fd43344918e3f5abf7f5b49",
+      "summary": [
+        "192 passed, 1 warning, 13 subtests passed in 259.32s (0:04:19)"
+      ]
+    },
+    {
+      "log": "phase9-backend-final-2.log",
+      "sha256": "887f575632eec4557bf39de220ff91ca73cba186724a1c3a828003b6cee80b29",
+      "summary": [
+        "192 passed, 1 warning, 13 subtests passed in 251.91s (0:04:11)"
+      ]
+    },
+    {
+      "log": "phase9-frontend-final-1.log",
+      "sha256": "cca2638a6f68a4466ca0b39f539273a32ec49aedce7e70e77beaeecfb55fe383",
+      "summary": [
+        "Tests  24 passed (24)"
+      ]
+    },
+    {
+      "log": "phase9-frontend-final-2.log",
+      "sha256": "c43e5d03dd6f25da723e884c82a607732ee65be4181b0f4a4c4902bdfa756401",
+      "summary": [
+        "Tests  24 passed (24)"
+      ]
+    },
+    {
+      "log": "phase9-typecheck-final.log",
+      "sha256": "7506ceffd71932eb1aa6a59c3f6f3363f4aab3110b5717ddeb2ddc188da9d684",
+      "summary": []
+    },
+    {
+      "log": "phase9-build-final.log",
+      "sha256": "a54a8b3d3e544a6a229e52e02d6d134b43429ab0f93788a253edff7748e9b152",
+      "summary": [
+        "\u2713 Compiled successfully in 9.1s"
+      ]
+    }
+  ]
+}

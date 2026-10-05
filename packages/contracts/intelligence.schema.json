@@ -1,0 +1,4902 @@
+{
+  "facts": {
+    "$defs": {
+      "DerivativeContract": {
+        "additionalProperties": false,
+        "properties": {
+          "schema_version": {
+            "const": "derivative_contract_v1",
+            "default": "derivative_contract_v1",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "instrument_id": {
+            "format": "uuid",
+            "title": "Instrument Id",
+            "type": "string"
+          },
+          "underlying_instrument_id": {
+            "format": "uuid",
+            "title": "Underlying Instrument Id",
+            "type": "string"
+          },
+          "provider": {
+            "title": "Provider",
+            "type": "string"
+          },
+          "venue": {
+            "title": "Venue",
+            "type": "string"
+          },
+          "native_id": {
+            "title": "Native Id",
+            "type": "string"
+          },
+          "contract_type": {
+            "enum": [
+              "PERPETUAL",
+              "DELIVERY"
+            ],
+            "title": "Contract Type",
+            "type": "string"
+          },
+          "base_asset": {
+            "title": "Base Asset",
+            "type": "string"
+          },
+          "quote_currency": {
+            "title": "Quote Currency",
+            "type": "string"
+          },
+          "margin_currency": {
+            "title": "Margin Currency",
+            "type": "string"
+          },
+          "quantity_unit": {
+            "title": "Quantity Unit",
+            "type": "string"
+          },
+          "identity_version": {
+            "title": "Identity Version",
+            "type": "string"
+          },
+          "known_at": {
+            "format": "date-time",
+            "title": "Known At",
+            "type": "string"
+          },
+          "metadata_source_ref": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Metadata Source Ref"
+          },
+          "metadata_raw_hash": {
+            "anyOf": [
+              {
+                "pattern": "^[0-9a-f]{64}$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Metadata Raw Hash"
+          },
+          "metadata_observed_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Metadata Observed At"
+          }
+        },
+        "required": [
+          "instrument_id",
+          "underlying_instrument_id",
+          "provider",
+          "venue",
+          "native_id",
+          "contract_type",
+          "base_asset",
+          "quote_currency",
+          "margin_currency",
+          "quantity_unit",
+          "identity_version",
+          "known_at"
+        ],
+        "title": "DerivativeContract",
+        "type": "object"
+      },
+      "DerivativeObservation": {
+        "additionalProperties": false,
+        "properties": {
+          "schema_version": {
+            "const": "context_fact_v1",
+            "default": "context_fact_v1",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "envelope": {
+            "$ref": "#/$defs/ObservationEnvelope"
+          },
+          "entity": {
+            "$ref": "#/$defs/EntityRef"
+          },
+          "related_instrument_ids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "maxItems": 50,
+            "title": "Related Instrument Ids",
+            "type": "array"
+          },
+          "logical_key": {
+            "maxLength": 240,
+            "minLength": 1,
+            "title": "Logical Key",
+            "type": "string"
+          },
+          "classification": {
+            "default": "SOURCE_FACT",
+            "enum": [
+              "SOURCE_FACT",
+              "EXTRACTED"
+            ],
+            "title": "Classification",
+            "type": "string"
+          },
+          "extraction_model": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Extraction Model"
+          },
+          "extraction_version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Extraction Version"
+          },
+          "validation_state": {
+            "default": "validated",
+            "enum": [
+              "validated",
+              "unvalidated"
+            ],
+            "title": "Validation State",
+            "type": "string"
+          },
+          "classification_scope": {
+            "default": "LIVE_SOURCE",
+            "enum": [
+              "LIVE_SOURCE",
+              "SYNTHETIC_TEST"
+            ],
+            "title": "Classification Scope",
+            "type": "string"
+          },
+          "revision_number": {
+            "default": 1,
+            "minimum": 1,
+            "title": "Revision Number",
+            "type": "integer"
+          },
+          "period_start": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Period Start"
+          },
+          "period_end": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Period End"
+          },
+          "effective_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Effective At"
+          },
+          "revised_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Revised At"
+          },
+          "domain": {
+            "const": "derivatives",
+            "default": "derivatives",
+            "title": "Domain",
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "funding",
+              "open_interest",
+              "mark_index",
+              "liquidation"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "contract": {
+            "$ref": "#/$defs/DerivativeContract"
+          },
+          "metric": {
+            "title": "Metric",
+            "type": "string"
+          },
+          "value": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+                "type": "string"
+              }
+            ],
+            "title": "Value"
+          },
+          "companion_value": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Companion Value"
+          },
+          "companion_unit": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Companion Unit"
+          },
+          "mark_price": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Mark Price"
+          },
+          "interval": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Interval"
+          }
+        },
+        "required": [
+          "envelope",
+          "entity",
+          "logical_key",
+          "kind",
+          "contract",
+          "metric",
+          "value"
+        ],
+        "title": "DerivativeObservation",
+        "type": "object"
+      },
+      "EconomicObservation": {
+        "additionalProperties": false,
+        "properties": {
+          "schema_version": {
+            "const": "context_fact_v1",
+            "default": "context_fact_v1",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "envelope": {
+            "$ref": "#/$defs/ObservationEnvelope"
+          },
+          "entity": {
+            "$ref": "#/$defs/EntityRef"
+          },
+          "related_instrument_ids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "maxItems": 50,
+            "title": "Related Instrument Ids",
+            "type": "array"
+          },
+          "logical_key": {
+            "maxLength": 240,
+            "minLength": 1,
+            "title": "Logical Key",
+            "type": "string"
+          },
+          "classification": {
+            "default": "SOURCE_FACT",
+            "enum": [
+              "SOURCE_FACT",
+              "EXTRACTED"
+            ],
+            "title": "Classification",
+            "type": "string"
+          },
+          "extraction_model": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Extraction Model"
+          },
+          "extraction_version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Extraction Version"
+          },
+          "validation_state": {
+            "default": "validated",
+            "enum": [
+              "validated",
+              "unvalidated"
+            ],
+            "title": "Validation State",
+            "type": "string"
+          },
+          "classification_scope": {
+            "default": "LIVE_SOURCE",
+            "enum": [
+              "LIVE_SOURCE",
+              "SYNTHETIC_TEST"
+            ],
+            "title": "Classification Scope",
+            "type": "string"
+          },
+          "revision_number": {
+            "default": 1,
+            "minimum": 1,
+            "title": "Revision Number",
+            "type": "integer"
+          },
+          "period_start": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Period Start"
+          },
+          "period_end": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Period End"
+          },
+          "effective_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Effective At"
+          },
+          "revised_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Revised At"
+          },
+          "domain": {
+            "const": "macro",
+            "default": "macro",
+            "title": "Domain",
+            "type": "string"
+          },
+          "kind": {
+            "const": "economic_observation",
+            "default": "economic_observation",
+            "title": "Kind",
+            "type": "string"
+          },
+          "series_id": {
+            "title": "Series Id",
+            "type": "string"
+          },
+          "metric": {
+            "title": "Metric",
+            "type": "string"
+          },
+          "value": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+                "type": "string"
+              }
+            ],
+            "title": "Value"
+          },
+          "region": {
+            "title": "Region",
+            "type": "string"
+          },
+          "frequency": {
+            "enum": [
+              "daily",
+              "monthly",
+              "quarterly",
+              "annual",
+              "irregular"
+            ],
+            "title": "Frequency",
+            "type": "string"
+          },
+          "seasonal_adjustment": {
+            "enum": [
+              "adjusted",
+              "unadjusted",
+              "not_applicable",
+              "unknown"
+            ],
+            "title": "Seasonal Adjustment",
+            "type": "string"
+          },
+          "initial_published_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Initial Published At"
+          }
+        },
+        "required": [
+          "envelope",
+          "entity",
+          "logical_key",
+          "series_id",
+          "metric",
+          "value",
+          "region",
+          "frequency",
+          "seasonal_adjustment"
+        ],
+        "title": "EconomicObservation",
+        "type": "object"
+      },
+      "EntityRef": {
+        "additionalProperties": false,
+        "properties": {
+          "kind": {
+            "enum": [
+              "instrument",
+              "issuer",
+              "region",
+              "series"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "key": {
+            "maxLength": 160,
+            "minLength": 1,
+            "title": "Key",
+            "type": "string"
+          },
+          "mapping_version": {
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Mapping Version",
+            "type": "string"
+          }
+        },
+        "required": [
+          "kind",
+          "key",
+          "mapping_version"
+        ],
+        "title": "EntityRef",
+        "type": "object"
+      },
+      "EventFact": {
+        "additionalProperties": false,
+        "properties": {
+          "schema_version": {
+            "const": "context_fact_v1",
+            "default": "context_fact_v1",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "envelope": {
+            "$ref": "#/$defs/ObservationEnvelope"
+          },
+          "entity": {
+            "$ref": "#/$defs/EntityRef"
+          },
+          "related_instrument_ids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "maxItems": 50,
+            "title": "Related Instrument Ids",
+            "type": "array"
+          },
+          "logical_key": {
+            "maxLength": 240,
+            "minLength": 1,
+            "title": "Logical Key",
+            "type": "string"
+          },
+          "classification": {
+            "default": "SOURCE_FACT",
+            "enum": [
+              "SOURCE_FACT",
+              "EXTRACTED"
+            ],
+            "title": "Classification",
+            "type": "string"
+          },
+          "extraction_model": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Extraction Model"
+          },
+          "extraction_version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Extraction Version"
+          },
+          "validation_state": {
+            "default": "validated",
+            "enum": [
+              "validated",
+              "unvalidated"
+            ],
+            "title": "Validation State",
+            "type": "string"
+          },
+          "classification_scope": {
+            "default": "LIVE_SOURCE",
+            "enum": [
+              "LIVE_SOURCE",
+              "SYNTHETIC_TEST"
+            ],
+            "title": "Classification Scope",
+            "type": "string"
+          },
+          "revision_number": {
+            "default": 1,
+            "minimum": 1,
+            "title": "Revision Number",
+            "type": "integer"
+          },
+          "period_start": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Period Start"
+          },
+          "period_end": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Period End"
+          },
+          "effective_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Effective At"
+          },
+          "revised_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Revised At"
+          },
+          "domain": {
+            "const": "events",
+            "default": "events",
+            "title": "Domain",
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "economic_event",
+              "corporate_event"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "category": {
+            "enum": [
+              "central_bank",
+              "inflation",
+              "employment",
+              "gdp",
+              "earnings",
+              "dividend",
+              "split",
+              "symbol_change",
+              "announcement"
+            ],
+            "title": "Category",
+            "type": "string"
+          },
+          "scheduled_at": {
+            "format": "date-time",
+            "title": "Scheduled At",
+            "type": "string"
+          },
+          "actual_release_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Actual Release At"
+          },
+          "region": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Region"
+          },
+          "importance": {
+            "default": "unknown",
+            "enum": [
+              "high",
+              "medium",
+              "low",
+              "unknown"
+            ],
+            "title": "Importance",
+            "type": "string"
+          },
+          "importance_source": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Importance Source"
+          },
+          "calendar_complete_until": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Calendar Complete Until"
+          },
+          "actual": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Actual"
+          },
+          "prior": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Prior"
+          },
+          "revised_prior": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Revised Prior"
+          },
+          "consensus": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Consensus"
+          },
+          "consensus_source": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Consensus Source"
+          },
+          "corporate_action_ref": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Corporate Action Ref"
+          }
+        },
+        "required": [
+          "envelope",
+          "entity",
+          "logical_key",
+          "kind",
+          "category",
+          "scheduled_at"
+        ],
+        "title": "EventFact",
+        "type": "object"
+      },
+      "FundamentalFact": {
+        "additionalProperties": false,
+        "properties": {
+          "schema_version": {
+            "const": "context_fact_v1",
+            "default": "context_fact_v1",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "envelope": {
+            "$ref": "#/$defs/ObservationEnvelope"
+          },
+          "entity": {
+            "$ref": "#/$defs/EntityRef"
+          },
+          "related_instrument_ids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "maxItems": 50,
+            "title": "Related Instrument Ids",
+            "type": "array"
+          },
+          "logical_key": {
+            "maxLength": 240,
+            "minLength": 1,
+            "title": "Logical Key",
+            "type": "string"
+          },
+          "classification": {
+            "default": "SOURCE_FACT",
+            "enum": [
+              "SOURCE_FACT",
+              "EXTRACTED"
+            ],
+            "title": "Classification",
+            "type": "string"
+          },
+          "extraction_model": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Extraction Model"
+          },
+          "extraction_version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Extraction Version"
+          },
+          "validation_state": {
+            "default": "validated",
+            "enum": [
+              "validated",
+              "unvalidated"
+            ],
+            "title": "Validation State",
+            "type": "string"
+          },
+          "classification_scope": {
+            "default": "LIVE_SOURCE",
+            "enum": [
+              "LIVE_SOURCE",
+              "SYNTHETIC_TEST"
+            ],
+            "title": "Classification Scope",
+            "type": "string"
+          },
+          "revision_number": {
+            "default": 1,
+            "minimum": 1,
+            "title": "Revision Number",
+            "type": "integer"
+          },
+          "period_start": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Period Start"
+          },
+          "period_end": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Period End"
+          },
+          "effective_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Effective At"
+          },
+          "revised_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Revised At"
+          },
+          "domain": {
+            "const": "fundamentals",
+            "default": "fundamentals",
+            "title": "Domain",
+            "type": "string"
+          },
+          "kind": {
+            "const": "fundamental_fact",
+            "default": "fundamental_fact",
+            "title": "Kind",
+            "type": "string"
+          },
+          "issuer_id": {
+            "title": "Issuer Id",
+            "type": "string"
+          },
+          "metric": {
+            "title": "Metric",
+            "type": "string"
+          },
+          "value": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+                "type": "string"
+              }
+            ],
+            "title": "Value"
+          },
+          "fiscal_period": {
+            "title": "Fiscal Period",
+            "type": "string"
+          },
+          "currency": {
+            "title": "Currency",
+            "type": "string"
+          }
+        },
+        "required": [
+          "envelope",
+          "entity",
+          "logical_key",
+          "issuer_id",
+          "metric",
+          "value",
+          "fiscal_period",
+          "currency"
+        ],
+        "title": "FundamentalFact",
+        "type": "object"
+      },
+      "NewsEvent": {
+        "additionalProperties": false,
+        "properties": {
+          "schema_version": {
+            "const": "context_fact_v1",
+            "default": "context_fact_v1",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "envelope": {
+            "$ref": "#/$defs/ObservationEnvelope"
+          },
+          "entity": {
+            "$ref": "#/$defs/EntityRef"
+          },
+          "related_instrument_ids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "maxItems": 50,
+            "title": "Related Instrument Ids",
+            "type": "array"
+          },
+          "logical_key": {
+            "maxLength": 240,
+            "minLength": 1,
+            "title": "Logical Key",
+            "type": "string"
+          },
+          "classification": {
+            "default": "SOURCE_FACT",
+            "enum": [
+              "SOURCE_FACT",
+              "EXTRACTED"
+            ],
+            "title": "Classification",
+            "type": "string"
+          },
+          "extraction_model": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Extraction Model"
+          },
+          "extraction_version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Extraction Version"
+          },
+          "validation_state": {
+            "default": "validated",
+            "enum": [
+              "validated",
+              "unvalidated"
+            ],
+            "title": "Validation State",
+            "type": "string"
+          },
+          "classification_scope": {
+            "default": "LIVE_SOURCE",
+            "enum": [
+              "LIVE_SOURCE",
+              "SYNTHETIC_TEST"
+            ],
+            "title": "Classification Scope",
+            "type": "string"
+          },
+          "revision_number": {
+            "default": 1,
+            "minimum": 1,
+            "title": "Revision Number",
+            "type": "integer"
+          },
+          "period_start": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Period Start"
+          },
+          "period_end": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Period End"
+          },
+          "effective_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Effective At"
+          },
+          "revised_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Revised At"
+          },
+          "domain": {
+            "const": "news",
+            "default": "news",
+            "title": "Domain",
+            "type": "string"
+          },
+          "kind": {
+            "const": "news_event",
+            "default": "news_event",
+            "title": "Kind",
+            "type": "string"
+          },
+          "title": {
+            "maxLength": 500,
+            "minLength": 1,
+            "title": "Title",
+            "type": "string"
+          },
+          "category": {
+            "maxLength": 60,
+            "title": "Category",
+            "type": "string"
+          },
+          "language": {
+            "default": "en",
+            "maxLength": 12,
+            "title": "Language",
+            "type": "string"
+          },
+          "duplicate_group_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Duplicate Group Id"
+          },
+          "syndication_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Syndication Id"
+          },
+          "assertion_key": {
+            "anyOf": [
+              {
+                "maxLength": 120,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Assertion Key"
+          },
+          "assertion_value": {
+            "anyOf": [
+              {
+                "maxLength": 300,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Assertion Value"
+          },
+          "confidence_category": {
+            "default": "unknown",
+            "enum": [
+              "source_reported",
+              "unverified_extraction",
+              "validated_extraction",
+              "unknown"
+            ],
+            "title": "Confidence Category",
+            "type": "string"
+          }
+        },
+        "required": [
+          "envelope",
+          "entity",
+          "logical_key",
+          "title",
+          "category"
+        ],
+        "title": "NewsEvent",
+        "type": "object"
+      },
+      "ObservationEnvelope": {
+        "additionalProperties": false,
+        "properties": {
+          "schema_version": {
+            "const": "1.0.0-draft",
+            "default": "1.0.0-draft",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "observation_id": {
+            "format": "uuid",
+            "title": "Observation Id",
+            "type": "string"
+          },
+          "instrument_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Instrument Id"
+          },
+          "series_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Series Id"
+          },
+          "venue_id": {
+            "title": "Venue Id",
+            "type": "string"
+          },
+          "provider_id": {
+            "title": "Provider Id",
+            "type": "string"
+          },
+          "provider_record_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Provider Record Id"
+          },
+          "event_at": {
+            "format": "date-time",
+            "title": "Event At",
+            "type": "string"
+          },
+          "published_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Published At"
+          },
+          "available_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Available At"
+          },
+          "availability_basis": {
+            "enum": [
+              "observed_arrival",
+              "documented_publication",
+              "conservative_proxy",
+              "unknown"
+            ],
+            "title": "Availability Basis",
+            "type": "string"
+          },
+          "ingested_at": {
+            "format": "date-time",
+            "title": "Ingested At",
+            "type": "string"
+          },
+          "timestamp_precision": {
+            "title": "Timestamp Precision",
+            "type": "string"
+          },
+          "is_final": {
+            "title": "Is Final",
+            "type": "boolean"
+          },
+          "quality_state": {
+            "enum": [
+              "valid",
+              "suspect",
+              "quarantined",
+              "corrected"
+            ],
+            "title": "Quality State",
+            "type": "string"
+          },
+          "freshness_policy_id": {
+            "title": "Freshness Policy Id",
+            "type": "string"
+          },
+          "validation_codes": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Validation Codes",
+            "type": "array"
+          },
+          "source_ref": {
+            "title": "Source Ref",
+            "type": "string"
+          },
+          "source_batch_id": {
+            "format": "uuid",
+            "title": "Source Batch Id",
+            "type": "string"
+          },
+          "raw_content_hash": {
+            "title": "Raw Content Hash",
+            "type": "string"
+          },
+          "raw_retention_state": {
+            "enum": [
+              "retained",
+              "hash_only",
+              "prohibited",
+              "expired"
+            ],
+            "title": "Raw Retention State",
+            "type": "string"
+          },
+          "normalizer_version": {
+            "title": "Normalizer Version",
+            "type": "string"
+          },
+          "license_policy_id": {
+            "title": "License Policy Id",
+            "type": "string"
+          },
+          "unit": {
+            "title": "Unit",
+            "type": "string"
+          },
+          "adjustment_basis": {
+            "title": "Adjustment Basis",
+            "type": "string"
+          },
+          "adjustment_vintage_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Adjustment Vintage Id"
+          },
+          "adjustment_known_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Adjustment Known At"
+          },
+          "supersedes_observation_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Supersedes Observation Id"
+          },
+          "missing_reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Missing Reason"
+          },
+          "currency": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Currency"
+          },
+          "revision": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Revision"
+          }
+        },
+        "required": [
+          "observation_id",
+          "venue_id",
+          "provider_id",
+          "event_at",
+          "availability_basis",
+          "ingested_at",
+          "timestamp_precision",
+          "is_final",
+          "quality_state",
+          "freshness_policy_id",
+          "validation_codes",
+          "source_ref",
+          "source_batch_id",
+          "raw_content_hash",
+          "raw_retention_state",
+          "normalizer_version",
+          "license_policy_id",
+          "unit",
+          "adjustment_basis"
+        ],
+        "title": "ObservationEnvelope",
+        "type": "object"
+      },
+      "OnChainMetric": {
+        "additionalProperties": false,
+        "properties": {
+          "schema_version": {
+            "const": "context_fact_v1",
+            "default": "context_fact_v1",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "envelope": {
+            "$ref": "#/$defs/ObservationEnvelope"
+          },
+          "entity": {
+            "$ref": "#/$defs/EntityRef"
+          },
+          "related_instrument_ids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "maxItems": 50,
+            "title": "Related Instrument Ids",
+            "type": "array"
+          },
+          "logical_key": {
+            "maxLength": 240,
+            "minLength": 1,
+            "title": "Logical Key",
+            "type": "string"
+          },
+          "classification": {
+            "default": "SOURCE_FACT",
+            "enum": [
+              "SOURCE_FACT",
+              "EXTRACTED"
+            ],
+            "title": "Classification",
+            "type": "string"
+          },
+          "extraction_model": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Extraction Model"
+          },
+          "extraction_version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Extraction Version"
+          },
+          "validation_state": {
+            "default": "validated",
+            "enum": [
+              "validated",
+              "unvalidated"
+            ],
+            "title": "Validation State",
+            "type": "string"
+          },
+          "classification_scope": {
+            "default": "LIVE_SOURCE",
+            "enum": [
+              "LIVE_SOURCE",
+              "SYNTHETIC_TEST"
+            ],
+            "title": "Classification Scope",
+            "type": "string"
+          },
+          "revision_number": {
+            "default": 1,
+            "minimum": 1,
+            "title": "Revision Number",
+            "type": "integer"
+          },
+          "period_start": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Period Start"
+          },
+          "period_end": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Period End"
+          },
+          "effective_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Effective At"
+          },
+          "revised_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Revised At"
+          },
+          "domain": {
+            "const": "onchain",
+            "default": "onchain",
+            "title": "Domain",
+            "type": "string"
+          },
+          "kind": {
+            "const": "onchain_metric",
+            "default": "onchain_metric",
+            "title": "Kind",
+            "type": "string"
+          },
+          "network": {
+            "title": "Network",
+            "type": "string"
+          },
+          "metric": {
+            "title": "Metric",
+            "type": "string"
+          },
+          "value": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "number"
+              },
+              {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+                "type": "string"
+              }
+            ],
+            "title": "Value"
+          },
+          "block_height": {
+            "anyOf": [
+              {
+                "minimum": 0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Block Height"
+          },
+          "methodology": {
+            "title": "Methodology",
+            "type": "string"
+          }
+        },
+        "required": [
+          "envelope",
+          "entity",
+          "logical_key",
+          "network",
+          "metric",
+          "value",
+          "methodology"
+        ],
+        "title": "OnChainMetric",
+        "type": "object"
+      },
+      "OptionChainSnapshot": {
+        "additionalProperties": false,
+        "properties": {
+          "schema_version": {
+            "const": "context_fact_v1",
+            "default": "context_fact_v1",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "envelope": {
+            "$ref": "#/$defs/ObservationEnvelope"
+          },
+          "entity": {
+            "$ref": "#/$defs/EntityRef"
+          },
+          "related_instrument_ids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "maxItems": 50,
+            "title": "Related Instrument Ids",
+            "type": "array"
+          },
+          "logical_key": {
+            "maxLength": 240,
+            "minLength": 1,
+            "title": "Logical Key",
+            "type": "string"
+          },
+          "classification": {
+            "default": "SOURCE_FACT",
+            "enum": [
+              "SOURCE_FACT",
+              "EXTRACTED"
+            ],
+            "title": "Classification",
+            "type": "string"
+          },
+          "extraction_model": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Extraction Model"
+          },
+          "extraction_version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Extraction Version"
+          },
+          "validation_state": {
+            "default": "validated",
+            "enum": [
+              "validated",
+              "unvalidated"
+            ],
+            "title": "Validation State",
+            "type": "string"
+          },
+          "classification_scope": {
+            "default": "LIVE_SOURCE",
+            "enum": [
+              "LIVE_SOURCE",
+              "SYNTHETIC_TEST"
+            ],
+            "title": "Classification Scope",
+            "type": "string"
+          },
+          "revision_number": {
+            "default": 1,
+            "minimum": 1,
+            "title": "Revision Number",
+            "type": "integer"
+          },
+          "period_start": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Period Start"
+          },
+          "period_end": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Period End"
+          },
+          "effective_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Effective At"
+          },
+          "revised_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Revised At"
+          },
+          "domain": {
+            "const": "options",
+            "default": "options",
+            "title": "Domain",
+            "type": "string"
+          },
+          "kind": {
+            "const": "option_chain",
+            "default": "option_chain",
+            "title": "Kind",
+            "type": "string"
+          },
+          "underlying_instrument_id": {
+            "format": "uuid",
+            "title": "Underlying Instrument Id",
+            "type": "string"
+          },
+          "underlying_price": {
+            "anyOf": [
+              {
+                "exclusiveMinimum": 0.0,
+                "type": "number"
+              },
+              {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+                "type": "string"
+              }
+            ],
+            "title": "Underlying Price"
+          },
+          "quotes": {
+            "items": {
+              "$ref": "#/$defs/OptionQuote"
+            },
+            "maxItems": 1000,
+            "title": "Quotes",
+            "type": "array"
+          }
+        },
+        "required": [
+          "envelope",
+          "entity",
+          "logical_key",
+          "underlying_instrument_id",
+          "underlying_price",
+          "quotes"
+        ],
+        "title": "OptionChainSnapshot",
+        "type": "object"
+      },
+      "OptionContract": {
+        "additionalProperties": false,
+        "properties": {
+          "schema_version": {
+            "const": "option_contract_v1",
+            "default": "option_contract_v1",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "instrument_id": {
+            "format": "uuid",
+            "title": "Instrument Id",
+            "type": "string"
+          },
+          "underlying_instrument_id": {
+            "format": "uuid",
+            "title": "Underlying Instrument Id",
+            "type": "string"
+          },
+          "provider": {
+            "title": "Provider",
+            "type": "string"
+          },
+          "venue": {
+            "title": "Venue",
+            "type": "string"
+          },
+          "native_id": {
+            "minLength": 1,
+            "title": "Native Id",
+            "type": "string"
+          },
+          "expiry": {
+            "format": "date-time",
+            "title": "Expiry",
+            "type": "string"
+          },
+          "strike": {
+            "anyOf": [
+              {
+                "exclusiveMinimum": 0.0,
+                "type": "number"
+              },
+              {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+                "type": "string"
+              }
+            ],
+            "title": "Strike"
+          },
+          "right": {
+            "enum": [
+              "call",
+              "put"
+            ],
+            "title": "Right",
+            "type": "string"
+          },
+          "multiplier": {
+            "anyOf": [
+              {
+                "exclusiveMinimum": 0.0,
+                "type": "number"
+              },
+              {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+                "type": "string"
+              }
+            ],
+            "title": "Multiplier"
+          },
+          "settlement": {
+            "enum": [
+              "cash",
+              "physical"
+            ],
+            "title": "Settlement",
+            "type": "string"
+          },
+          "exercise": {
+            "enum": [
+              "european",
+              "american"
+            ],
+            "title": "Exercise",
+            "type": "string"
+          },
+          "quote_currency": {
+            "title": "Quote Currency",
+            "type": "string"
+          },
+          "identity_version": {
+            "title": "Identity Version",
+            "type": "string"
+          }
+        },
+        "required": [
+          "instrument_id",
+          "underlying_instrument_id",
+          "provider",
+          "venue",
+          "native_id",
+          "expiry",
+          "strike",
+          "right",
+          "multiplier",
+          "settlement",
+          "exercise",
+          "quote_currency",
+          "identity_version"
+        ],
+        "title": "OptionContract",
+        "type": "object"
+      },
+      "OptionQuote": {
+        "additionalProperties": false,
+        "properties": {
+          "contract": {
+            "$ref": "#/$defs/OptionContract"
+          },
+          "bid": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "number"
+              },
+              {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Bid"
+          },
+          "ask": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "number"
+              },
+              {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Ask"
+          },
+          "last": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "number"
+              },
+              {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Last"
+          },
+          "volume": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "number"
+              },
+              {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Volume"
+          },
+          "open_interest": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "number"
+              },
+              {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Open Interest"
+          },
+          "implied_volatility": {
+            "anyOf": [
+              {
+                "exclusiveMinimum": 0.0,
+                "type": "number"
+              },
+              {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Implied Volatility"
+          },
+          "greeks": {
+            "additionalProperties": {
+              "anyOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+                  "type": "string"
+                }
+              ]
+            },
+            "title": "Greeks",
+            "type": "object"
+          },
+          "analytics_origin": {
+            "default": "unavailable",
+            "enum": [
+              "provider",
+              "calculated",
+              "unavailable"
+            ],
+            "title": "Analytics Origin",
+            "type": "string"
+          },
+          "calculation_version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Calculation Version"
+          }
+        },
+        "required": [
+          "contract"
+        ],
+        "title": "OptionQuote",
+        "type": "object"
+      }
+    },
+    "discriminator": {
+      "mapping": {
+        "corporate_event": "#/$defs/EventFact",
+        "economic_event": "#/$defs/EventFact",
+        "economic_observation": "#/$defs/EconomicObservation",
+        "fundamental_fact": "#/$defs/FundamentalFact",
+        "funding": "#/$defs/DerivativeObservation",
+        "liquidation": "#/$defs/DerivativeObservation",
+        "mark_index": "#/$defs/DerivativeObservation",
+        "news_event": "#/$defs/NewsEvent",
+        "onchain_metric": "#/$defs/OnChainMetric",
+        "open_interest": "#/$defs/DerivativeObservation",
+        "option_chain": "#/$defs/OptionChainSnapshot"
+      },
+      "propertyName": "kind"
+    },
+    "oneOf": [
+      {
+        "$ref": "#/$defs/EconomicObservation"
+      },
+      {
+        "$ref": "#/$defs/FundamentalFact"
+      },
+      {
+        "$ref": "#/$defs/EventFact"
+      },
+      {
+        "$ref": "#/$defs/NewsEvent"
+      },
+      {
+        "$ref": "#/$defs/DerivativeObservation"
+      },
+      {
+        "$ref": "#/$defs/OptionChainSnapshot"
+      },
+      {
+        "$ref": "#/$defs/OnChainMetric"
+      }
+    ]
+  },
+  "snapshot": {
+    "$defs": {
+      "ContextDimension": {
+        "additionalProperties": false,
+        "properties": {
+          "status": {
+            "enum": [
+              "AVAILABLE",
+              "PARTIAL",
+              "STALE",
+              "UNKNOWN",
+              "UNSUPPORTED"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "reason": {
+            "title": "Reason",
+            "type": "string"
+          },
+          "fact_ids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "title": "Fact Ids",
+            "type": "array"
+          },
+          "metrics": {
+            "additionalProperties": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "title": "Metrics",
+            "type": "object"
+          }
+        },
+        "required": [
+          "status",
+          "reason",
+          "fact_ids"
+        ],
+        "title": "ContextDimension",
+        "type": "object"
+      },
+      "DerivativeContract": {
+        "additionalProperties": false,
+        "properties": {
+          "schema_version": {
+            "const": "derivative_contract_v1",
+            "default": "derivative_contract_v1",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "instrument_id": {
+            "format": "uuid",
+            "title": "Instrument Id",
+            "type": "string"
+          },
+          "underlying_instrument_id": {
+            "format": "uuid",
+            "title": "Underlying Instrument Id",
+            "type": "string"
+          },
+          "provider": {
+            "title": "Provider",
+            "type": "string"
+          },
+          "venue": {
+            "title": "Venue",
+            "type": "string"
+          },
+          "native_id": {
+            "title": "Native Id",
+            "type": "string"
+          },
+          "contract_type": {
+            "enum": [
+              "PERPETUAL",
+              "DELIVERY"
+            ],
+            "title": "Contract Type",
+            "type": "string"
+          },
+          "base_asset": {
+            "title": "Base Asset",
+            "type": "string"
+          },
+          "quote_currency": {
+            "title": "Quote Currency",
+            "type": "string"
+          },
+          "margin_currency": {
+            "title": "Margin Currency",
+            "type": "string"
+          },
+          "quantity_unit": {
+            "title": "Quantity Unit",
+            "type": "string"
+          },
+          "identity_version": {
+            "title": "Identity Version",
+            "type": "string"
+          },
+          "known_at": {
+            "format": "date-time",
+            "title": "Known At",
+            "type": "string"
+          },
+          "metadata_source_ref": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Metadata Source Ref"
+          },
+          "metadata_raw_hash": {
+            "anyOf": [
+              {
+                "pattern": "^[0-9a-f]{64}$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Metadata Raw Hash"
+          },
+          "metadata_observed_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Metadata Observed At"
+          }
+        },
+        "required": [
+          "instrument_id",
+          "underlying_instrument_id",
+          "provider",
+          "venue",
+          "native_id",
+          "contract_type",
+          "base_asset",
+          "quote_currency",
+          "margin_currency",
+          "quantity_unit",
+          "identity_version",
+          "known_at"
+        ],
+        "title": "DerivativeContract",
+        "type": "object"
+      },
+      "DerivativeObservation": {
+        "additionalProperties": false,
+        "properties": {
+          "schema_version": {
+            "const": "context_fact_v1",
+            "default": "context_fact_v1",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "envelope": {
+            "$ref": "#/$defs/ObservationEnvelope"
+          },
+          "entity": {
+            "$ref": "#/$defs/EntityRef"
+          },
+          "related_instrument_ids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "maxItems": 50,
+            "title": "Related Instrument Ids",
+            "type": "array"
+          },
+          "logical_key": {
+            "maxLength": 240,
+            "minLength": 1,
+            "title": "Logical Key",
+            "type": "string"
+          },
+          "classification": {
+            "default": "SOURCE_FACT",
+            "enum": [
+              "SOURCE_FACT",
+              "EXTRACTED"
+            ],
+            "title": "Classification",
+            "type": "string"
+          },
+          "extraction_model": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Extraction Model"
+          },
+          "extraction_version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Extraction Version"
+          },
+          "validation_state": {
+            "default": "validated",
+            "enum": [
+              "validated",
+              "unvalidated"
+            ],
+            "title": "Validation State",
+            "type": "string"
+          },
+          "classification_scope": {
+            "default": "LIVE_SOURCE",
+            "enum": [
+              "LIVE_SOURCE",
+              "SYNTHETIC_TEST"
+            ],
+            "title": "Classification Scope",
+            "type": "string"
+          },
+          "revision_number": {
+            "default": 1,
+            "minimum": 1,
+            "title": "Revision Number",
+            "type": "integer"
+          },
+          "period_start": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Period Start"
+          },
+          "period_end": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Period End"
+          },
+          "effective_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Effective At"
+          },
+          "revised_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Revised At"
+          },
+          "domain": {
+            "const": "derivatives",
+            "default": "derivatives",
+            "title": "Domain",
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "funding",
+              "open_interest",
+              "mark_index",
+              "liquidation"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "contract": {
+            "$ref": "#/$defs/DerivativeContract"
+          },
+          "metric": {
+            "title": "Metric",
+            "type": "string"
+          },
+          "value": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+                "type": "string"
+              }
+            ],
+            "title": "Value"
+          },
+          "companion_value": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Companion Value"
+          },
+          "companion_unit": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Companion Unit"
+          },
+          "mark_price": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Mark Price"
+          },
+          "interval": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Interval"
+          }
+        },
+        "required": [
+          "envelope",
+          "entity",
+          "logical_key",
+          "kind",
+          "contract",
+          "metric",
+          "value"
+        ],
+        "title": "DerivativeObservation",
+        "type": "object"
+      },
+      "EconomicObservation": {
+        "additionalProperties": false,
+        "properties": {
+          "schema_version": {
+            "const": "context_fact_v1",
+            "default": "context_fact_v1",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "envelope": {
+            "$ref": "#/$defs/ObservationEnvelope"
+          },
+          "entity": {
+            "$ref": "#/$defs/EntityRef"
+          },
+          "related_instrument_ids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "maxItems": 50,
+            "title": "Related Instrument Ids",
+            "type": "array"
+          },
+          "logical_key": {
+            "maxLength": 240,
+            "minLength": 1,
+            "title": "Logical Key",
+            "type": "string"
+          },
+          "classification": {
+            "default": "SOURCE_FACT",
+            "enum": [
+              "SOURCE_FACT",
+              "EXTRACTED"
+            ],
+            "title": "Classification",
+            "type": "string"
+          },
+          "extraction_model": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Extraction Model"
+          },
+          "extraction_version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Extraction Version"
+          },
+          "validation_state": {
+            "default": "validated",
+            "enum": [
+              "validated",
+              "unvalidated"
+            ],
+            "title": "Validation State",
+            "type": "string"
+          },
+          "classification_scope": {
+            "default": "LIVE_SOURCE",
+            "enum": [
+              "LIVE_SOURCE",
+              "SYNTHETIC_TEST"
+            ],
+            "title": "Classification Scope",
+            "type": "string"
+          },
+          "revision_number": {
+            "default": 1,
+            "minimum": 1,
+            "title": "Revision Number",
+            "type": "integer"
+          },
+          "period_start": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Period Start"
+          },
+          "period_end": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Period End"
+          },
+          "effective_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Effective At"
+          },
+          "revised_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Revised At"
+          },
+          "domain": {
+            "const": "macro",
+            "default": "macro",
+            "title": "Domain",
+            "type": "string"
+          },
+          "kind": {
+            "const": "economic_observation",
+            "default": "economic_observation",
+            "title": "Kind",
+            "type": "string"
+          },
+          "series_id": {
+            "title": "Series Id",
+            "type": "string"
+          },
+          "metric": {
+            "title": "Metric",
+            "type": "string"
+          },
+          "value": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+                "type": "string"
+              }
+            ],
+            "title": "Value"
+          },
+          "region": {
+            "title": "Region",
+            "type": "string"
+          },
+          "frequency": {
+            "enum": [
+              "daily",
+              "monthly",
+              "quarterly",
+              "annual",
+              "irregular"
+            ],
+            "title": "Frequency",
+            "type": "string"
+          },
+          "seasonal_adjustment": {
+            "enum": [
+              "adjusted",
+              "unadjusted",
+              "not_applicable",
+              "unknown"
+            ],
+            "title": "Seasonal Adjustment",
+            "type": "string"
+          },
+          "initial_published_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Initial Published At"
+          }
+        },
+        "required": [
+          "envelope",
+          "entity",
+          "logical_key",
+          "series_id",
+          "metric",
+          "value",
+          "region",
+          "frequency",
+          "seasonal_adjustment"
+        ],
+        "title": "EconomicObservation",
+        "type": "object"
+      },
+      "EntityRef": {
+        "additionalProperties": false,
+        "properties": {
+          "kind": {
+            "enum": [
+              "instrument",
+              "issuer",
+              "region",
+              "series"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "key": {
+            "maxLength": 160,
+            "minLength": 1,
+            "title": "Key",
+            "type": "string"
+          },
+          "mapping_version": {
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Mapping Version",
+            "type": "string"
+          }
+        },
+        "required": [
+          "kind",
+          "key",
+          "mapping_version"
+        ],
+        "title": "EntityRef",
+        "type": "object"
+      },
+      "EventFact": {
+        "additionalProperties": false,
+        "properties": {
+          "schema_version": {
+            "const": "context_fact_v1",
+            "default": "context_fact_v1",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "envelope": {
+            "$ref": "#/$defs/ObservationEnvelope"
+          },
+          "entity": {
+            "$ref": "#/$defs/EntityRef"
+          },
+          "related_instrument_ids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "maxItems": 50,
+            "title": "Related Instrument Ids",
+            "type": "array"
+          },
+          "logical_key": {
+            "maxLength": 240,
+            "minLength": 1,
+            "title": "Logical Key",
+            "type": "string"
+          },
+          "classification": {
+            "default": "SOURCE_FACT",
+            "enum": [
+              "SOURCE_FACT",
+              "EXTRACTED"
+            ],
+            "title": "Classification",
+            "type": "string"
+          },
+          "extraction_model": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Extraction Model"
+          },
+          "extraction_version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Extraction Version"
+          },
+          "validation_state": {
+            "default": "validated",
+            "enum": [
+              "validated",
+              "unvalidated"
+            ],
+            "title": "Validation State",
+            "type": "string"
+          },
+          "classification_scope": {
+            "default": "LIVE_SOURCE",
+            "enum": [
+              "LIVE_SOURCE",
+              "SYNTHETIC_TEST"
+            ],
+            "title": "Classification Scope",
+            "type": "string"
+          },
+          "revision_number": {
+            "default": 1,
+            "minimum": 1,
+            "title": "Revision Number",
+            "type": "integer"
+          },
+          "period_start": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Period Start"
+          },
+          "period_end": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Period End"
+          },
+          "effective_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Effective At"
+          },
+          "revised_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Revised At"
+          },
+          "domain": {
+            "const": "events",
+            "default": "events",
+            "title": "Domain",
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "economic_event",
+              "corporate_event"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "category": {
+            "enum": [
+              "central_bank",
+              "inflation",
+              "employment",
+              "gdp",
+              "earnings",
+              "dividend",
+              "split",
+              "symbol_change",
+              "announcement"
+            ],
+            "title": "Category",
+            "type": "string"
+          },
+          "scheduled_at": {
+            "format": "date-time",
+            "title": "Scheduled At",
+            "type": "string"
+          },
+          "actual_release_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Actual Release At"
+          },
+          "region": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Region"
+          },
+          "importance": {
+            "default": "unknown",
+            "enum": [
+              "high",
+              "medium",
+              "low",
+              "unknown"
+            ],
+            "title": "Importance",
+            "type": "string"
+          },
+          "importance_source": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Importance Source"
+          },
+          "calendar_complete_until": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Calendar Complete Until"
+          },
+          "actual": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Actual"
+          },
+          "prior": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Prior"
+          },
+          "revised_prior": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Revised Prior"
+          },
+          "consensus": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Consensus"
+          },
+          "consensus_source": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Consensus Source"
+          },
+          "corporate_action_ref": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Corporate Action Ref"
+          }
+        },
+        "required": [
+          "envelope",
+          "entity",
+          "logical_key",
+          "kind",
+          "category",
+          "scheduled_at"
+        ],
+        "title": "EventFact",
+        "type": "object"
+      },
+      "FundamentalFact": {
+        "additionalProperties": false,
+        "properties": {
+          "schema_version": {
+            "const": "context_fact_v1",
+            "default": "context_fact_v1",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "envelope": {
+            "$ref": "#/$defs/ObservationEnvelope"
+          },
+          "entity": {
+            "$ref": "#/$defs/EntityRef"
+          },
+          "related_instrument_ids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "maxItems": 50,
+            "title": "Related Instrument Ids",
+            "type": "array"
+          },
+          "logical_key": {
+            "maxLength": 240,
+            "minLength": 1,
+            "title": "Logical Key",
+            "type": "string"
+          },
+          "classification": {
+            "default": "SOURCE_FACT",
+            "enum": [
+              "SOURCE_FACT",
+              "EXTRACTED"
+            ],
+            "title": "Classification",
+            "type": "string"
+          },
+          "extraction_model": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Extraction Model"
+          },
+          "extraction_version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Extraction Version"
+          },
+          "validation_state": {
+            "default": "validated",
+            "enum": [
+              "validated",
+              "unvalidated"
+            ],
+            "title": "Validation State",
+            "type": "string"
+          },
+          "classification_scope": {
+            "default": "LIVE_SOURCE",
+            "enum": [
+              "LIVE_SOURCE",
+              "SYNTHETIC_TEST"
+            ],
+            "title": "Classification Scope",
+            "type": "string"
+          },
+          "revision_number": {
+            "default": 1,
+            "minimum": 1,
+            "title": "Revision Number",
+            "type": "integer"
+          },
+          "period_start": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Period Start"
+          },
+          "period_end": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Period End"
+          },
+          "effective_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Effective At"
+          },
+          "revised_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Revised At"
+          },
+          "domain": {
+            "const": "fundamentals",
+            "default": "fundamentals",
+            "title": "Domain",
+            "type": "string"
+          },
+          "kind": {
+            "const": "fundamental_fact",
+            "default": "fundamental_fact",
+            "title": "Kind",
+            "type": "string"
+          },
+          "issuer_id": {
+            "title": "Issuer Id",
+            "type": "string"
+          },
+          "metric": {
+            "title": "Metric",
+            "type": "string"
+          },
+          "value": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+                "type": "string"
+              }
+            ],
+            "title": "Value"
+          },
+          "fiscal_period": {
+            "title": "Fiscal Period",
+            "type": "string"
+          },
+          "currency": {
+            "title": "Currency",
+            "type": "string"
+          }
+        },
+        "required": [
+          "envelope",
+          "entity",
+          "logical_key",
+          "issuer_id",
+          "metric",
+          "value",
+          "fiscal_period",
+          "currency"
+        ],
+        "title": "FundamentalFact",
+        "type": "object"
+      },
+      "NewsEvent": {
+        "additionalProperties": false,
+        "properties": {
+          "schema_version": {
+            "const": "context_fact_v1",
+            "default": "context_fact_v1",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "envelope": {
+            "$ref": "#/$defs/ObservationEnvelope"
+          },
+          "entity": {
+            "$ref": "#/$defs/EntityRef"
+          },
+          "related_instrument_ids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "maxItems": 50,
+            "title": "Related Instrument Ids",
+            "type": "array"
+          },
+          "logical_key": {
+            "maxLength": 240,
+            "minLength": 1,
+            "title": "Logical Key",
+            "type": "string"
+          },
+          "classification": {
+            "default": "SOURCE_FACT",
+            "enum": [
+              "SOURCE_FACT",
+              "EXTRACTED"
+            ],
+            "title": "Classification",
+            "type": "string"
+          },
+          "extraction_model": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Extraction Model"
+          },
+          "extraction_version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Extraction Version"
+          },
+          "validation_state": {
+            "default": "validated",
+            "enum": [
+              "validated",
+              "unvalidated"
+            ],
+            "title": "Validation State",
+            "type": "string"
+          },
+          "classification_scope": {
+            "default": "LIVE_SOURCE",
+            "enum": [
+              "LIVE_SOURCE",
+              "SYNTHETIC_TEST"
+            ],
+            "title": "Classification Scope",
+            "type": "string"
+          },
+          "revision_number": {
+            "default": 1,
+            "minimum": 1,
+            "title": "Revision Number",
+            "type": "integer"
+          },
+          "period_start": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Period Start"
+          },
+          "period_end": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Period End"
+          },
+          "effective_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Effective At"
+          },
+          "revised_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Revised At"
+          },
+          "domain": {
+            "const": "news",
+            "default": "news",
+            "title": "Domain",
+            "type": "string"
+          },
+          "kind": {
+            "const": "news_event",
+            "default": "news_event",
+            "title": "Kind",
+            "type": "string"
+          },
+          "title": {
+            "maxLength": 500,
+            "minLength": 1,
+            "title": "Title",
+            "type": "string"
+          },
+          "category": {
+            "maxLength": 60,
+            "title": "Category",
+            "type": "string"
+          },
+          "language": {
+            "default": "en",
+            "maxLength": 12,
+            "title": "Language",
+            "type": "string"
+          },
+          "duplicate_group_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Duplicate Group Id"
+          },
+          "syndication_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Syndication Id"
+          },
+          "assertion_key": {
+            "anyOf": [
+              {
+                "maxLength": 120,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Assertion Key"
+          },
+          "assertion_value": {
+            "anyOf": [
+              {
+                "maxLength": 300,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Assertion Value"
+          },
+          "confidence_category": {
+            "default": "unknown",
+            "enum": [
+              "source_reported",
+              "unverified_extraction",
+              "validated_extraction",
+              "unknown"
+            ],
+            "title": "Confidence Category",
+            "type": "string"
+          }
+        },
+        "required": [
+          "envelope",
+          "entity",
+          "logical_key",
+          "title",
+          "category"
+        ],
+        "title": "NewsEvent",
+        "type": "object"
+      },
+      "ObservationEnvelope": {
+        "additionalProperties": false,
+        "properties": {
+          "schema_version": {
+            "const": "1.0.0-draft",
+            "default": "1.0.0-draft",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "observation_id": {
+            "format": "uuid",
+            "title": "Observation Id",
+            "type": "string"
+          },
+          "instrument_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Instrument Id"
+          },
+          "series_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Series Id"
+          },
+          "venue_id": {
+            "title": "Venue Id",
+            "type": "string"
+          },
+          "provider_id": {
+            "title": "Provider Id",
+            "type": "string"
+          },
+          "provider_record_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Provider Record Id"
+          },
+          "event_at": {
+            "format": "date-time",
+            "title": "Event At",
+            "type": "string"
+          },
+          "published_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Published At"
+          },
+          "available_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Available At"
+          },
+          "availability_basis": {
+            "enum": [
+              "observed_arrival",
+              "documented_publication",
+              "conservative_proxy",
+              "unknown"
+            ],
+            "title": "Availability Basis",
+            "type": "string"
+          },
+          "ingested_at": {
+            "format": "date-time",
+            "title": "Ingested At",
+            "type": "string"
+          },
+          "timestamp_precision": {
+            "title": "Timestamp Precision",
+            "type": "string"
+          },
+          "is_final": {
+            "title": "Is Final",
+            "type": "boolean"
+          },
+          "quality_state": {
+            "enum": [
+              "valid",
+              "suspect",
+              "quarantined",
+              "corrected"
+            ],
+            "title": "Quality State",
+            "type": "string"
+          },
+          "freshness_policy_id": {
+            "title": "Freshness Policy Id",
+            "type": "string"
+          },
+          "validation_codes": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Validation Codes",
+            "type": "array"
+          },
+          "source_ref": {
+            "title": "Source Ref",
+            "type": "string"
+          },
+          "source_batch_id": {
+            "format": "uuid",
+            "title": "Source Batch Id",
+            "type": "string"
+          },
+          "raw_content_hash": {
+            "title": "Raw Content Hash",
+            "type": "string"
+          },
+          "raw_retention_state": {
+            "enum": [
+              "retained",
+              "hash_only",
+              "prohibited",
+              "expired"
+            ],
+            "title": "Raw Retention State",
+            "type": "string"
+          },
+          "normalizer_version": {
+            "title": "Normalizer Version",
+            "type": "string"
+          },
+          "license_policy_id": {
+            "title": "License Policy Id",
+            "type": "string"
+          },
+          "unit": {
+            "title": "Unit",
+            "type": "string"
+          },
+          "adjustment_basis": {
+            "title": "Adjustment Basis",
+            "type": "string"
+          },
+          "adjustment_vintage_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Adjustment Vintage Id"
+          },
+          "adjustment_known_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Adjustment Known At"
+          },
+          "supersedes_observation_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Supersedes Observation Id"
+          },
+          "missing_reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Missing Reason"
+          },
+          "currency": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Currency"
+          },
+          "revision": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Revision"
+          }
+        },
+        "required": [
+          "observation_id",
+          "venue_id",
+          "provider_id",
+          "event_at",
+          "availability_basis",
+          "ingested_at",
+          "timestamp_precision",
+          "is_final",
+          "quality_state",
+          "freshness_policy_id",
+          "validation_codes",
+          "source_ref",
+          "source_batch_id",
+          "raw_content_hash",
+          "raw_retention_state",
+          "normalizer_version",
+          "license_policy_id",
+          "unit",
+          "adjustment_basis"
+        ],
+        "title": "ObservationEnvelope",
+        "type": "object"
+      },
+      "OnChainMetric": {
+        "additionalProperties": false,
+        "properties": {
+          "schema_version": {
+            "const": "context_fact_v1",
+            "default": "context_fact_v1",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "envelope": {
+            "$ref": "#/$defs/ObservationEnvelope"
+          },
+          "entity": {
+            "$ref": "#/$defs/EntityRef"
+          },
+          "related_instrument_ids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "maxItems": 50,
+            "title": "Related Instrument Ids",
+            "type": "array"
+          },
+          "logical_key": {
+            "maxLength": 240,
+            "minLength": 1,
+            "title": "Logical Key",
+            "type": "string"
+          },
+          "classification": {
+            "default": "SOURCE_FACT",
+            "enum": [
+              "SOURCE_FACT",
+              "EXTRACTED"
+            ],
+            "title": "Classification",
+            "type": "string"
+          },
+          "extraction_model": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Extraction Model"
+          },
+          "extraction_version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Extraction Version"
+          },
+          "validation_state": {
+            "default": "validated",
+            "enum": [
+              "validated",
+              "unvalidated"
+            ],
+            "title": "Validation State",
+            "type": "string"
+          },
+          "classification_scope": {
+            "default": "LIVE_SOURCE",
+            "enum": [
+              "LIVE_SOURCE",
+              "SYNTHETIC_TEST"
+            ],
+            "title": "Classification Scope",
+            "type": "string"
+          },
+          "revision_number": {
+            "default": 1,
+            "minimum": 1,
+            "title": "Revision Number",
+            "type": "integer"
+          },
+          "period_start": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Period Start"
+          },
+          "period_end": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Period End"
+          },
+          "effective_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Effective At"
+          },
+          "revised_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Revised At"
+          },
+          "domain": {
+            "const": "onchain",
+            "default": "onchain",
+            "title": "Domain",
+            "type": "string"
+          },
+          "kind": {
+            "const": "onchain_metric",
+            "default": "onchain_metric",
+            "title": "Kind",
+            "type": "string"
+          },
+          "network": {
+            "title": "Network",
+            "type": "string"
+          },
+          "metric": {
+            "title": "Metric",
+            "type": "string"
+          },
+          "value": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "number"
+              },
+              {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+                "type": "string"
+              }
+            ],
+            "title": "Value"
+          },
+          "block_height": {
+            "anyOf": [
+              {
+                "minimum": 0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Block Height"
+          },
+          "methodology": {
+            "title": "Methodology",
+            "type": "string"
+          }
+        },
+        "required": [
+          "envelope",
+          "entity",
+          "logical_key",
+          "network",
+          "metric",
+          "value",
+          "methodology"
+        ],
+        "title": "OnChainMetric",
+        "type": "object"
+      },
+      "OptionChainSnapshot": {
+        "additionalProperties": false,
+        "properties": {
+          "schema_version": {
+            "const": "context_fact_v1",
+            "default": "context_fact_v1",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "envelope": {
+            "$ref": "#/$defs/ObservationEnvelope"
+          },
+          "entity": {
+            "$ref": "#/$defs/EntityRef"
+          },
+          "related_instrument_ids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "maxItems": 50,
+            "title": "Related Instrument Ids",
+            "type": "array"
+          },
+          "logical_key": {
+            "maxLength": 240,
+            "minLength": 1,
+            "title": "Logical Key",
+            "type": "string"
+          },
+          "classification": {
+            "default": "SOURCE_FACT",
+            "enum": [
+              "SOURCE_FACT",
+              "EXTRACTED"
+            ],
+            "title": "Classification",
+            "type": "string"
+          },
+          "extraction_model": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Extraction Model"
+          },
+          "extraction_version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Extraction Version"
+          },
+          "validation_state": {
+            "default": "validated",
+            "enum": [
+              "validated",
+              "unvalidated"
+            ],
+            "title": "Validation State",
+            "type": "string"
+          },
+          "classification_scope": {
+            "default": "LIVE_SOURCE",
+            "enum": [
+              "LIVE_SOURCE",
+              "SYNTHETIC_TEST"
+            ],
+            "title": "Classification Scope",
+            "type": "string"
+          },
+          "revision_number": {
+            "default": 1,
+            "minimum": 1,
+            "title": "Revision Number",
+            "type": "integer"
+          },
+          "period_start": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Period Start"
+          },
+          "period_end": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Period End"
+          },
+          "effective_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Effective At"
+          },
+          "revised_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Revised At"
+          },
+          "domain": {
+            "const": "options",
+            "default": "options",
+            "title": "Domain",
+            "type": "string"
+          },
+          "kind": {
+            "const": "option_chain",
+            "default": "option_chain",
+            "title": "Kind",
+            "type": "string"
+          },
+          "underlying_instrument_id": {
+            "format": "uuid",
+            "title": "Underlying Instrument Id",
+            "type": "string"
+          },
+          "underlying_price": {
+            "anyOf": [
+              {
+                "exclusiveMinimum": 0.0,
+                "type": "number"
+              },
+              {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+                "type": "string"
+              }
+            ],
+            "title": "Underlying Price"
+          },
+          "quotes": {
+            "items": {
+              "$ref": "#/$defs/OptionQuote"
+            },
+            "maxItems": 1000,
+            "title": "Quotes",
+            "type": "array"
+          }
+        },
+        "required": [
+          "envelope",
+          "entity",
+          "logical_key",
+          "underlying_instrument_id",
+          "underlying_price",
+          "quotes"
+        ],
+        "title": "OptionChainSnapshot",
+        "type": "object"
+      },
+      "OptionContract": {
+        "additionalProperties": false,
+        "properties": {
+          "schema_version": {
+            "const": "option_contract_v1",
+            "default": "option_contract_v1",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "instrument_id": {
+            "format": "uuid",
+            "title": "Instrument Id",
+            "type": "string"
+          },
+          "underlying_instrument_id": {
+            "format": "uuid",
+            "title": "Underlying Instrument Id",
+            "type": "string"
+          },
+          "provider": {
+            "title": "Provider",
+            "type": "string"
+          },
+          "venue": {
+            "title": "Venue",
+            "type": "string"
+          },
+          "native_id": {
+            "minLength": 1,
+            "title": "Native Id",
+            "type": "string"
+          },
+          "expiry": {
+            "format": "date-time",
+            "title": "Expiry",
+            "type": "string"
+          },
+          "strike": {
+            "anyOf": [
+              {
+                "exclusiveMinimum": 0.0,
+                "type": "number"
+              },
+              {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+                "type": "string"
+              }
+            ],
+            "title": "Strike"
+          },
+          "right": {
+            "enum": [
+              "call",
+              "put"
+            ],
+            "title": "Right",
+            "type": "string"
+          },
+          "multiplier": {
+            "anyOf": [
+              {
+                "exclusiveMinimum": 0.0,
+                "type": "number"
+              },
+              {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+                "type": "string"
+              }
+            ],
+            "title": "Multiplier"
+          },
+          "settlement": {
+            "enum": [
+              "cash",
+              "physical"
+            ],
+            "title": "Settlement",
+            "type": "string"
+          },
+          "exercise": {
+            "enum": [
+              "european",
+              "american"
+            ],
+            "title": "Exercise",
+            "type": "string"
+          },
+          "quote_currency": {
+            "title": "Quote Currency",
+            "type": "string"
+          },
+          "identity_version": {
+            "title": "Identity Version",
+            "type": "string"
+          }
+        },
+        "required": [
+          "instrument_id",
+          "underlying_instrument_id",
+          "provider",
+          "venue",
+          "native_id",
+          "expiry",
+          "strike",
+          "right",
+          "multiplier",
+          "settlement",
+          "exercise",
+          "quote_currency",
+          "identity_version"
+        ],
+        "title": "OptionContract",
+        "type": "object"
+      },
+      "OptionQuote": {
+        "additionalProperties": false,
+        "properties": {
+          "contract": {
+            "$ref": "#/$defs/OptionContract"
+          },
+          "bid": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "number"
+              },
+              {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Bid"
+          },
+          "ask": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "number"
+              },
+              {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Ask"
+          },
+          "last": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "number"
+              },
+              {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Last"
+          },
+          "volume": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "number"
+              },
+              {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Volume"
+          },
+          "open_interest": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "number"
+              },
+              {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Open Interest"
+          },
+          "implied_volatility": {
+            "anyOf": [
+              {
+                "exclusiveMinimum": 0.0,
+                "type": "number"
+              },
+              {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Implied Volatility"
+          },
+          "greeks": {
+            "additionalProperties": {
+              "anyOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+                  "type": "string"
+                }
+              ]
+            },
+            "title": "Greeks",
+            "type": "object"
+          },
+          "analytics_origin": {
+            "default": "unavailable",
+            "enum": [
+              "provider",
+              "calculated",
+              "unavailable"
+            ],
+            "title": "Analytics Origin",
+            "type": "string"
+          },
+          "calculation_version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Calculation Version"
+          }
+        },
+        "required": [
+          "contract"
+        ],
+        "title": "OptionQuote",
+        "type": "object"
+      }
+    },
+    "additionalProperties": false,
+    "properties": {
+      "schema_version": {
+        "const": "context_snapshot_v1",
+        "default": "context_snapshot_v1",
+        "title": "Schema Version",
+        "type": "string"
+      },
+      "calculation_version": {
+        "const": "context_dimensions_v1",
+        "default": "context_dimensions_v1",
+        "title": "Calculation Version",
+        "type": "string"
+      },
+      "calculation_code_hash": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Calculation Code Hash"
+      },
+      "snapshot_id": {
+        "format": "uuid",
+        "title": "Snapshot Id",
+        "type": "string"
+      },
+      "content_hash": {
+        "title": "Content Hash",
+        "type": "string"
+      },
+      "context_manifest_id": {
+        "anyOf": [
+          {
+            "format": "uuid",
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "title": "Context Manifest Id"
+      },
+      "market_manifest_id": {
+        "anyOf": [
+          {
+            "format": "uuid",
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "title": "Market Manifest Id"
+      },
+      "as_of": {
+        "format": "date-time",
+        "title": "As Of",
+        "type": "string"
+      },
+      "instrument_id": {
+        "anyOf": [
+          {
+            "format": "uuid",
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "title": "Instrument Id"
+      },
+      "dimensions": {
+        "additionalProperties": {
+          "$ref": "#/$defs/ContextDimension"
+        },
+        "title": "Dimensions",
+        "type": "object"
+      },
+      "facts": {
+        "items": {
+          "discriminator": {
+            "mapping": {
+              "corporate_event": "#/$defs/EventFact",
+              "economic_event": "#/$defs/EventFact",
+              "economic_observation": "#/$defs/EconomicObservation",
+              "fundamental_fact": "#/$defs/FundamentalFact",
+              "funding": "#/$defs/DerivativeObservation",
+              "liquidation": "#/$defs/DerivativeObservation",
+              "mark_index": "#/$defs/DerivativeObservation",
+              "news_event": "#/$defs/NewsEvent",
+              "onchain_metric": "#/$defs/OnChainMetric",
+              "open_interest": "#/$defs/DerivativeObservation",
+              "option_chain": "#/$defs/OptionChainSnapshot"
+            },
+            "propertyName": "kind"
+          },
+          "oneOf": [
+            {
+              "$ref": "#/$defs/EconomicObservation"
+            },
+            {
+              "$ref": "#/$defs/FundamentalFact"
+            },
+            {
+              "$ref": "#/$defs/EventFact"
+            },
+            {
+              "$ref": "#/$defs/NewsEvent"
+            },
+            {
+              "$ref": "#/$defs/DerivativeObservation"
+            },
+            {
+              "$ref": "#/$defs/OptionChainSnapshot"
+            },
+            {
+              "$ref": "#/$defs/OnChainMetric"
+            }
+          ]
+        },
+        "title": "Facts",
+        "type": "array"
+      },
+      "conflicts": {
+        "items": {
+          "additionalProperties": true,
+          "type": "object"
+        },
+        "title": "Conflicts",
+        "type": "array"
+      },
+      "event_risk": {
+        "additionalProperties": true,
+        "title": "Event Risk",
+        "type": "object"
+      },
+      "warnings": {
+        "items": {
+          "type": "string"
+        },
+        "title": "Warnings",
+        "type": "array"
+      }
+    },
+    "required": [
+      "snapshot_id",
+      "content_hash",
+      "context_manifest_id",
+      "market_manifest_id",
+      "as_of",
+      "instrument_id",
+      "dimensions",
+      "facts",
+      "conflicts",
+      "event_risk",
+      "warnings"
+    ],
+    "title": "ContextSnapshot",
+    "type": "object"
+  }
+}

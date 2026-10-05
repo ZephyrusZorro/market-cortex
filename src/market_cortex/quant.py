@@ -24,7 +24,7 @@ ENGINE_VERSION="quant_daily_v1"
 
 def _snapshot_code_hash():
     paths=[Path(__file__),*Path(__file__).parent.glob("quant_*.py"),Path(__file__).with_name("market_state.py"),
-           *[Path(__file__).with_name(name+".py") for name in ("risk","alignment","calendar","quality","identity","breadth","features","indicators")]]
+           *[Path(__file__).with_name(name+".py") for name in ("risk","alignment","calendar","quality","identity","breadth","features","indicators", "intelligence", "intelligence_contracts", "intelligence_store")]]
     return digest({p.name:p.read_bytes().replace(b"\r\n",b"\n").decode() for p in sorted(paths)})
 
 
@@ -71,7 +71,7 @@ class QuantService:
         return self._sources[key]
 
     def decisions(self,d,source,source_hash):
-        key=(source_hash,d.replay_policy,d.publication_lag_seconds,d.strategy_id,tuple(d.symbols),d.start,d.end)
+        key=(source_hash,d.replay_policy,d.publication_lag_seconds,d.strategy_id,tuple(d.symbols),d.start,d.end,d.context_filter)
         if key in self._decisions:
             return self._decisions[key]
         catalog=ReplayCatalog(source,d.replay_policy,d.publication_lag_seconds)
@@ -110,6 +110,40 @@ class QuantService:
                         outcome=c.outcome if c else "insufficient_data",status=c.status if c else "WATCHING",enter=enter,
                         reason="VALID_ENTRY" if enter else "NO_VALID_CURRENT_SESSION_CANDIDATE",
                         observation_ids=refs,evidence_hash=digest({"candidate":payload,"source":source_hash,"session":day})))
+        from .intelligence_contracts import FACTS
+        from .intelligence_store import visible
+        from .intelligence import derivatives
+        contextual = source.get('contextual', {})
+        facts = [FACTS.validate_python(f) for f in contextual.get('facts', [])]
+        created = datetime.fromisoformat(contextual['created_at']) if contextual.get('created_at') else None
+        recorded = {fid: datetime.fromisoformat(at) for fid, at in contextual.get('recorded_at', {}).items()}
+        context_times = {mid: datetime.fromisoformat(at) for mid, at in contextual.get('manifest_times', {}).items()}
+        members = {m.identifier_value: m.instrument_id for m in catalog.mappings if m.provider_id == 'binance' and m.venue_id == 'BINANCE_SPOT'}
+        supplemented = []
+        for decision in output:
+            if context_times:
+                eligible = [(at, mid) for mid, at in context_times.items() if at <= decision.cutoff]
+                known_manifest = max(eligible)[1] if eligible else None
+                arrived = [f for f in facts if recorded.get(str(f.envelope.observation_id), d.source_as_of) <= decision.cutoff]
+                known = visible(arrived, decision.cutoff, members.get(decision.symbol)) if known_manifest else []
+            else:
+                known_manifest = contextual.get('manifest_id') if created and created <= decision.cutoff else None
+                known = visible(facts, decision.cutoff, members.get(decision.symbol)) if known_manifest else []
+            derivative_facts = [f for f in known if f.domain == 'derivatives']
+            metrics = derivatives(derivative_facts) if derivative_facts else {}
+            context = {'manifest_id': known_manifest, 'frozen_source_manifest_id': contextual.get('manifest_id'), 'policy': 'AS_RECORDED_ONLY',
+                'fact_ids': [str(f.envelope.observation_id) for f in known], 'metrics': metrics,
+                'status': 'PARTIAL' if known else 'INSUFFICIENT_AS_RECORDED_CONTEXT'}
+            enter, reason = decision.enter, decision.reason
+            if d.context_filter != 'none':
+                sufficient = metrics.get('funding_N', 0) >= 20 if d.context_filter == 'funding_nonpositive' else metrics.get('oi_N', 0) >= 20
+                passes = (metrics.get('funding_latest', 1) <= 0) if d.context_filter == 'funding_nonpositive' else (metrics.get('oi_change_fraction', 0) > 0)
+                enter = enter and sufficient and passes
+                if decision.enter and not enter:
+                    reason = 'CONTEXT_FILTER_INSUFFICIENT_HISTORY' if not sufficient else 'CONTEXT_FILTER_REJECTED'
+            supplemented.append(decision.model_copy(update={'contextual_evidence': context, 'enter': enter,
+                'reason': reason, 'evidence_hash': digest({'canonical': decision.evidence_hash, 'context': context, 'filter': d.context_filter})}))
+        output = supplemented
         self._decisions[key]=output
         return output
 

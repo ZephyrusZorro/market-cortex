@@ -85,6 +85,7 @@ class BacktestDefinition(Strict):
     annualization: Literal[365] = 365
     risk_free_rate: float = Field(default=0, ge=-.1, le=.5)
     classification: Literal["OWNER_RESEARCH", "SYNTHETIC_TEST"] = "OWNER_RESEARCH"
+    context_filter: Literal['none', 'funding_nonpositive', 'oi_expanding'] = 'none'
     @field_validator("source_as_of")
     @classmethod
     def aware(cls, value):
@@ -119,6 +120,7 @@ class Decision(Strict):
     reason: str
     observation_ids: list[str]
     evidence_hash: str
+    contextual_evidence: dict = Field(default_factory=dict)
 
 
 class SimulatedTrade(Strict):

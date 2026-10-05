@@ -28,6 +28,41 @@ class OpportunityStore:
     def __init__(self, dsn: str):
         self.dsn = dsn
 
+    def attach_context(self, thesis_id, snapshot):
+        """Append a supplement without changing the canonical detector evidence."""
+        from .intelligence import event_risk
+        from .intelligence_store import digest
+        if digest(snapshot.model_dump(mode='json', exclude={'snapshot_id', 'content_hash'})) != snapshot.content_hash:
+            raise ValueError('CONTEXT_SNAPSHOT_HASH_MISMATCH')
+        with connect(self.dsn) as c:
+            head = c.execute('SELECT current_version FROM research_theses WHERE thesis_id=%s FOR UPDATE', (thesis_id,)).fetchone()
+            if not head:
+                raise LookupError('THESIS_NOT_FOUND')
+            previous = Thesis.model_validate(c.execute('SELECT payload FROM research_thesis_versions WHERE thesis_id=%s AND version=%s', (thesis_id, head[0])).fetchone()[0])
+            if snapshot.instrument_id != previous.instrument_id or snapshot.market_manifest_id != previous.source_manifest_id or snapshot.as_of < previous.as_of:
+                raise ValueError('THESIS_CONTEXT_SCOPE_MISMATCH')
+            horizon = 20 if previous.horizon == 'swing_days_2_to_20' else None
+            risk = event_risk(snapshot.facts, snapshot.as_of, previous.instrument_id, horizon or 1)
+            status = previous.status
+            if horizon and risk['high_impact_in_horizon'] and 'EVENT_RISK' in VALID_TRANSITIONS[status]:
+                status = 'EVENT_RISK'
+            supplement = {'snapshot_id': str(snapshot.snapshot_id), 'content_hash': snapshot.content_hash,
+                'context_manifest_id': str(snapshot.context_manifest_id) if snapshot.context_manifest_id else None,
+                'event_risk': risk, 'horizon_rule': 'canonical_swing_days_2_to_20' if horizon else 'UNKNOWN_HORIZON_NO_TRANSITION',
+                'dimensions': {k: v.model_dump(mode='json') for k, v in snapshot.dimensions.items()}, 'conflicts': snapshot.conflicts}
+            if previous.contextual_evidence == supplement:
+                return previous
+            now = datetime.now(timezone.utc)
+            transition = ThesisTransition(from_status=previous.status, to_status=status, at=now, actor='detector',
+                reason='CONTEXT_EVENT_RISK_V1' if status != previous.status else 'CONTEXT_SUPPLEMENT_STATUS_UNCHANGED',
+                source_manifest_id=previous.source_manifest_id, as_of=snapshot.as_of,
+                changed_evidence_ids=risk['transition_fact_ids'] if status != previous.status else [])
+            updated = previous.model_copy(update={'version': previous.version+1, 'status': status, 'updated_at': now,
+                'as_of': snapshot.as_of, 'contextual_evidence': supplement, 'transitions': previous.transitions+[transition]})
+            self._insert_version(c, updated, 'detector')
+            c.execute('UPDATE research_theses SET current_version=%s WHERE thesis_id=%s', (updated.version, thesis_id))
+        return updated
+
     def record_scan(self, scan: ScanResult) -> int:
         inserted = 0
         with connect(self.dsn) as connection:

@@ -22,6 +22,7 @@ class ResearchRequest(BaseModel):
     symbol: str | None = None
     compare_symbol: str | None = None
     older_manifest_id: UUID | None = None
+    context_manifest_id: UUID | None = None
     candidate_id: UUID | None = None
     thesis_id: UUID | None = None
     prediction_id: UUID | None = None
@@ -79,6 +80,7 @@ class ResearchContext(BaseModel):
     environment: str
     base_currency: str
     secondary_currency: str = "USD"
+    context_manifest_id: UUID | None = None
 
 
 class Evidence(BaseModel):

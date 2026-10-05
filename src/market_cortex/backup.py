@@ -130,6 +130,9 @@ def backup(settings: Settings, destination: Path, passphrase: str) -> dict:
             try:
                 head = catalog.head()
                 artifacts = catalog.artifacts_for(head) if head else []
+                if lock_connection.execute("SELECT to_regclass('context_files')").fetchone()[0]:
+                    from .intelligence_store import ContextStore
+                    artifacts += ContextStore(catalog).artifacts()
                 dump = staging / "catalog.dump"
                 _run_pg("pg_dump", settings.database_url, ["--format=custom", "--no-owner", "--no-privileges",
                                                             "--file", str(dump)])

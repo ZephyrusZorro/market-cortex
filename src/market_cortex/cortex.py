@@ -78,7 +78,9 @@ class CortexService:
         if symbol and symbol not in present:
             # The mapping itself can be unavailable at a historical cutoff.
             second = None
-        return ResearchContext(mode=request.mode, manifest_id=UUID(context["source_manifest_id"]),
+        from .intelligence_store import ContextStore
+        contextual = ContextStore(self.catalog).resolve(cutoff, request.context_manifest_id)
+        return ResearchContext(mode=request.mode, manifest_id=UUID(context["source_manifest_id"]), context_manifest_id=contextual,
             as_of=cutoff, evaluation_date=date.fromisoformat(context["evaluation_date"])
                 if context["evaluation_date"] else None,
             history_start=date.fromisoformat(context["history_start"])
@@ -95,6 +97,11 @@ class CortexService:
             ("prediction", "journal", "lesson", "mistake", "learning", "performed", "performance",
              "outcome", "actually happened", "expect from", "thesis failed", "skeptic was right", "edge library"))
         plan = [("dataset.context", {}, context)]
+        contextual_question = any(term in question for term in ('context', 'funding', 'open interest', ' oi ', 'derivative', 'macro', 'earnings', 'economic', 'news', 'event', 'on-chain', 'onchain', 'options', 'fundamental'))
+        if contextual_question:
+            plan.append(('intelligence.context', {'symbol': context.symbol, 'context_manifest_id': context.context_manifest_id}, context))
+            if not any(term in question for term in ('backtest', 'quant', 'thesis', 'portfolio', 'momentum', 'trend')):
+                return plan
         strategy_matches=[k for k in ("momentum","breakout","trend_continuation","pullback","buy_hold","equal_weight")
                           if k in question or k.replace("_"," ") in question]
         quant_question=bool(request.backtest_run_id or request.quant_study_id) or any(term in question for term in
@@ -514,11 +521,15 @@ class CortexService:
                  "", "Evidence"]
         lines += [render(item) for item in support[:10]] or ["- Insufficient visible deterministic evidence for a directional conclusion."]
         extra=[item for item in quant_audit if item.claim_id not in {c.claim_id for c in support[:10]}]
+        context_audit = [item for item in support if item.text.startswith(('SOURCE_FACT', 'EXTRACTED', 'derivatives.', 'macro.', 'Event risk:', 'Context snapshot hash:'))
+                         and item.claim_id not in {c.claim_id for c in support[:10]}]
+        if context_audit:
+            lines += ['', 'Contextual source facts and calculations']+[render(item) for item in context_audit]
         if extra:
             lines += ["", "Quant research context"]+[render(item) for item in extra]
         lines += ["", "Counter-evidence"] + ([render(item) for item in counter] or ["- No direct indicator conflict was detected in the retrieved evidence."])
         lines += ["", "Limits"] + ([render(item) for item in limits] or ["- No additional scoped limitation was identified."])
-        if context.symbol and not quant_audit:
+        if context.symbol and not quant_audit and not context_audit and not any('context' in c.text.lower() or 'funding' in c.text.lower() for c in support):
             sma = next((item for item in claims if "closed above" in item.text or "closed below" in item.text), None)
             lines += ["", "Invalidation", "- Recheck the interpretation if the next stored daily close crosses SMA20 or momentum/state evidence changes."
                       + (" " + " ".join(f"[{e}]" for e in sma.evidence_ids) if sma else "")]
@@ -535,6 +546,17 @@ class CortexService:
         plan = self._plan(request, context)
         tools, warnings = self._collect(plan)
         claims = self._claims(context, tools)
+        for run in tools:
+            if not run.tool_id.startswith('intelligence.'):
+                continue
+            for e in run.evidence:
+                if e.kind == 'context_limit':
+                    claims.append(_claim('LIMITATION', f'{e.label}: {e.value or "UNAVAILABLE"}; {e.reason}.', [e], 'limitation'))
+                elif e.kind in ('context_calculation', 'context_event_risk', 'context_manifest', 'context_provenance'):
+                    claims.append(_claim('CALCULATION', f'{e.label}: {e.value}; calculation {e.version or "event_proximity_v1"}.', [e], 'neutral'))
+                elif e.kind == 'context_fact' and e.label.endswith(('funding', 'open_interest', 'economic_observation')):
+                    if e is next((x for x in reversed(run.evidence) if x.label == e.label), None):
+                        claims.append(_claim('OBSERVATION', f'{e.label}: {e.value} {e.unit}; available {e.source_as_of}; {e.reason}.', [e], 'neutral'))
         claims += self._challenge(context, tools, claims)
         if not claims:
             marker = next((item for run in tools for item in run.evidence if item.kind == "coverage"), None)
@@ -562,11 +584,13 @@ class CortexService:
                 selected = set(model_result.selected_claim_ids)
         else:
             warnings.append("MODEL_BLOCKED_BY_PRIVACY_POLICY")
+        context_evidence = {e.evidence_id for run in tools if run.tool_id.startswith('intelligence.') for e in run.evidence}
+        selected |= {c.claim_id for c in claims if set(c.evidence_ids) & context_evidence}
         strength = self._strength(context, tools, claims)
         answer = self._synthesize(request, context, claims, selected, strength)
         evidence_hash = digest([{"tool_id": item.tool_id, "inputs": item.inputs,
                                  "output_hash": item.output_hash} for item in tools])
-        has_observation = any(item.kind in ("observation", "learning_metric", "learning_record", "risk_metric", "quant_metric", "quant_record")
+        has_observation = any(item.kind in ("observation", "learning_metric", "learning_record", "risk_metric", "quant_metric", "quant_record", "context_fact")
                               and item.value is not None for run in tools for item in run.evidence)
         run = ResearchRun(run_id=uuid4(), created_at=datetime.now(timezone.utc),
             request=request, context=context, tools=tools, claims=claims,

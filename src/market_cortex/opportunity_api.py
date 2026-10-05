@@ -112,7 +112,12 @@ def router_for(catalog: PostgresCatalog, settings: Settings) -> APIRouter:
                 symbol=prior.symbol, detector_id=prior.detector_id, record=True))
             current = next(item for item in result.candidates if item.symbol == prior.symbol and
                            item.detector_id == prior.detector_id)
-            return store.advance(thesis_id, current).model_dump(mode="json")
+            updated = store.advance(thesis_id, current)
+            from .intelligence import IntelligenceService
+            from .intelligence_contracts import ContextRequest
+            snap = IntelligenceService(catalog).snapshot(ContextRequest(as_of=current.as_of,
+                market_manifest_id=current.source_manifest_id, instrument_id=current.instrument_id, horizon_days=20), persist=True)
+            return store.attach_context(thesis_id, snap).model_dump(mode="json")
         except StopIteration:
             raise HTTPException(422, detail={"code": "DETECTOR_EVALUATION_UNAVAILABLE"}) from None
         except (LookupError, ValueError, KeyError) as exc:

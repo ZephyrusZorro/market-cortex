@@ -51,7 +51,9 @@ def capture(catalog, manifest_id, as_of):
         if cal.venue.session_kind!="24x7":
             raise ValueError("QUANT_REQUIRES_VERIFIED_24X7_CRYPTO_CALENDAR")
         calendars[venue_id]={"venue":cal.venue.model_dump(mode="json"),"calendar_id":cal.calendar_id,"version":cal.version}
-    return {"manifest_id":str(manifest_id),"source_as_of":as_of.isoformat(),
+    from .intelligence_store import ContextStore
+    contextual = ContextStore(catalog).freeze(as_of)
+    return {"manifest_id":str(manifest_id),"source_as_of":as_of.isoformat(), 'contextual': contextual,
             "manifest_times":{str(k):v.isoformat() for k,v in chain},
             "observation_manifests":{str(k):str(v) for k,v in observation_manifests.items()},
             "files":[{"path":a.relative_path,"hash":a.content_hash} for a in artifacts],

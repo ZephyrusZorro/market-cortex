@@ -394,6 +394,18 @@ class RiskService:
                 for item in result_positions) else "current",
             market_state_freshness=state_freshness,
             warnings=list(dict.fromkeys(warnings + ["PORTFOLIO_EQUITY_SERIES_UNAVAILABLE:DRAWDOWN_UNKNOWN"])))
+        from .intelligence import IntelligenceService
+        from .intelligence_contracts import ContextRequest
+        supplementary = {}
+        context_service = IntelligenceService(self.catalog)
+        for position in result_positions:
+            contextual = context_service.snapshot(ContextRequest(as_of=cutoff, market_manifest_id=manifest,
+                instrument_id=position.instrument_id))
+            supplementary[str(position.instrument_id)] = {'context_snapshot_id': str(contextual.snapshot_id),
+                'context_manifest_id': str(contextual.context_manifest_id) if contextual.context_manifest_id else None,
+                'event_risk': contextual.event_risk, 'derivatives': contextual.dimensions['derivatives'].model_dump(mode='json'),
+                'warning': 'CONTEXT_WARNINGS_DO_NOT_CHANGE_NUMERICAL_RISK_OR_SIZING'}
+        snapshot = snapshot.model_copy(update={'contextual_risk': supplementary})
         snapshot = snapshot.model_copy(update={"snapshot_id":snapshot_identity(snapshot)})
         if request.persist and overlay is None:
             self.store.save_risk(snapshot.model_dump(mode="json"))

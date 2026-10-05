@@ -202,6 +202,7 @@ class Thesis(BaseModel):
     updated_at: datetime
     transitions: list[ThesisTransition]
     candidate: Candidate
+    contextual_evidence: dict = Field(default_factory=dict)
 
 
 class ThesisCreateRequest(BaseModel):

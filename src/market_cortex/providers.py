@@ -24,6 +24,8 @@ from .calendar import CalendarMissing, SessionCalendar
 from .contracts import Bar, IdentifierMapping, Instrument, ObservationEnvelope, utc
 
 HOSTS = {
+    "fapi.binance.com": (r"/fapi/v1/exchangeInfo", r"/fapi/v1/fundingRate", r"/futures/data/openInterestHist", r"/fapi/v1/premiumIndex"),
+    "api.fiscaldata.treasury.gov": (r"/services/api/fiscal_service/v2/accounting/od/avg_interest_rates",),
     "data-api.binance.vision": (r"/api/v3/klines", r"/api/v3/exchangeInfo"),
     "data.alpaca.markets": (r"/v2/stocks/[A-Z0-9]+(?:\.[A-Z0-9]+)?/bars",),
     "api.upstox.com": (r"/v3/historical-candle/NSE_EQ%7C[A-Z0-9]+/days/1/\d{4}-\d{2}-\d{2}/\d{4}-\d{2}-\d{2}",),

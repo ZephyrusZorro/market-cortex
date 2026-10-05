@@ -212,6 +212,7 @@ class RiskSnapshot(Strict):
     feature_freshness: str
     market_state_freshness: str
     warnings: list[str]
+    contextual_risk: dict = Field(default_factory=dict)
 
 
 class ScenarioResult(Strict):

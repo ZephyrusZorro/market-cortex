@@ -11,12 +11,13 @@ import OpportunityPane from './OpportunityPane';
 import PortfolioPane from './PortfolioPane';
 import LearningPane from './LearningPane';
 import QuantPane from './QuantPane';
+import IntelligencePane from './IntelligencePane';
 import { ApiError, appendParams, category, contextParams, getJson, number, percent, pinnedParams, shortId,
   type ChartFeature, type Comparison, type Context, type Dimension, type FeatureDefinition, type FeatureSeries,
   type InstrumentView, type ManifestDetail, type MarketState, type Mode, type Overview, type OverviewItem,
   type ResearchSelection } from '@/lib/api';
 
-type View = 'overview' | 'instruments' | 'analytics' | 'market-state' | 'compare' | 'coverage' | 'research' | 'system' | 'cortex' | 'opportunities' | 'portfolio' | 'learning' | 'quant';
+type View = 'overview' | 'instruments' | 'analytics' | 'market-state' | 'compare' | 'coverage' | 'research' | 'system' | 'cortex' | 'opportunities' | 'portfolio' | 'learning' | 'quant' | 'intelligence';
 const NAV: { id: View; label: string; icon: typeof LayoutDashboard; key: string }[] = [
   { id: 'overview', label: 'Overview', icon: LayoutDashboard, key: '1' },
   { id: 'instruments', label: 'Instruments', icon: BarChart3, key: '2' },
@@ -30,7 +31,8 @@ const NAV: { id: View; label: string; icon: typeof LayoutDashboard; key: string 
   { id: 'opportunities', label: 'Opportunities', icon: Lightbulb, key: '0' },
   { id: 'portfolio', label: 'Portfolio & Risk', icon: ShieldCheck, key: 'p' },
   { id: 'learning', label: 'Journal & Learning', icon: FileClock, key: 'j' },
-  { id: 'quant', label: 'Quant Lab', icon: Activity, key: 'q' }
+  { id: 'quant', label: 'Quant Lab', icon: Activity, key: 'q' },
+  { id: 'intelligence', label: 'Intelligence', icon: Database, key: 'i' }
 ];
 type Watchlist = { id: string; name: string; instrumentIds: string[] };
 type WatchSignal = { symbol: string; detector_id: string; status: string; outcome?: string;
@@ -399,6 +401,7 @@ export default function Workstation() {
           <div className="row wrap between border-top pad16 small muted"><span>Candles, overlays, RSI and MACD are backend derived. All timestamps are UTC daily sessions.</span>
             <span className="mono">Raw · P1D · {shortId(context?.source_manifest_id)}</span></div>
         </Panel>
+        {context && <IntelligencePane key={`${context.as_of}.${instrumentId}`} context={context} instrumentId={instrumentId} compact />}
         <div className="grid main-side mt18"><Panel title="Indicator readout" subtitle="Backend canonical values · current evaluation session">
           <div className="grid three">{Object.entries(chart.features).filter(([name]) =>
             ['sma_20','sma_50','ema_20','rsi_14','macd_histogram','atr_14','annualized_volatility_20','relative_volume_20','drawdown'].includes(name)).map(([name, item]) =>
@@ -654,7 +657,8 @@ export default function Workstation() {
             mode={selection.mode} watchlistIds={currentWatchlist?.instrumentIds ?? []} /> : view === 'portfolio' ?
           <PortfolioPane key={`${context.source_manifest_id}.${context.as_of}`} context={context} /> : view === 'learning' ?
           <LearningPane key={`${context.source_manifest_id}.${context.as_of}`} context={context} /> : view === 'quant' ?
-          <QuantPane key={`${context.source_manifest_id}.${context.as_of}`} context={context} /> : view === 'cortex' ?
+          <QuantPane key={`${context.source_manifest_id}.${context.as_of}`} context={context} /> : view === 'intelligence' ?
+          <IntelligencePane key={`${context.source_manifest_id}.${context.as_of}`} context={context} instrumentId={instrumentId} /> : view === 'cortex' ?
           <CortexPane key={`${context.source_manifest_id}.${context.as_of}.${cortexFocus}`} context={context}
             mode={selection.mode} symbol={cortexFocus === 'market' ? null : selectedMember?.symbol ?? null} /> : systemPage()}
       </div></main>

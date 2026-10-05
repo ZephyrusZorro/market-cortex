@@ -365,6 +365,8 @@ class PostgresCatalog:
         """Read-only crash recovery inventory; never deletes unreferenced files."""
         with connect(self.dsn) as connection:
             rows = connection.execute("SELECT relative_path, content_hash FROM dataset_files").fetchall()
+            if connection.execute("SELECT to_regclass('context_files')").fetchone()[0]:
+                rows += connection.execute("SELECT relative_path, content_hash FROM context_files").fetchall()
         expected = {path: digest for path, digest in rows}
         lake = self.artifacts.root / "lake"
         actual = {path.relative_to(self.artifacts.root).as_posix(): path for path in lake.rglob("*.parquet")} if lake.exists() else {}

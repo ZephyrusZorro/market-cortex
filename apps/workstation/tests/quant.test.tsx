@@ -43,11 +43,11 @@ describe('Quant Lab',()=>{
     expect(screen.getByText(/N=2 · 2025-09-01/)).toBeInTheDocument();
     expect(screen.getByText('INSUFFICIENT_TRADE_SAMPLE_N_LT_30')).toBeInTheDocument();
     expect(screen.getByText('Equity curve net gross benchmark drawdown')).toBeInTheDocument();
-    fireEvent.click(screen.getByText('Inspect trade'));expect(screen.getByText(/Trade inspector/)).toBeInTheDocument();
+    fireEvent.click(screen.getByText('Inspect trade'));expect(await screen.findByText(/Trade inspector/)).toBeInTheDocument();
     fireEvent.click(screen.getByText('Research studies'));
     expect(screen.getByText('Run walk-forward')).toBeInTheDocument();expect(screen.getByLabelText('Holding grid')).toHaveValue('5,10,15');
     expect(screen.getByText('Run sensitivity')).toBeInTheDocument();expect(screen.getByText('Run Monte Carlo')).toBeInTheDocument();
-    fireEvent.click(screen.getByRole('button',{name:/walk_forward · aaaaaaaa/}));
+    fireEvent.click(await screen.findByRole('button',{name:/walk_forward · aaaaaaaa/}));
     await screen.findByText(/Fold 1: train/);
     expect(screen.getByText('TEMPORAL_OOS_NOT_PROSPECTIVE')).toBeInTheDocument();
     expect(screen.getByText('-0.4')).toBeInTheDocument();

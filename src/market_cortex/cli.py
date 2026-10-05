@@ -140,9 +140,42 @@ def main(argv: list[str] | None = None) -> int:
     for name in ("quant-inspect","quant-replay"):
         command=sub.add_parser(name)
         command.add_argument("artifact_id",type=UUID)
+    for name in ('intelligence-coverage', 'intelligence-context', 'intelligence-events', 'intelligence-inspect'):
+        command = sub.add_parser(name, help='Read immutable contextual intelligence')
+        command.add_argument('--as-of', type=datetime.fromisoformat)
+        command.add_argument('--context-manifest-id', type=UUID)
+        command.add_argument('--instrument-id', type=UUID)
+        if name == 'intelligence-inspect':
+            command.add_argument('fact_id', type=UUID)
+    for name in ('intelligence-probe', 'intelligence-sync'):
+        command = sub.add_parser(name, help='Bounded public advanced-data GET; sync appends source facts')
+        command.add_argument('--source', choices=('binance_usdm', 'us_treasury'), required=True)
+        command.add_argument('--symbols', nargs='+', default=['BTCUSDT'])
+        command.add_argument('--funding-limit', type=int, default=90)
     args = parser.parse_args(argv)
     try:
         settings = Settings.load()
+        if args.command.startswith('intelligence-'):
+            from .intelligence import IntelligenceService
+            from .intelligence_contracts import ContextRequest
+            from .intelligence_sources import BinanceDerivatives, TreasuryMacro, coverage
+            from .storage import ArtifactStore, PostgresCatalog
+            service = IntelligenceService(PostgresCatalog(settings.database_url, ArtifactStore(settings.data_root)))
+            if args.command in ('intelligence-probe', 'intelligence-sync'):
+                provider = BinanceDerivatives() if args.source == 'binance_usdm' else TreasuryMacro()
+                facts = provider.fetch(service.catalog, symbols=args.symbols, funding_limit=args.funding_limit) if args.source == 'binance_usdm' else provider.fetch()
+                result = service.store.append(facts) if args.command == 'intelligence-sync' else {'source': args.source, 'normalized_records': len(facts), 'persisted_facts': False}
+            else:
+                cutoff = args.as_of or datetime.now(timezone.utc)
+                if args.command == 'intelligence-coverage':
+                    result = {'items': [s.model_dump(mode='json') for s in coverage(service.store, cutoff)]}
+                elif args.command == 'intelligence-inspect':
+                    result = service.store.inspect(args.fact_id, cutoff)
+                else:
+                    snap = service.snapshot(ContextRequest(as_of=cutoff, context_manifest_id=args.context_manifest_id, instrument_id=args.instrument_id))
+                    result = snap.model_dump(mode='json') if args.command == 'intelligence-context' else {'event_risk': snap.event_risk, 'items': [f.model_dump(mode='json') for f in snap.facts if f.domain == 'events']}
+            print(json.dumps(result))
+            return 0
         if args.command.startswith("quant-"):
             from .quant import QuantService,strategies
             from .quant_api import MODELS
