@@ -20,7 +20,7 @@ logger = logging.getLogger("market_cortex.api")
 
 def create_app(settings: Settings | None = None, catalog: PostgresCatalog | None = None) -> FastAPI:
     settings = settings or Settings.load()
-    app = FastAPI(title="MARKET CORTEX", version="0.9.0", docs_url="/docs", redoc_url=None)
+    app = FastAPI(title="MARKET CORTEX", version="0.10.0", docs_url="/docs", redoc_url=None)
     store = catalog or (PostgresCatalog(settings.database_url, ArtifactStore(settings.data_root)) if settings.database_url else None)
 
     @app.middleware("http")
@@ -305,6 +305,8 @@ def create_app(settings: Settings | None = None, catalog: PostgresCatalog | None
         if isinstance(store, PostgresCatalog):
             from .cortex_api import router_for as cortex_router
             app.include_router(cortex_router(store, settings))
+            from .mission_api import router_for as mission_router
+            app.include_router(mission_router(store, settings))
             from .opportunity_api import router_for as opportunity_router
             app.include_router(opportunity_router(store, settings))
             from .risk_api import router_for as risk_router

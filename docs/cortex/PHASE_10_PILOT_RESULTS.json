@@ -1,0 +1,2543 @@
+{
+  "validated_at": "2026-10-05T17:47:34.034367+00:00",
+  "environment": "PILOT_TEST",
+  "market_head": "3bf002d2-15f2-4f9d-8c54-cc7eb3fb349c",
+  "implementation_hash": "553f8c6bcc998b42a00b1d86922bc30f69a7f755ff84dd47c990c780d905a257",
+  "canonical_counts_before": {
+    "observations": 5035,
+    "context_facts": 1234,
+    "opportunity_candidates": 433,
+    "research_thesis_versions": 52,
+    "portfolio_versions": 10,
+    "prediction_records": 3,
+    "journal_revisions": 2,
+    "quant_artifacts": 158
+  },
+  "canonical_counts_after": {
+    "observations": 5035,
+    "context_facts": 1234,
+    "opportunity_candidates": 433,
+    "research_thesis_versions": 52,
+    "portfolio_versions": 10,
+    "prediction_records": 3,
+    "journal_revisions": 2,
+    "quant_artifacts": 158
+  },
+  "paid_api_cost_inr": 0,
+  "model_runtime": "NONE_DISCOVERED; DETERMINISTIC_FALLBACK",
+  "missions": [
+    {
+      "label": "A",
+      "mission_id": "800e1535-acd9-474d-9d7c-3a5ba45af4be",
+      "revision": 22,
+      "goal": "Analyze BTCUSDT comprehensively, including whether its momentum is attractive.",
+      "status": "INCONCLUSIVE",
+      "termination_reason": "INVESTIGATION_FINISHED_WITH_EXPLICIT_LIMITS",
+      "context": {
+        "mode": "pinned",
+        "manifest_id": "3bf002d2-15f2-4f9d-8c54-cc7eb3fb349c",
+        "as_of": "2026-10-05T17:45:13.810465Z",
+        "universe_id": "binance_pilot_5",
+        "evaluation_date": "2026-10-03",
+        "history_start": "2024-01-01",
+        "members": {
+          "BNBUSDT": "982aa9ce-e6c8-4dee-958a-dd5c5a6d6340",
+          "BTCUSDT": "dbe1c9c1-a1c1-4c95-b74c-1973f640a462",
+          "ETHUSDT": "e7069c4c-2d48-49fd-85ef-55bbda6d22c2",
+          "SOLUSDT": "eb97fc2c-34c8-441b-b4c9-5792343ab55d",
+          "XRPUSDT": "294adbc0-32da-415e-b5c1-c219193d8953"
+        },
+        "member_last_sessions": {
+          "BNBUSDT": "2026-10-03",
+          "BTCUSDT": "2026-10-03",
+          "ETHUSDT": "2026-10-03",
+          "SOLUSDT": "2026-10-03",
+          "XRPUSDT": "2026-10-03"
+        },
+        "symbol": "BTCUSDT",
+        "compare_symbol": null,
+        "environment": "PILOT_TEST",
+        "base_currency": "INR",
+        "secondary_currency": "USD",
+        "context_manifest_id": "158ad3f7-aab9-5d41-b79f-05eef01bc207"
+      },
+      "previous_context": null,
+      "tool_ids": [
+        "dataset.context",
+        "instrument.features",
+        "market.state",
+        "intelligence.context",
+        "opportunity.scan",
+        "mission.quant_evidence",
+        "mission.prior",
+        "mission.challenge_candidate"
+      ],
+      "usage": {
+        "tool_calls": 8,
+        "planner_iterations": 2,
+        "replans": 1,
+        "quant_runs": 0,
+        "historical_comparisons": 0,
+        "model_calls": 0,
+        "model_input_tokens": null,
+        "model_output_tokens": null,
+        "api_cost_inr": 0,
+        "elapsed_ms": 11306.54,
+        "cache_hits": 0
+      },
+      "evidence_N": 240,
+      "claim_N": 274,
+      "contradiction_N": 34,
+      "hypotheses": [
+        {
+          "hypothesis_id": "current_momentum",
+          "statement": "Positive canonical momentum is present; this does not imply future profitability or improvement over an earlier state.",
+          "originating_evidence": [
+            "dd2b71097abea0b76fee",
+            "da1416b67ada3cfa505f"
+          ],
+          "test_requirements": [
+            "rolling_return(20)",
+            "macd_histogram",
+            "freshness",
+            "aligned earlier state for improvement"
+          ],
+          "support": [
+            "dd2b71097abea0b76fee"
+          ],
+          "contradictions": [
+            "da1416b67ada3cfa505f"
+          ],
+          "status": "INCONCLUSIVE"
+        },
+        {
+          "hypothesis_id": "historical_momentum_support",
+          "statement": "Registered momentum has positive temporal OOS support in the saved Pilot 5 study.",
+          "originating_evidence": [
+            "32e6e453b98a4764a3de"
+          ],
+          "test_requirements": [
+            "independent temporal OOS",
+            "regime-aligned evidence",
+            "sufficient independent sample"
+          ],
+          "support": [],
+          "contradictions": [
+            "32e6e453b98a4764a3de"
+          ],
+          "status": "CONTRADICTED"
+        },
+        {
+          "hypothesis_id": "b658c7dc36d6774f",
+          "statement": "Broad crypto beta may explain apparent asset momentum; aligned comparison can describe participation, not causation.",
+          "originating_evidence": [
+            "3b541b792ab014b59e22",
+            "e39ef60ed36b2b34d35c"
+          ],
+          "test_requirements": [
+            "aligned returns",
+            "relative strength",
+            "broader universe"
+          ],
+          "support": [],
+          "contradictions": [],
+          "status": "INCONCLUSIVE"
+        },
+        {
+          "hypothesis_id": "786d0abd80e20715",
+          "statement": "Volatility expansion may explain unstable momentum; a single current volatility value cannot establish a change.",
+          "originating_evidence": [
+            "3557b2f1a2659a02c8e7"
+          ],
+          "test_requirements": [
+            "earlier comparable volatility",
+            "adequate regime sample"
+          ],
+          "support": [],
+          "contradictions": [],
+          "status": "INCONCLUSIVE"
+        },
+        {
+          "hypothesis_id": "35e3c3e8a9252f3e",
+          "statement": "Derivatives positioning is an alternative explanation; funding and OI do not identify short covering or causal position ownership.",
+          "originating_evidence": [
+            "8e0bc01f678ac0272502",
+            "374eab9f3b7ad233857e"
+          ],
+          "test_requirements": [
+            "contract-aligned series",
+            "position attribution unavailable"
+          ],
+          "support": [],
+          "contradictions": [],
+          "status": "INCONCLUSIVE"
+        }
+      ],
+      "evaluator": {
+        "evidence_count": 240,
+        "domains_examined": [
+          "intelligence",
+          "market",
+          "memory",
+          "opportunities",
+          "quant"
+        ],
+        "mandatory_domains_missing": [],
+        "freshness": [
+          "stale"
+        ],
+        "source_tools": [
+          "dataset.context",
+          "instrument.features",
+          "intelligence.context",
+          "market.state",
+          "mission.challenge_candidate",
+          "mission.prior",
+          "mission.quant_evidence",
+          "opportunity.scan"
+        ],
+        "contradiction_N": 34,
+        "source_diversity": {
+          "provider_ids": [
+            "binance"
+          ],
+          "source_record_N": 181,
+          "basis": "Distinct recorded sources and tools, not statistically independent confirmation"
+        },
+        "quant_trade_sample_N": [
+          82
+        ],
+        "unavailable_domains": [
+          "fundamentals coverage",
+          "events coverage",
+          "news coverage",
+          "options coverage",
+          "onchain coverage",
+          "cross_asset coverage"
+        ],
+        "sample_sufficiency": "INSUFFICIENT_OR_NOT_ESTABLISHED",
+        "quantitative_support": "NO_SUPPORTED_EDGE_ESTABLISHED",
+        "rejected_claims": [],
+        "budgets_respected": true,
+        "api_cost_inr": 0,
+        "probability_score": null,
+        "adversarial_review": "Check stale data, incompatible scopes, source conflicts, negative OOS and untested alternative explanations",
+        "answered_with_limits": true,
+        "causality": "NOT_ESTABLISHED"
+      },
+      "phase8_oos_return": -0.07817165407921722,
+      "phase8_oos_N": 82,
+      "replay": {
+        "mission_id": "800e1535-acd9-474d-9d7c-3a5ba45af4be",
+        "status": "VERIFIED",
+        "matched": true,
+        "checks": [
+          {
+            "step_id": "availability",
+            "matched": true
+          },
+          {
+            "step_id": "features",
+            "matched": true
+          },
+          {
+            "step_id": "state",
+            "matched": true
+          },
+          {
+            "step_id": "context",
+            "matched": true
+          },
+          {
+            "step_id": "opportunities",
+            "matched": true
+          },
+          {
+            "step_id": "quant",
+            "matched": true
+          },
+          {
+            "step_id": "memory",
+            "matched": true
+          },
+          {
+            "step_id": "adversarial_challenge",
+            "matched": true
+          }
+        ],
+        "grounding_rejected": [],
+        "model_narrative_reexecuted": false,
+        "scope_unchanged": true
+      },
+      "content_hash": "399633ab572516a8592bb5dc8accf7bd2dbae7b3a59fa8efffd60e7572bb12ba",
+      "model_metadata": {
+        "provider": "deterministic",
+        "status": "no_model_configured",
+        "paid_api_cost_inr": 0,
+        "configured_provider": "deterministic",
+        "locality": "local",
+        "routing": {
+          "scope": "deterministic",
+          "planner": "deterministic",
+          "evaluator": "deterministic",
+          "synthesis": "claim_id_curation"
+        },
+        "selected_claim_ids": []
+      },
+      "frozen_references": {
+        "prior": [
+          {
+            "id": "d0e168b1-0444-4b02-9c32-95b4e28ec196",
+            "revision": 28,
+            "content_hash": "4ae6e8d131361daf8fcd81e6cdbbcf5fa5bb97bb7cf415f487572592943d0013"
+          },
+          {
+            "id": "e0dcfeae-efb5-4f2d-9366-7ea6c083ae66",
+            "revision": 22,
+            "content_hash": "4276849150bd22ad86121fc9e4ee49351925d11401b85e93c6752a1f3216696d"
+          },
+          {
+            "id": "7e444da2-c881-4b35-9edd-f3e8cadcb545",
+            "revision": 22,
+            "content_hash": "0db5fdaf426386e77abc4bcff26b967af77bbe62544174fb99675d3e04f8aeb4"
+          },
+          {
+            "id": "404e14a8-9c6f-477d-8aec-ffe698a73b1e",
+            "revision": 26,
+            "content_hash": "aead0da52841169fe41ff7b826f38198dcf5b9b5b463a983f95eab3da5f7c64f"
+          },
+          {
+            "id": "f0d4169b-53d6-40e8-8efa-6f1418f266f8",
+            "revision": 22,
+            "content_hash": "ff3d1c0aeccf9313c6353f53dccb74b021c8d8a8c977714b4c20fae83faf20d9"
+          }
+        ],
+        "quant": [
+          {
+            "id": "e7c94b19-a247-557b-9114-a28834222d84",
+            "kind": "comparison",
+            "created_at": "2026-10-05T00:50:27.881539+05:30",
+            "content_hash": "0d9a094fc2f3f685d54c72b199c01a2f75edbac24e08c3011c23b7ec73d36a8e"
+          },
+          {
+            "id": "5b2d707e-2b49-5d45-8063-fc44b84110fc",
+            "kind": "monte_carlo",
+            "created_at": "2026-10-05T00:49:59.180572+05:30",
+            "content_hash": "22b2aace2a12477e7914a3a8256b21e7b128b50f1bb73e6c816408c18b74b56f"
+          },
+          {
+            "id": "a752070f-f8b3-5eef-8852-6d7a9ecaece8",
+            "kind": "robustness",
+            "created_at": "2026-10-05T00:49:52.777151+05:30",
+            "content_hash": "356f3c27e2da6a1256f8c8b9432fa2e968bb6833483c07327c9cc20f8a02c6d7"
+          },
+          {
+            "id": "6319a0dc-9a68-55df-88b3-9147aa80fe62",
+            "kind": "sensitivity",
+            "created_at": "2026-10-05T00:38:08.161468+05:30",
+            "content_hash": "cfc5338c4b8f1b116225f24dc08edbad015e6c92fa5716f993074e060adc8e3f"
+          },
+          {
+            "id": "e70e6b51-827d-5d69-9248-e2bad774f0db",
+            "kind": "walk_forward",
+            "created_at": "2026-10-05T00:27:09.111651+05:30",
+            "content_hash": "44a64269fda6a56a3bbf5f267edf122164601a4d7f36054d7ac0138db02f85b6"
+          }
+        ]
+      }
+    },
+    {
+      "label": "B",
+      "mission_id": "d016bec1-7835-4928-8d6d-cb6c6520a80f",
+      "revision": 24,
+      "goal": "Compare ETHUSDT versus BTCUSDT and challenge relative momentum evidence.",
+      "status": "INCONCLUSIVE",
+      "termination_reason": "INVESTIGATION_FINISHED_WITH_EXPLICIT_LIMITS",
+      "context": {
+        "mode": "pinned",
+        "manifest_id": "3bf002d2-15f2-4f9d-8c54-cc7eb3fb349c",
+        "as_of": "2026-10-05T17:45:13.810465Z",
+        "universe_id": "binance_pilot_5",
+        "evaluation_date": "2026-10-03",
+        "history_start": "2024-01-01",
+        "members": {
+          "BNBUSDT": "982aa9ce-e6c8-4dee-958a-dd5c5a6d6340",
+          "BTCUSDT": "dbe1c9c1-a1c1-4c95-b74c-1973f640a462",
+          "ETHUSDT": "e7069c4c-2d48-49fd-85ef-55bbda6d22c2",
+          "SOLUSDT": "eb97fc2c-34c8-441b-b4c9-5792343ab55d",
+          "XRPUSDT": "294adbc0-32da-415e-b5c1-c219193d8953"
+        },
+        "member_last_sessions": {
+          "BNBUSDT": "2026-10-03",
+          "BTCUSDT": "2026-10-03",
+          "ETHUSDT": "2026-10-03",
+          "SOLUSDT": "2026-10-03",
+          "XRPUSDT": "2026-10-03"
+        },
+        "symbol": "ETHUSDT",
+        "compare_symbol": "BTCUSDT",
+        "environment": "PILOT_TEST",
+        "base_currency": "INR",
+        "secondary_currency": "USD",
+        "context_manifest_id": "158ad3f7-aab9-5d41-b79f-05eef01bc207"
+      },
+      "previous_context": null,
+      "tool_ids": [
+        "dataset.context",
+        "instrument.features",
+        "asset.compare",
+        "market.state",
+        "intelligence.context",
+        "opportunity.scan",
+        "mission.quant_evidence",
+        "mission.prior",
+        "mission.challenge_candidate"
+      ],
+      "usage": {
+        "tool_calls": 9,
+        "planner_iterations": 2,
+        "replans": 1,
+        "quant_runs": 0,
+        "historical_comparisons": 0,
+        "model_calls": 0,
+        "model_input_tokens": null,
+        "model_output_tokens": null,
+        "api_cost_inr": 0,
+        "elapsed_ms": 13269.72,
+        "cache_hits": 0
+      },
+      "evidence_N": 239,
+      "claim_N": 273,
+      "contradiction_N": 34,
+      "hypotheses": [
+        {
+          "hypothesis_id": "current_momentum",
+          "statement": "Positive canonical momentum is present; this does not imply future profitability or improvement over an earlier state.",
+          "originating_evidence": [
+            "a9da2e95dd8f78a48b44",
+            "b76e8169ebaedc6e8dd4"
+          ],
+          "test_requirements": [
+            "rolling_return(20)",
+            "macd_histogram",
+            "freshness",
+            "aligned earlier state for improvement"
+          ],
+          "support": [
+            "a9da2e95dd8f78a48b44"
+          ],
+          "contradictions": [
+            "b76e8169ebaedc6e8dd4"
+          ],
+          "status": "INCONCLUSIVE"
+        },
+        {
+          "hypothesis_id": "historical_momentum_support",
+          "statement": "Registered momentum has positive temporal OOS support in the saved Pilot 5 study.",
+          "originating_evidence": [
+            "32e6e453b98a4764a3de"
+          ],
+          "test_requirements": [
+            "independent temporal OOS",
+            "regime-aligned evidence",
+            "sufficient independent sample"
+          ],
+          "support": [],
+          "contradictions": [
+            "32e6e453b98a4764a3de"
+          ],
+          "status": "CONTRADICTED"
+        },
+        {
+          "hypothesis_id": "b658c7dc36d6774f",
+          "statement": "Broad crypto beta may explain apparent asset momentum; aligned comparison can describe participation, not causation.",
+          "originating_evidence": [
+            "b3aa60b3aa439231a19c",
+            "9e1d2e822207587c28ce",
+            "3b541b792ab014b59e22",
+            "e39ef60ed36b2b34d35c"
+          ],
+          "test_requirements": [
+            "aligned returns",
+            "relative strength",
+            "broader universe"
+          ],
+          "support": [],
+          "contradictions": [],
+          "status": "INCONCLUSIVE"
+        },
+        {
+          "hypothesis_id": "786d0abd80e20715",
+          "statement": "Volatility expansion may explain unstable momentum; a single current volatility value cannot establish a change.",
+          "originating_evidence": [
+            "1605ba6e66da45894d03"
+          ],
+          "test_requirements": [
+            "earlier comparable volatility",
+            "adequate regime sample"
+          ],
+          "support": [],
+          "contradictions": [],
+          "status": "INCONCLUSIVE"
+        },
+        {
+          "hypothesis_id": "35e3c3e8a9252f3e",
+          "statement": "Derivatives positioning is an alternative explanation; funding and OI do not identify short covering or causal position ownership.",
+          "originating_evidence": [
+            "d00c97d9bdb0f60341ac",
+            "3d9ed3dd7a93a959c2a3"
+          ],
+          "test_requirements": [
+            "contract-aligned series",
+            "position attribution unavailable"
+          ],
+          "support": [],
+          "contradictions": [],
+          "status": "INCONCLUSIVE"
+        }
+      ],
+      "evaluator": {
+        "evidence_count": 239,
+        "domains_examined": [
+          "intelligence",
+          "market",
+          "memory",
+          "opportunities",
+          "quant"
+        ],
+        "mandatory_domains_missing": [],
+        "freshness": [
+          "stale"
+        ],
+        "source_tools": [
+          "asset.compare",
+          "dataset.context",
+          "instrument.features",
+          "intelligence.context",
+          "market.state",
+          "mission.challenge_candidate",
+          "mission.prior",
+          "mission.quant_evidence",
+          "opportunity.scan"
+        ],
+        "contradiction_N": 34,
+        "source_diversity": {
+          "provider_ids": [
+            "binance"
+          ],
+          "source_record_N": 180,
+          "basis": "Distinct recorded sources and tools, not statistically independent confirmation"
+        },
+        "quant_trade_sample_N": [
+          82
+        ],
+        "unavailable_domains": [
+          "fundamentals coverage",
+          "events coverage",
+          "news coverage",
+          "options coverage",
+          "onchain coverage",
+          "cross_asset coverage"
+        ],
+        "sample_sufficiency": "INSUFFICIENT_OR_NOT_ESTABLISHED",
+        "quantitative_support": "NO_SUPPORTED_EDGE_ESTABLISHED",
+        "rejected_claims": [],
+        "budgets_respected": true,
+        "api_cost_inr": 0,
+        "probability_score": null,
+        "adversarial_review": "Check stale data, incompatible scopes, source conflicts, negative OOS and untested alternative explanations",
+        "answered_with_limits": true,
+        "causality": "NOT_ESTABLISHED"
+      },
+      "phase8_oos_return": -0.07817165407921722,
+      "phase8_oos_N": 82,
+      "replay": {
+        "mission_id": "d016bec1-7835-4928-8d6d-cb6c6520a80f",
+        "status": "VERIFIED",
+        "matched": true,
+        "checks": [
+          {
+            "step_id": "availability",
+            "matched": true
+          },
+          {
+            "step_id": "features",
+            "matched": true
+          },
+          {
+            "step_id": "relative",
+            "matched": true
+          },
+          {
+            "step_id": "state",
+            "matched": true
+          },
+          {
+            "step_id": "context",
+            "matched": true
+          },
+          {
+            "step_id": "opportunities",
+            "matched": true
+          },
+          {
+            "step_id": "quant",
+            "matched": true
+          },
+          {
+            "step_id": "memory",
+            "matched": true
+          },
+          {
+            "step_id": "adversarial_challenge",
+            "matched": true
+          }
+        ],
+        "grounding_rejected": [],
+        "model_narrative_reexecuted": false,
+        "scope_unchanged": true
+      },
+      "content_hash": "afbddf253cc1e59b430cfbd133203419523d2d289fe0edf03b3b9fa029fe581d",
+      "model_metadata": {
+        "provider": "deterministic",
+        "status": "no_model_configured",
+        "paid_api_cost_inr": 0,
+        "configured_provider": "deterministic",
+        "locality": "local",
+        "routing": {
+          "scope": "deterministic",
+          "planner": "deterministic",
+          "evaluator": "deterministic",
+          "synthesis": "claim_id_curation"
+        },
+        "selected_claim_ids": []
+      },
+      "frozen_references": {
+        "prior": [
+          {
+            "id": "e87bb7e8-385e-4b64-acfe-b099cbc4c59b",
+            "revision": 24,
+            "content_hash": "fc62431ac311db8fb746df66893b3d0d1d466cc69493ce45d03aa0149d24dfc5"
+          },
+          {
+            "id": "c2d2ce5d-779b-4c2d-8045-8be2ecc0cd40",
+            "revision": 24,
+            "content_hash": "55da91fe77445c164d10fac588e12ed5262323a01c62abd4236014e2365b14c9"
+          }
+        ],
+        "quant": [
+          {
+            "id": "e7c94b19-a247-557b-9114-a28834222d84",
+            "kind": "comparison",
+            "created_at": "2026-10-05T00:50:27.881539+05:30",
+            "content_hash": "0d9a094fc2f3f685d54c72b199c01a2f75edbac24e08c3011c23b7ec73d36a8e"
+          },
+          {
+            "id": "5b2d707e-2b49-5d45-8063-fc44b84110fc",
+            "kind": "monte_carlo",
+            "created_at": "2026-10-05T00:49:59.180572+05:30",
+            "content_hash": "22b2aace2a12477e7914a3a8256b21e7b128b50f1bb73e6c816408c18b74b56f"
+          },
+          {
+            "id": "a752070f-f8b3-5eef-8852-6d7a9ecaece8",
+            "kind": "robustness",
+            "created_at": "2026-10-05T00:49:52.777151+05:30",
+            "content_hash": "356f3c27e2da6a1256f8c8b9432fa2e968bb6833483c07327c9cc20f8a02c6d7"
+          },
+          {
+            "id": "6319a0dc-9a68-55df-88b3-9147aa80fe62",
+            "kind": "sensitivity",
+            "created_at": "2026-10-05T00:38:08.161468+05:30",
+            "content_hash": "cfc5338c4b8f1b116225f24dc08edbad015e6c92fa5716f993074e060adc8e3f"
+          },
+          {
+            "id": "e70e6b51-827d-5d69-9248-e2bad774f0db",
+            "kind": "walk_forward",
+            "created_at": "2026-10-05T00:27:09.111651+05:30",
+            "content_hash": "44a64269fda6a56a3bbf5f267edf122164601a4d7f36054d7ac0138db02f85b6"
+          }
+        ]
+      }
+    },
+    {
+      "label": "C",
+      "mission_id": "a6d799f8-f3ef-493c-8a79-6c249248876a",
+      "revision": 21,
+      "goal": "Challenge the strongest current opportunity candidate using canonical conditions and counter-evidence.",
+      "status": "INCONCLUSIVE",
+      "termination_reason": "INVESTIGATION_FINISHED_WITH_EXPLICIT_LIMITS",
+      "context": {
+        "mode": "pinned",
+        "manifest_id": "3bf002d2-15f2-4f9d-8c54-cc7eb3fb349c",
+        "as_of": "2026-10-05T17:45:13.810465Z",
+        "universe_id": "binance_pilot_5",
+        "evaluation_date": "2026-10-03",
+        "history_start": "2024-01-01",
+        "members": {
+          "BNBUSDT": "982aa9ce-e6c8-4dee-958a-dd5c5a6d6340",
+          "BTCUSDT": "dbe1c9c1-a1c1-4c95-b74c-1973f640a462",
+          "ETHUSDT": "e7069c4c-2d48-49fd-85ef-55bbda6d22c2",
+          "SOLUSDT": "eb97fc2c-34c8-441b-b4c9-5792343ab55d",
+          "XRPUSDT": "294adbc0-32da-415e-b5c1-c219193d8953"
+        },
+        "member_last_sessions": {
+          "BNBUSDT": "2026-10-03",
+          "BTCUSDT": "2026-10-03",
+          "ETHUSDT": "2026-10-03",
+          "SOLUSDT": "2026-10-03",
+          "XRPUSDT": "2026-10-03"
+        },
+        "symbol": null,
+        "compare_symbol": null,
+        "environment": "PILOT_TEST",
+        "base_currency": "INR",
+        "secondary_currency": "USD",
+        "context_manifest_id": "158ad3f7-aab9-5d41-b79f-05eef01bc207"
+      },
+      "previous_context": null,
+      "tool_ids": [
+        "dataset.context",
+        "market.state",
+        "intelligence.context",
+        "opportunity.scan",
+        "mission.challenge_candidate",
+        "mission.quant_evidence",
+        "learning.performance",
+        "learning.predictions"
+      ],
+      "usage": {
+        "tool_calls": 8,
+        "planner_iterations": 1,
+        "replans": 0,
+        "quant_runs": 0,
+        "historical_comparisons": 0,
+        "model_calls": 0,
+        "model_input_tokens": null,
+        "model_output_tokens": null,
+        "api_cost_inr": 0,
+        "elapsed_ms": 13353.9,
+        "cache_hits": 0
+      },
+      "evidence_N": 265,
+      "claim_N": 320,
+      "contradiction_N": 55,
+      "hypotheses": [
+        {
+          "hypothesis_id": "current_momentum",
+          "statement": "Current momentum support requires sufficient visible canonical features.",
+          "originating_evidence": [
+            "e24ab1bcbdc7ea4a5970"
+          ],
+          "test_requirements": [
+            "visible canonical features"
+          ],
+          "support": [],
+          "contradictions": [],
+          "status": "INCONCLUSIVE"
+        },
+        {
+          "hypothesis_id": "historical_momentum_support",
+          "statement": "Registered momentum has positive temporal OOS support in the saved Pilot 5 study.",
+          "originating_evidence": [
+            "32e6e453b98a4764a3de"
+          ],
+          "test_requirements": [
+            "independent temporal OOS",
+            "regime-aligned evidence",
+            "sufficient independent sample"
+          ],
+          "support": [],
+          "contradictions": [
+            "32e6e453b98a4764a3de"
+          ],
+          "status": "CONTRADICTED"
+        },
+        {
+          "hypothesis_id": "b658c7dc36d6774f",
+          "statement": "Broad crypto beta may explain apparent asset momentum; aligned comparison can describe participation, not causation.",
+          "originating_evidence": [
+            "3b541b792ab014b59e22",
+            "e39ef60ed36b2b34d35c"
+          ],
+          "test_requirements": [
+            "aligned returns",
+            "relative strength",
+            "broader universe"
+          ],
+          "support": [],
+          "contradictions": [],
+          "status": "INCONCLUSIVE"
+        }
+      ],
+      "evaluator": {
+        "evidence_count": 265,
+        "domains_examined": [
+          "intelligence",
+          "learning",
+          "market",
+          "opportunities",
+          "quant"
+        ],
+        "mandatory_domains_missing": [],
+        "freshness": [
+          "stale"
+        ],
+        "source_tools": [
+          "dataset.context",
+          "intelligence.context",
+          "learning.performance",
+          "learning.predictions",
+          "market.state",
+          "mission.challenge_candidate",
+          "mission.quant_evidence",
+          "opportunity.scan"
+        ],
+        "contradiction_N": 55,
+        "source_diversity": {
+          "provider_ids": [
+            "binance"
+          ],
+          "source_record_N": 203,
+          "basis": "Distinct recorded sources and tools, not statistically independent confirmation"
+        },
+        "quant_trade_sample_N": [
+          82
+        ],
+        "unavailable_domains": [
+          "fundamentals coverage",
+          "events coverage",
+          "news coverage",
+          "options coverage",
+          "onchain coverage",
+          "cross_asset coverage"
+        ],
+        "sample_sufficiency": "INSUFFICIENT_OR_NOT_ESTABLISHED",
+        "quantitative_support": "NO_SUPPORTED_EDGE_ESTABLISHED",
+        "rejected_claims": [],
+        "budgets_respected": true,
+        "api_cost_inr": 0,
+        "probability_score": null,
+        "adversarial_review": "Check stale data, incompatible scopes, source conflicts, negative OOS and untested alternative explanations",
+        "answered_with_limits": true,
+        "causality": "NOT_ESTABLISHED"
+      },
+      "phase8_oos_return": -0.07817165407921722,
+      "phase8_oos_N": 82,
+      "replay": {
+        "mission_id": "a6d799f8-f3ef-493c-8a79-6c249248876a",
+        "status": "VERIFIED",
+        "matched": true,
+        "checks": [
+          {
+            "step_id": "availability",
+            "matched": true
+          },
+          {
+            "step_id": "state",
+            "matched": true
+          },
+          {
+            "step_id": "context",
+            "matched": true
+          },
+          {
+            "step_id": "opportunities",
+            "matched": true
+          },
+          {
+            "step_id": "challenge",
+            "matched": true
+          },
+          {
+            "step_id": "quant",
+            "matched": true
+          },
+          {
+            "step_id": "learning",
+            "matched": true
+          },
+          {
+            "step_id": "predictions",
+            "matched": true
+          }
+        ],
+        "grounding_rejected": [],
+        "model_narrative_reexecuted": false,
+        "scope_unchanged": true
+      },
+      "content_hash": "4924e3cec0daa4e8c4834067b1fa20be968e561216a1e4461354c319be8f4a47",
+      "model_metadata": {
+        "provider": "deterministic",
+        "status": "no_model_configured",
+        "paid_api_cost_inr": 0,
+        "configured_provider": "deterministic",
+        "locality": "local",
+        "routing": {
+          "scope": "deterministic",
+          "planner": "deterministic",
+          "evaluator": "deterministic",
+          "synthesis": "claim_id_curation"
+        },
+        "selected_claim_ids": []
+      },
+      "frozen_references": {
+        "prior": [
+          {
+            "id": "0fac799c-ff4f-42c4-a591-6c104650a75c",
+            "revision": 21,
+            "content_hash": "292d82a306fe21bfe822b10096b266c973dd7dcd93b3e657eb6b7aab931961e5"
+          },
+          {
+            "id": "e96cae3c-d917-47e0-8e3f-d9da24541054",
+            "revision": 21,
+            "content_hash": "56f235f9fc3d9e47b833bf13ba4be6bed6901548f55be9bdf65ebe98379f26a9"
+          }
+        ],
+        "quant": [
+          {
+            "id": "e7c94b19-a247-557b-9114-a28834222d84",
+            "kind": "comparison",
+            "created_at": "2026-10-05T00:50:27.881539+05:30",
+            "content_hash": "0d9a094fc2f3f685d54c72b199c01a2f75edbac24e08c3011c23b7ec73d36a8e"
+          },
+          {
+            "id": "5b2d707e-2b49-5d45-8063-fc44b84110fc",
+            "kind": "monte_carlo",
+            "created_at": "2026-10-05T00:49:59.180572+05:30",
+            "content_hash": "22b2aace2a12477e7914a3a8256b21e7b128b50f1bb73e6c816408c18b74b56f"
+          },
+          {
+            "id": "a752070f-f8b3-5eef-8852-6d7a9ecaece8",
+            "kind": "robustness",
+            "created_at": "2026-10-05T00:49:52.777151+05:30",
+            "content_hash": "356f3c27e2da6a1256f8c8b9432fa2e968bb6833483c07327c9cc20f8a02c6d7"
+          },
+          {
+            "id": "6319a0dc-9a68-55df-88b3-9147aa80fe62",
+            "kind": "sensitivity",
+            "created_at": "2026-10-05T00:38:08.161468+05:30",
+            "content_hash": "cfc5338c4b8f1b116225f24dc08edbad015e6c92fa5716f993074e060adc8e3f"
+          },
+          {
+            "id": "e70e6b51-827d-5d69-9248-e2bad774f0db",
+            "kind": "walk_forward",
+            "created_at": "2026-10-05T00:27:09.111651+05:30",
+            "content_hash": "44a64269fda6a56a3bbf5f267edf122164601a4d7f36054d7ac0138db02f85b6"
+          }
+        ]
+      }
+    },
+    {
+      "label": "D",
+      "mission_id": "d75bcaa5-88bd-4c84-b2a1-cacf92ae9c66",
+      "revision": 26,
+      "goal": "Determine whether momentum currently has quantitative historical support.",
+      "status": "INCONCLUSIVE",
+      "termination_reason": "INVESTIGATION_FINISHED_WITH_EXPLICIT_LIMITS",
+      "context": {
+        "mode": "pinned",
+        "manifest_id": "3bf002d2-15f2-4f9d-8c54-cc7eb3fb349c",
+        "as_of": "2026-10-05T17:45:13.810465Z",
+        "universe_id": "binance_pilot_5",
+        "evaluation_date": "2026-10-03",
+        "history_start": "2024-01-01",
+        "members": {
+          "BNBUSDT": "982aa9ce-e6c8-4dee-958a-dd5c5a6d6340",
+          "BTCUSDT": "dbe1c9c1-a1c1-4c95-b74c-1973f640a462",
+          "ETHUSDT": "e7069c4c-2d48-49fd-85ef-55bbda6d22c2",
+          "SOLUSDT": "eb97fc2c-34c8-441b-b4c9-5792343ab55d",
+          "XRPUSDT": "294adbc0-32da-415e-b5c1-c219193d8953"
+        },
+        "member_last_sessions": {
+          "BNBUSDT": "2026-10-03",
+          "BTCUSDT": "2026-10-03",
+          "ETHUSDT": "2026-10-03",
+          "SOLUSDT": "2026-10-03",
+          "XRPUSDT": "2026-10-03"
+        },
+        "symbol": "BTCUSDT",
+        "compare_symbol": null,
+        "environment": "PILOT_TEST",
+        "base_currency": "INR",
+        "secondary_currency": "USD",
+        "context_manifest_id": "158ad3f7-aab9-5d41-b79f-05eef01bc207"
+      },
+      "previous_context": null,
+      "tool_ids": [
+        "dataset.context",
+        "instrument.features",
+        "market.state",
+        "intelligence.context",
+        "opportunity.scan",
+        "mission.quant_evidence",
+        "mission.prior",
+        "learning.performance",
+        "learning.predictions",
+        "mission.challenge_candidate"
+      ],
+      "usage": {
+        "tool_calls": 10,
+        "planner_iterations": 2,
+        "replans": 1,
+        "quant_runs": 0,
+        "historical_comparisons": 0,
+        "model_calls": 0,
+        "model_input_tokens": null,
+        "model_output_tokens": null,
+        "api_cost_inr": 0,
+        "elapsed_ms": 12022.23,
+        "cache_hits": 0
+      },
+      "evidence_N": 263,
+      "claim_N": 297,
+      "contradiction_N": 34,
+      "hypotheses": [
+        {
+          "hypothesis_id": "current_momentum",
+          "statement": "Positive canonical momentum is present; this does not imply future profitability or improvement over an earlier state.",
+          "originating_evidence": [
+            "dd2b71097abea0b76fee",
+            "da1416b67ada3cfa505f"
+          ],
+          "test_requirements": [
+            "rolling_return(20)",
+            "macd_histogram",
+            "freshness",
+            "aligned earlier state for improvement"
+          ],
+          "support": [
+            "dd2b71097abea0b76fee"
+          ],
+          "contradictions": [
+            "da1416b67ada3cfa505f"
+          ],
+          "status": "INCONCLUSIVE"
+        },
+        {
+          "hypothesis_id": "historical_momentum_support",
+          "statement": "Registered momentum has positive temporal OOS support in the saved Pilot 5 study.",
+          "originating_evidence": [
+            "32e6e453b98a4764a3de"
+          ],
+          "test_requirements": [
+            "independent temporal OOS",
+            "regime-aligned evidence",
+            "sufficient independent sample"
+          ],
+          "support": [],
+          "contradictions": [
+            "32e6e453b98a4764a3de"
+          ],
+          "status": "CONTRADICTED"
+        },
+        {
+          "hypothesis_id": "b658c7dc36d6774f",
+          "statement": "Broad crypto beta may explain apparent asset momentum; aligned comparison can describe participation, not causation.",
+          "originating_evidence": [
+            "3b541b792ab014b59e22",
+            "e39ef60ed36b2b34d35c"
+          ],
+          "test_requirements": [
+            "aligned returns",
+            "relative strength",
+            "broader universe"
+          ],
+          "support": [],
+          "contradictions": [],
+          "status": "INCONCLUSIVE"
+        },
+        {
+          "hypothesis_id": "786d0abd80e20715",
+          "statement": "Volatility expansion may explain unstable momentum; a single current volatility value cannot establish a change.",
+          "originating_evidence": [
+            "3557b2f1a2659a02c8e7"
+          ],
+          "test_requirements": [
+            "earlier comparable volatility",
+            "adequate regime sample"
+          ],
+          "support": [],
+          "contradictions": [],
+          "status": "INCONCLUSIVE"
+        },
+        {
+          "hypothesis_id": "35e3c3e8a9252f3e",
+          "statement": "Derivatives positioning is an alternative explanation; funding and OI do not identify short covering or causal position ownership.",
+          "originating_evidence": [
+            "8e0bc01f678ac0272502",
+            "374eab9f3b7ad233857e"
+          ],
+          "test_requirements": [
+            "contract-aligned series",
+            "position attribution unavailable"
+          ],
+          "support": [],
+          "contradictions": [],
+          "status": "INCONCLUSIVE"
+        }
+      ],
+      "evaluator": {
+        "evidence_count": 263,
+        "domains_examined": [
+          "intelligence",
+          "learning",
+          "market",
+          "memory",
+          "opportunities",
+          "quant"
+        ],
+        "mandatory_domains_missing": [],
+        "freshness": [
+          "stale"
+        ],
+        "source_tools": [
+          "dataset.context",
+          "instrument.features",
+          "intelligence.context",
+          "learning.performance",
+          "learning.predictions",
+          "market.state",
+          "mission.challenge_candidate",
+          "mission.prior",
+          "mission.quant_evidence",
+          "opportunity.scan"
+        ],
+        "contradiction_N": 34,
+        "source_diversity": {
+          "provider_ids": [
+            "binance"
+          ],
+          "source_record_N": 185,
+          "basis": "Distinct recorded sources and tools, not statistically independent confirmation"
+        },
+        "quant_trade_sample_N": [
+          82
+        ],
+        "unavailable_domains": [
+          "fundamentals coverage",
+          "events coverage",
+          "news coverage",
+          "options coverage",
+          "onchain coverage",
+          "cross_asset coverage"
+        ],
+        "sample_sufficiency": "INSUFFICIENT_OR_NOT_ESTABLISHED",
+        "quantitative_support": "NO_SUPPORTED_EDGE_ESTABLISHED",
+        "rejected_claims": [],
+        "budgets_respected": true,
+        "api_cost_inr": 0,
+        "probability_score": null,
+        "adversarial_review": "Check stale data, incompatible scopes, source conflicts, negative OOS and untested alternative explanations",
+        "answered_with_limits": true,
+        "causality": "NOT_ESTABLISHED"
+      },
+      "phase8_oos_return": -0.07817165407921722,
+      "phase8_oos_N": 82,
+      "replay": {
+        "mission_id": "d75bcaa5-88bd-4c84-b2a1-cacf92ae9c66",
+        "status": "VERIFIED",
+        "matched": true,
+        "checks": [
+          {
+            "step_id": "availability",
+            "matched": true
+          },
+          {
+            "step_id": "features",
+            "matched": true
+          },
+          {
+            "step_id": "state",
+            "matched": true
+          },
+          {
+            "step_id": "context",
+            "matched": true
+          },
+          {
+            "step_id": "opportunities",
+            "matched": true
+          },
+          {
+            "step_id": "quant",
+            "matched": true
+          },
+          {
+            "step_id": "memory",
+            "matched": true
+          },
+          {
+            "step_id": "learning",
+            "matched": true
+          },
+          {
+            "step_id": "predictions",
+            "matched": true
+          },
+          {
+            "step_id": "adversarial_challenge",
+            "matched": true
+          }
+        ],
+        "grounding_rejected": [],
+        "model_narrative_reexecuted": false,
+        "scope_unchanged": true
+      },
+      "content_hash": "1cc308018bbd568e6bf080f8cf98a70607d7a0b36549a9af35be947c267f1f8c",
+      "model_metadata": {
+        "provider": "deterministic",
+        "status": "no_model_configured",
+        "paid_api_cost_inr": 0,
+        "configured_provider": "deterministic",
+        "locality": "local",
+        "routing": {
+          "scope": "deterministic",
+          "planner": "deterministic",
+          "evaluator": "deterministic",
+          "synthesis": "claim_id_curation"
+        },
+        "selected_claim_ids": []
+      },
+      "frozen_references": {
+        "prior": [
+          {
+            "id": "d0e168b1-0444-4b02-9c32-95b4e28ec196",
+            "revision": 28,
+            "content_hash": "4ae6e8d131361daf8fcd81e6cdbbcf5fa5bb97bb7cf415f487572592943d0013"
+          },
+          {
+            "id": "e0dcfeae-efb5-4f2d-9366-7ea6c083ae66",
+            "revision": 22,
+            "content_hash": "4276849150bd22ad86121fc9e4ee49351925d11401b85e93c6752a1f3216696d"
+          },
+          {
+            "id": "7e444da2-c881-4b35-9edd-f3e8cadcb545",
+            "revision": 22,
+            "content_hash": "0db5fdaf426386e77abc4bcff26b967af77bbe62544174fb99675d3e04f8aeb4"
+          },
+          {
+            "id": "404e14a8-9c6f-477d-8aec-ffe698a73b1e",
+            "revision": 26,
+            "content_hash": "aead0da52841169fe41ff7b826f38198dcf5b9b5b463a983f95eab3da5f7c64f"
+          },
+          {
+            "id": "f0d4169b-53d6-40e8-8efa-6f1418f266f8",
+            "revision": 22,
+            "content_hash": "ff3d1c0aeccf9313c6353f53dccb74b021c8d8a8c977714b4c20fae83faf20d9"
+          }
+        ],
+        "quant": [
+          {
+            "id": "e7c94b19-a247-557b-9114-a28834222d84",
+            "kind": "comparison",
+            "created_at": "2026-10-05T00:50:27.881539+05:30",
+            "content_hash": "0d9a094fc2f3f685d54c72b199c01a2f75edbac24e08c3011c23b7ec73d36a8e"
+          },
+          {
+            "id": "5b2d707e-2b49-5d45-8063-fc44b84110fc",
+            "kind": "monte_carlo",
+            "created_at": "2026-10-05T00:49:59.180572+05:30",
+            "content_hash": "22b2aace2a12477e7914a3a8256b21e7b128b50f1bb73e6c816408c18b74b56f"
+          },
+          {
+            "id": "a752070f-f8b3-5eef-8852-6d7a9ecaece8",
+            "kind": "robustness",
+            "created_at": "2026-10-05T00:49:52.777151+05:30",
+            "content_hash": "356f3c27e2da6a1256f8c8b9432fa2e968bb6833483c07327c9cc20f8a02c6d7"
+          },
+          {
+            "id": "6319a0dc-9a68-55df-88b3-9147aa80fe62",
+            "kind": "sensitivity",
+            "created_at": "2026-10-05T00:38:08.161468+05:30",
+            "content_hash": "cfc5338c4b8f1b116225f24dc08edbad015e6c92fa5716f993074e060adc8e3f"
+          },
+          {
+            "id": "e70e6b51-827d-5d69-9248-e2bad774f0db",
+            "kind": "walk_forward",
+            "created_at": "2026-10-05T00:27:09.111651+05:30",
+            "content_hash": "44a64269fda6a56a3bbf5f267edf122164601a4d7f36054d7ac0138db02f85b6"
+          }
+        ]
+      }
+    },
+    {
+      "label": "E",
+      "mission_id": "69b04aea-65e1-4975-9273-49ac319bbd80",
+      "revision": 22,
+      "goal": "Explain what recorded Binance derivatives and Treasury macro add to BTC context.",
+      "status": "INCONCLUSIVE",
+      "termination_reason": "INVESTIGATION_FINISHED_WITH_EXPLICIT_LIMITS",
+      "context": {
+        "mode": "pinned",
+        "manifest_id": "3bf002d2-15f2-4f9d-8c54-cc7eb3fb349c",
+        "as_of": "2026-10-05T17:45:13.810465Z",
+        "universe_id": "binance_pilot_5",
+        "evaluation_date": "2026-10-03",
+        "history_start": "2024-01-01",
+        "members": {
+          "BNBUSDT": "982aa9ce-e6c8-4dee-958a-dd5c5a6d6340",
+          "BTCUSDT": "dbe1c9c1-a1c1-4c95-b74c-1973f640a462",
+          "ETHUSDT": "e7069c4c-2d48-49fd-85ef-55bbda6d22c2",
+          "SOLUSDT": "eb97fc2c-34c8-441b-b4c9-5792343ab55d",
+          "XRPUSDT": "294adbc0-32da-415e-b5c1-c219193d8953"
+        },
+        "member_last_sessions": {
+          "BNBUSDT": "2026-10-03",
+          "BTCUSDT": "2026-10-03",
+          "ETHUSDT": "2026-10-03",
+          "SOLUSDT": "2026-10-03",
+          "XRPUSDT": "2026-10-03"
+        },
+        "symbol": "BTCUSDT",
+        "compare_symbol": null,
+        "environment": "PILOT_TEST",
+        "base_currency": "INR",
+        "secondary_currency": "USD",
+        "context_manifest_id": "158ad3f7-aab9-5d41-b79f-05eef01bc207"
+      },
+      "previous_context": null,
+      "tool_ids": [
+        "dataset.context",
+        "instrument.features",
+        "market.state",
+        "intelligence.context",
+        "opportunity.scan",
+        "mission.quant_evidence",
+        "mission.prior",
+        "mission.challenge_candidate"
+      ],
+      "usage": {
+        "tool_calls": 8,
+        "planner_iterations": 2,
+        "replans": 1,
+        "quant_runs": 0,
+        "historical_comparisons": 0,
+        "model_calls": 0,
+        "model_input_tokens": null,
+        "model_output_tokens": null,
+        "api_cost_inr": 0,
+        "elapsed_ms": 11689.76,
+        "cache_hits": 0
+      },
+      "evidence_N": 240,
+      "claim_N": 274,
+      "contradiction_N": 34,
+      "hypotheses": [
+        {
+          "hypothesis_id": "current_momentum",
+          "statement": "Positive canonical momentum is present; this does not imply future profitability or improvement over an earlier state.",
+          "originating_evidence": [
+            "dd2b71097abea0b76fee",
+            "da1416b67ada3cfa505f"
+          ],
+          "test_requirements": [
+            "rolling_return(20)",
+            "macd_histogram",
+            "freshness",
+            "aligned earlier state for improvement"
+          ],
+          "support": [
+            "dd2b71097abea0b76fee"
+          ],
+          "contradictions": [
+            "da1416b67ada3cfa505f"
+          ],
+          "status": "INCONCLUSIVE"
+        },
+        {
+          "hypothesis_id": "historical_momentum_support",
+          "statement": "Registered momentum has positive temporal OOS support in the saved Pilot 5 study.",
+          "originating_evidence": [
+            "32e6e453b98a4764a3de"
+          ],
+          "test_requirements": [
+            "independent temporal OOS",
+            "regime-aligned evidence",
+            "sufficient independent sample"
+          ],
+          "support": [],
+          "contradictions": [
+            "32e6e453b98a4764a3de"
+          ],
+          "status": "CONTRADICTED"
+        },
+        {
+          "hypothesis_id": "b658c7dc36d6774f",
+          "statement": "Broad crypto beta may explain apparent asset momentum; aligned comparison can describe participation, not causation.",
+          "originating_evidence": [
+            "3b541b792ab014b59e22",
+            "e39ef60ed36b2b34d35c"
+          ],
+          "test_requirements": [
+            "aligned returns",
+            "relative strength",
+            "broader universe"
+          ],
+          "support": [],
+          "contradictions": [],
+          "status": "INCONCLUSIVE"
+        },
+        {
+          "hypothesis_id": "786d0abd80e20715",
+          "statement": "Volatility expansion may explain unstable momentum; a single current volatility value cannot establish a change.",
+          "originating_evidence": [
+            "3557b2f1a2659a02c8e7"
+          ],
+          "test_requirements": [
+            "earlier comparable volatility",
+            "adequate regime sample"
+          ],
+          "support": [],
+          "contradictions": [],
+          "status": "INCONCLUSIVE"
+        },
+        {
+          "hypothesis_id": "35e3c3e8a9252f3e",
+          "statement": "Derivatives positioning is an alternative explanation; funding and OI do not identify short covering or causal position ownership.",
+          "originating_evidence": [
+            "8e0bc01f678ac0272502",
+            "374eab9f3b7ad233857e"
+          ],
+          "test_requirements": [
+            "contract-aligned series",
+            "position attribution unavailable"
+          ],
+          "support": [],
+          "contradictions": [],
+          "status": "INCONCLUSIVE"
+        }
+      ],
+      "evaluator": {
+        "evidence_count": 240,
+        "domains_examined": [
+          "intelligence",
+          "market",
+          "memory",
+          "opportunities",
+          "quant"
+        ],
+        "mandatory_domains_missing": [],
+        "freshness": [
+          "stale"
+        ],
+        "source_tools": [
+          "dataset.context",
+          "instrument.features",
+          "intelligence.context",
+          "market.state",
+          "mission.challenge_candidate",
+          "mission.prior",
+          "mission.quant_evidence",
+          "opportunity.scan"
+        ],
+        "contradiction_N": 34,
+        "source_diversity": {
+          "provider_ids": [
+            "binance"
+          ],
+          "source_record_N": 181,
+          "basis": "Distinct recorded sources and tools, not statistically independent confirmation"
+        },
+        "quant_trade_sample_N": [
+          82
+        ],
+        "unavailable_domains": [
+          "fundamentals coverage",
+          "events coverage",
+          "news coverage",
+          "options coverage",
+          "onchain coverage",
+          "cross_asset coverage"
+        ],
+        "sample_sufficiency": "INSUFFICIENT_OR_NOT_ESTABLISHED",
+        "quantitative_support": "NO_SUPPORTED_EDGE_ESTABLISHED",
+        "rejected_claims": [],
+        "budgets_respected": true,
+        "api_cost_inr": 0,
+        "probability_score": null,
+        "adversarial_review": "Check stale data, incompatible scopes, source conflicts, negative OOS and untested alternative explanations",
+        "answered_with_limits": true,
+        "causality": "NOT_ESTABLISHED"
+      },
+      "phase8_oos_return": -0.07817165407921722,
+      "phase8_oos_N": 82,
+      "replay": {
+        "mission_id": "69b04aea-65e1-4975-9273-49ac319bbd80",
+        "status": "VERIFIED",
+        "matched": true,
+        "checks": [
+          {
+            "step_id": "availability",
+            "matched": true
+          },
+          {
+            "step_id": "features",
+            "matched": true
+          },
+          {
+            "step_id": "state",
+            "matched": true
+          },
+          {
+            "step_id": "context",
+            "matched": true
+          },
+          {
+            "step_id": "opportunities",
+            "matched": true
+          },
+          {
+            "step_id": "quant",
+            "matched": true
+          },
+          {
+            "step_id": "memory",
+            "matched": true
+          },
+          {
+            "step_id": "adversarial_challenge",
+            "matched": true
+          }
+        ],
+        "grounding_rejected": [],
+        "model_narrative_reexecuted": false,
+        "scope_unchanged": true
+      },
+      "content_hash": "b8b283a753e48e17c823ad754a81edde9c5f377bbaefcc3a0a39e43eaef67960",
+      "model_metadata": {
+        "provider": "deterministic",
+        "status": "no_model_configured",
+        "paid_api_cost_inr": 0,
+        "configured_provider": "deterministic",
+        "locality": "local",
+        "routing": {
+          "scope": "deterministic",
+          "planner": "deterministic",
+          "evaluator": "deterministic",
+          "synthesis": "claim_id_curation"
+        },
+        "selected_claim_ids": []
+      },
+      "frozen_references": {
+        "prior": [
+          {
+            "id": "d0e168b1-0444-4b02-9c32-95b4e28ec196",
+            "revision": 28,
+            "content_hash": "4ae6e8d131361daf8fcd81e6cdbbcf5fa5bb97bb7cf415f487572592943d0013"
+          },
+          {
+            "id": "e0dcfeae-efb5-4f2d-9366-7ea6c083ae66",
+            "revision": 22,
+            "content_hash": "4276849150bd22ad86121fc9e4ee49351925d11401b85e93c6752a1f3216696d"
+          },
+          {
+            "id": "7e444da2-c881-4b35-9edd-f3e8cadcb545",
+            "revision": 22,
+            "content_hash": "0db5fdaf426386e77abc4bcff26b967af77bbe62544174fb99675d3e04f8aeb4"
+          },
+          {
+            "id": "404e14a8-9c6f-477d-8aec-ffe698a73b1e",
+            "revision": 26,
+            "content_hash": "aead0da52841169fe41ff7b826f38198dcf5b9b5b463a983f95eab3da5f7c64f"
+          },
+          {
+            "id": "f0d4169b-53d6-40e8-8efa-6f1418f266f8",
+            "revision": 22,
+            "content_hash": "ff3d1c0aeccf9313c6353f53dccb74b021c8d8a8c977714b4c20fae83faf20d9"
+          }
+        ],
+        "quant": [
+          {
+            "id": "e7c94b19-a247-557b-9114-a28834222d84",
+            "kind": "comparison",
+            "created_at": "2026-10-05T00:50:27.881539+05:30",
+            "content_hash": "0d9a094fc2f3f685d54c72b199c01a2f75edbac24e08c3011c23b7ec73d36a8e"
+          },
+          {
+            "id": "5b2d707e-2b49-5d45-8063-fc44b84110fc",
+            "kind": "monte_carlo",
+            "created_at": "2026-10-05T00:49:59.180572+05:30",
+            "content_hash": "22b2aace2a12477e7914a3a8256b21e7b128b50f1bb73e6c816408c18b74b56f"
+          },
+          {
+            "id": "a752070f-f8b3-5eef-8852-6d7a9ecaece8",
+            "kind": "robustness",
+            "created_at": "2026-10-05T00:49:52.777151+05:30",
+            "content_hash": "356f3c27e2da6a1256f8c8b9432fa2e968bb6833483c07327c9cc20f8a02c6d7"
+          },
+          {
+            "id": "6319a0dc-9a68-55df-88b3-9147aa80fe62",
+            "kind": "sensitivity",
+            "created_at": "2026-10-05T00:38:08.161468+05:30",
+            "content_hash": "cfc5338c4b8f1b116225f24dc08edbad015e6c92fa5716f993074e060adc8e3f"
+          },
+          {
+            "id": "e70e6b51-827d-5d69-9248-e2bad774f0db",
+            "kind": "walk_forward",
+            "created_at": "2026-10-05T00:27:09.111651+05:30",
+            "content_hash": "44a64269fda6a56a3bbf5f267edf122164601a4d7f36054d7ac0138db02f85b6"
+          }
+        ]
+      }
+    },
+    {
+      "label": "F",
+      "mission_id": "e16ba5ed-51be-4f85-9a4d-17f0e17cafdd",
+      "revision": 28,
+      "goal": "Compare current BTC context with an older manifest; distinguish data additions from market changes.",
+      "status": "INCONCLUSIVE",
+      "termination_reason": "INVESTIGATION_FINISHED_WITH_EXPLICIT_LIMITS",
+      "context": {
+        "mode": "pinned",
+        "manifest_id": "3bf002d2-15f2-4f9d-8c54-cc7eb3fb349c",
+        "as_of": "2026-10-05T17:45:13.810465Z",
+        "universe_id": "binance_pilot_5",
+        "evaluation_date": "2026-10-03",
+        "history_start": "2024-01-01",
+        "members": {
+          "BNBUSDT": "982aa9ce-e6c8-4dee-958a-dd5c5a6d6340",
+          "BTCUSDT": "dbe1c9c1-a1c1-4c95-b74c-1973f640a462",
+          "ETHUSDT": "e7069c4c-2d48-49fd-85ef-55bbda6d22c2",
+          "SOLUSDT": "eb97fc2c-34c8-441b-b4c9-5792343ab55d",
+          "XRPUSDT": "294adbc0-32da-415e-b5c1-c219193d8953"
+        },
+        "member_last_sessions": {
+          "BNBUSDT": "2026-10-03",
+          "BTCUSDT": "2026-10-03",
+          "ETHUSDT": "2026-10-03",
+          "SOLUSDT": "2026-10-03",
+          "XRPUSDT": "2026-10-03"
+        },
+        "symbol": "BTCUSDT",
+        "compare_symbol": null,
+        "environment": "PILOT_TEST",
+        "base_currency": "INR",
+        "secondary_currency": "USD",
+        "context_manifest_id": "158ad3f7-aab9-5d41-b79f-05eef01bc207"
+      },
+      "previous_context": {
+        "mode": "pinned",
+        "manifest_id": "f87c2a62-7cdf-443d-8eed-0575b6dd8e17",
+        "as_of": "2026-10-04T11:02:36.796490Z",
+        "universe_id": "binance_pilot_5",
+        "evaluation_date": "2026-10-03",
+        "history_start": "2025-09-01",
+        "members": {
+          "BNBUSDT": "982aa9ce-e6c8-4dee-958a-dd5c5a6d6340",
+          "BTCUSDT": "dbe1c9c1-a1c1-4c95-b74c-1973f640a462",
+          "ETHUSDT": "e7069c4c-2d48-49fd-85ef-55bbda6d22c2",
+          "SOLUSDT": "eb97fc2c-34c8-441b-b4c9-5792343ab55d",
+          "XRPUSDT": "294adbc0-32da-415e-b5c1-c219193d8953"
+        },
+        "member_last_sessions": {
+          "BNBUSDT": "2026-10-03",
+          "BTCUSDT": "2026-10-03",
+          "ETHUSDT": "2026-10-03",
+          "SOLUSDT": "2026-10-03",
+          "XRPUSDT": "2026-10-03"
+        },
+        "symbol": "BTCUSDT",
+        "compare_symbol": null,
+        "environment": "PILOT_TEST",
+        "base_currency": "INR",
+        "secondary_currency": "USD",
+        "context_manifest_id": null
+      },
+      "tool_ids": [
+        "dataset.context",
+        "instrument.features",
+        "market.state",
+        "intelligence.context",
+        "opportunity.scan",
+        "mission.quant_evidence",
+        "mission.prior",
+        "instrument.features",
+        "intelligence.context",
+        "mission.compare_states",
+        "mission.challenge_candidate"
+      ],
+      "usage": {
+        "tool_calls": 11,
+        "planner_iterations": 2,
+        "replans": 1,
+        "quant_runs": 0,
+        "historical_comparisons": 3,
+        "model_calls": 0,
+        "model_input_tokens": null,
+        "model_output_tokens": null,
+        "api_cost_inr": 0,
+        "elapsed_ms": 12855.45,
+        "cache_hits": 0
+      },
+      "evidence_N": 294,
+      "claim_N": 328,
+      "contradiction_N": 34,
+      "hypotheses": [
+        {
+          "hypothesis_id": "current_momentum",
+          "statement": "Positive canonical momentum is present; this does not imply future profitability or improvement over an earlier state.",
+          "originating_evidence": [
+            "dd2b71097abea0b76fee",
+            "da1416b67ada3cfa505f"
+          ],
+          "test_requirements": [
+            "rolling_return(20)",
+            "macd_histogram",
+            "freshness",
+            "aligned earlier state for improvement"
+          ],
+          "support": [
+            "dd2b71097abea0b76fee"
+          ],
+          "contradictions": [
+            "da1416b67ada3cfa505f"
+          ],
+          "status": "INCONCLUSIVE"
+        },
+        {
+          "hypothesis_id": "historical_momentum_support",
+          "statement": "Registered momentum has positive temporal OOS support in the saved Pilot 5 study.",
+          "originating_evidence": [
+            "32e6e453b98a4764a3de"
+          ],
+          "test_requirements": [
+            "independent temporal OOS",
+            "regime-aligned evidence",
+            "sufficient independent sample"
+          ],
+          "support": [],
+          "contradictions": [
+            "32e6e453b98a4764a3de"
+          ],
+          "status": "CONTRADICTED"
+        },
+        {
+          "hypothesis_id": "b658c7dc36d6774f",
+          "statement": "Broad crypto beta may explain apparent asset momentum; aligned comparison can describe participation, not causation.",
+          "originating_evidence": [
+            "3b541b792ab014b59e22",
+            "e39ef60ed36b2b34d35c"
+          ],
+          "test_requirements": [
+            "aligned returns",
+            "relative strength",
+            "broader universe"
+          ],
+          "support": [],
+          "contradictions": [],
+          "status": "INCONCLUSIVE"
+        },
+        {
+          "hypothesis_id": "786d0abd80e20715",
+          "statement": "Volatility expansion may explain unstable momentum; a single current volatility value cannot establish a change.",
+          "originating_evidence": [
+            "3557b2f1a2659a02c8e7"
+          ],
+          "test_requirements": [
+            "earlier comparable volatility",
+            "adequate regime sample"
+          ],
+          "support": [],
+          "contradictions": [],
+          "status": "INCONCLUSIVE"
+        },
+        {
+          "hypothesis_id": "35e3c3e8a9252f3e",
+          "statement": "Derivatives positioning is an alternative explanation; funding and OI do not identify short covering or causal position ownership.",
+          "originating_evidence": [
+            "8e0bc01f678ac0272502",
+            "374eab9f3b7ad233857e"
+          ],
+          "test_requirements": [
+            "contract-aligned series",
+            "position attribution unavailable"
+          ],
+          "support": [],
+          "contradictions": [],
+          "status": "INCONCLUSIVE"
+        }
+      ],
+      "evaluator": {
+        "evidence_count": 294,
+        "domains_examined": [
+          "intelligence",
+          "market",
+          "memory",
+          "opportunities",
+          "quant"
+        ],
+        "mandatory_domains_missing": [],
+        "freshness": [
+          "current",
+          "stale"
+        ],
+        "source_tools": [
+          "dataset.context",
+          "instrument.features",
+          "intelligence.context",
+          "market.state",
+          "mission.challenge_candidate",
+          "mission.compare_states",
+          "mission.prior",
+          "mission.quant_evidence",
+          "opportunity.scan"
+        ],
+        "contradiction_N": 34,
+        "source_diversity": {
+          "provider_ids": [
+            "binance"
+          ],
+          "source_record_N": 223,
+          "basis": "Distinct recorded sources and tools, not statistically independent confirmation"
+        },
+        "quant_trade_sample_N": [
+          82
+        ],
+        "unavailable_domains": [
+          "fundamentals coverage",
+          "events coverage",
+          "news coverage",
+          "options coverage",
+          "onchain coverage",
+          "cross_asset coverage",
+          "macro coverage",
+          "fundamentals coverage",
+          "events coverage",
+          "news coverage",
+          "derivatives coverage",
+          "options coverage",
+          "onchain coverage",
+          "cross_asset coverage"
+        ],
+        "sample_sufficiency": "INSUFFICIENT_OR_NOT_ESTABLISHED",
+        "quantitative_support": "NO_SUPPORTED_EDGE_ESTABLISHED",
+        "rejected_claims": [],
+        "budgets_respected": true,
+        "api_cost_inr": 0,
+        "probability_score": null,
+        "adversarial_review": "Check stale data, incompatible scopes, source conflicts, negative OOS and untested alternative explanations",
+        "answered_with_limits": true,
+        "causality": "NOT_ESTABLISHED"
+      },
+      "phase8_oos_return": -0.07817165407921722,
+      "phase8_oos_N": 82,
+      "replay": {
+        "mission_id": "e16ba5ed-51be-4f85-9a4d-17f0e17cafdd",
+        "status": "VERIFIED",
+        "matched": true,
+        "checks": [
+          {
+            "step_id": "availability",
+            "matched": true
+          },
+          {
+            "step_id": "features",
+            "matched": true
+          },
+          {
+            "step_id": "state",
+            "matched": true
+          },
+          {
+            "step_id": "context",
+            "matched": true
+          },
+          {
+            "step_id": "opportunities",
+            "matched": true
+          },
+          {
+            "step_id": "quant",
+            "matched": true
+          },
+          {
+            "step_id": "memory",
+            "matched": true
+          },
+          {
+            "step_id": "previous_features",
+            "matched": true
+          },
+          {
+            "step_id": "previous_context",
+            "matched": true
+          },
+          {
+            "step_id": "changes",
+            "matched": true
+          },
+          {
+            "step_id": "adversarial_challenge",
+            "matched": true
+          }
+        ],
+        "grounding_rejected": [],
+        "model_narrative_reexecuted": false,
+        "scope_unchanged": true
+      },
+      "content_hash": "88d60940d95e1d2ac87ab11aec70e8ca3b17c1becf093267cce60923674b4a4d",
+      "model_metadata": {
+        "provider": "deterministic",
+        "status": "no_model_configured",
+        "paid_api_cost_inr": 0,
+        "configured_provider": "deterministic",
+        "locality": "local",
+        "routing": {
+          "scope": "deterministic",
+          "planner": "deterministic",
+          "evaluator": "deterministic",
+          "synthesis": "claim_id_curation"
+        },
+        "selected_claim_ids": []
+      },
+      "frozen_references": {
+        "prior": [
+          {
+            "id": "d0e168b1-0444-4b02-9c32-95b4e28ec196",
+            "revision": 28,
+            "content_hash": "4ae6e8d131361daf8fcd81e6cdbbcf5fa5bb97bb7cf415f487572592943d0013"
+          },
+          {
+            "id": "e0dcfeae-efb5-4f2d-9366-7ea6c083ae66",
+            "revision": 22,
+            "content_hash": "4276849150bd22ad86121fc9e4ee49351925d11401b85e93c6752a1f3216696d"
+          },
+          {
+            "id": "7e444da2-c881-4b35-9edd-f3e8cadcb545",
+            "revision": 22,
+            "content_hash": "0db5fdaf426386e77abc4bcff26b967af77bbe62544174fb99675d3e04f8aeb4"
+          },
+          {
+            "id": "404e14a8-9c6f-477d-8aec-ffe698a73b1e",
+            "revision": 26,
+            "content_hash": "aead0da52841169fe41ff7b826f38198dcf5b9b5b463a983f95eab3da5f7c64f"
+          },
+          {
+            "id": "f0d4169b-53d6-40e8-8efa-6f1418f266f8",
+            "revision": 22,
+            "content_hash": "ff3d1c0aeccf9313c6353f53dccb74b021c8d8a8c977714b4c20fae83faf20d9"
+          }
+        ],
+        "quant": [
+          {
+            "id": "e7c94b19-a247-557b-9114-a28834222d84",
+            "kind": "comparison",
+            "created_at": "2026-10-05T00:50:27.881539+05:30",
+            "content_hash": "0d9a094fc2f3f685d54c72b199c01a2f75edbac24e08c3011c23b7ec73d36a8e"
+          },
+          {
+            "id": "5b2d707e-2b49-5d45-8063-fc44b84110fc",
+            "kind": "monte_carlo",
+            "created_at": "2026-10-05T00:49:59.180572+05:30",
+            "content_hash": "22b2aace2a12477e7914a3a8256b21e7b128b50f1bb73e6c816408c18b74b56f"
+          },
+          {
+            "id": "a752070f-f8b3-5eef-8852-6d7a9ecaece8",
+            "kind": "robustness",
+            "created_at": "2026-10-05T00:49:52.777151+05:30",
+            "content_hash": "356f3c27e2da6a1256f8c8b9432fa2e968bb6833483c07327c9cc20f8a02c6d7"
+          },
+          {
+            "id": "6319a0dc-9a68-55df-88b3-9147aa80fe62",
+            "kind": "sensitivity",
+            "created_at": "2026-10-05T00:38:08.161468+05:30",
+            "content_hash": "cfc5338c4b8f1b116225f24dc08edbad015e6c92fa5716f993074e060adc8e3f"
+          },
+          {
+            "id": "e70e6b51-827d-5d69-9248-e2bad774f0db",
+            "kind": "walk_forward",
+            "created_at": "2026-10-05T00:27:09.111651+05:30",
+            "content_hash": "44a64269fda6a56a3bbf5f267edf122164601a4d7f36054d7ac0138db02f85b6"
+          }
+        ]
+      }
+    }
+  ],
+  "diff": {
+    "older_mission_id": "800e1535-acd9-474d-9d7c-3a5ba45af4be",
+    "newer_mission_id": "e16ba5ed-51be-4f85-9a4d-17f0e17cafdd",
+    "older_scope": {
+      "mode": "pinned",
+      "manifest_id": "3bf002d2-15f2-4f9d-8c54-cc7eb3fb349c",
+      "as_of": "2026-10-05T17:45:13.810465Z",
+      "universe_id": "binance_pilot_5",
+      "evaluation_date": "2026-10-03",
+      "history_start": "2024-01-01",
+      "members": {
+        "BNBUSDT": "982aa9ce-e6c8-4dee-958a-dd5c5a6d6340",
+        "BTCUSDT": "dbe1c9c1-a1c1-4c95-b74c-1973f640a462",
+        "ETHUSDT": "e7069c4c-2d48-49fd-85ef-55bbda6d22c2",
+        "SOLUSDT": "eb97fc2c-34c8-441b-b4c9-5792343ab55d",
+        "XRPUSDT": "294adbc0-32da-415e-b5c1-c219193d8953"
+      },
+      "member_last_sessions": {
+        "BNBUSDT": "2026-10-03",
+        "BTCUSDT": "2026-10-03",
+        "ETHUSDT": "2026-10-03",
+        "SOLUSDT": "2026-10-03",
+        "XRPUSDT": "2026-10-03"
+      },
+      "symbol": "BTCUSDT",
+      "compare_symbol": null,
+      "environment": "PILOT_TEST",
+      "base_currency": "INR",
+      "secondary_currency": "USD",
+      "context_manifest_id": "158ad3f7-aab9-5d41-b79f-05eef01bc207"
+    },
+    "newer_scope": {
+      "mode": "pinned",
+      "manifest_id": "3bf002d2-15f2-4f9d-8c54-cc7eb3fb349c",
+      "as_of": "2026-10-05T17:45:13.810465Z",
+      "universe_id": "binance_pilot_5",
+      "evaluation_date": "2026-10-03",
+      "history_start": "2024-01-01",
+      "members": {
+        "BNBUSDT": "982aa9ce-e6c8-4dee-958a-dd5c5a6d6340",
+        "BTCUSDT": "dbe1c9c1-a1c1-4c95-b74c-1973f640a462",
+        "ETHUSDT": "e7069c4c-2d48-49fd-85ef-55bbda6d22c2",
+        "SOLUSDT": "eb97fc2c-34c8-441b-b4c9-5792343ab55d",
+        "XRPUSDT": "294adbc0-32da-415e-b5c1-c219193d8953"
+      },
+      "member_last_sessions": {
+        "BNBUSDT": "2026-10-03",
+        "BTCUSDT": "2026-10-03",
+        "ETHUSDT": "2026-10-03",
+        "SOLUSDT": "2026-10-03",
+        "XRPUSDT": "2026-10-03"
+      },
+      "symbol": "BTCUSDT",
+      "compare_symbol": null,
+      "environment": "PILOT_TEST",
+      "base_currency": "INR",
+      "secondary_currency": "USD",
+      "context_manifest_id": "158ad3f7-aab9-5d41-b79f-05eef01bc207"
+    },
+    "evidence_changes": [
+      {
+        "tool_id": "mission.compare_states",
+        "label": "Change in Context snapshot hash",
+        "symbol": null,
+        "before": null,
+        "after": "0a61463a32704483c47ceef5132b0f88343aaaf3e9fe19beb9dc7c8e568186e3 -> 20fa318369347fc8c432df297c2497b8fde874f0168bed1ab7933c3084829c4c",
+        "change": "ADDED",
+        "before_evidence": null,
+        "after_evidence": "5c8aadc41c1322e664d6",
+        "delta": null
+      },
+      {
+        "tool_id": "mission.compare_states",
+        "label": "Change in derivatives coverage",
+        "symbol": "BTCUSDT",
+        "before": null,
+        "after": "UNKNOWN -> PARTIAL",
+        "change": "ADDED",
+        "before_evidence": null,
+        "after_evidence": "d30bf779dca20c9a4385",
+        "delta": null
+      },
+      {
+        "tool_id": "mission.compare_states",
+        "label": "Change in macd_histogram",
+        "symbol": "BTCUSDT",
+        "before": null,
+        "after": 2.546585164964199e-11,
+        "change": "ADDED",
+        "before_evidence": null,
+        "after_evidence": "639c7819a04ab223a6ac",
+        "delta": null
+      },
+      {
+        "tool_id": "mission.compare_states",
+        "label": "Change in macro coverage",
+        "symbol": "BTCUSDT",
+        "before": null,
+        "after": "UNKNOWN -> PARTIAL",
+        "change": "ADDED",
+        "before_evidence": null,
+        "after_evidence": "c2899d74cd12452a1075",
+        "delta": null
+      },
+      {
+        "tool_id": "mission.compare_states",
+        "label": "Change in market_state.market_manifest_id",
+        "symbol": "BTCUSDT",
+        "before": null,
+        "after": "f87c2a62-7cdf-443d-8eed-0575b6dd8e17 -> 3bf002d2-15f2-4f9d-8c54-cc7eb3fb349c",
+        "change": "ADDED",
+        "before_evidence": null,
+        "after_evidence": "5bab0fd84cab2c97b473",
+        "delta": null
+      },
+      {
+        "tool_id": "mission.compare_states",
+        "label": "Change in rsi(14)",
+        "symbol": "BTCUSDT",
+        "before": null,
+        "after": -9.769962616701378e-12,
+        "change": "ADDED",
+        "before_evidence": null,
+        "after_evidence": "ce7646ea5ed4ea39e3a2",
+        "delta": null
+      },
+      {
+        "tool_id": "mission.compare_states",
+        "label": "Coverage change: SOURCE_FACT BTCUSDT funding",
+        "symbol": "BTCUSDT",
+        "before": null,
+        "after": "ADDED",
+        "change": "ADDED",
+        "before_evidence": null,
+        "after_evidence": "42a8bcbbd2a441088479",
+        "delta": null
+      },
+      {
+        "tool_id": "mission.compare_states",
+        "label": "Coverage change: SOURCE_FACT BTCUSDT mark_index",
+        "symbol": "BTCUSDT",
+        "before": null,
+        "after": "ADDED",
+        "change": "ADDED",
+        "before_evidence": null,
+        "after_evidence": "83d20c8854d53c90f964",
+        "delta": null
+      },
+      {
+        "tool_id": "mission.compare_states",
+        "label": "Coverage change: SOURCE_FACT BTCUSDT open_interest",
+        "symbol": "BTCUSDT",
+        "before": null,
+        "after": "ADDED",
+        "change": "ADDED",
+        "before_evidence": null,
+        "after_evidence": "3d9b6703f965c7de0b17",
+        "delta": null
+      },
+      {
+        "tool_id": "mission.compare_states",
+        "label": "Coverage change: SOURCE_FACT economic_observation",
+        "symbol": "BTCUSDT",
+        "before": null,
+        "after": "ADDED",
+        "change": "ADDED",
+        "before_evidence": null,
+        "after_evidence": "b432d24249a838f9573d",
+        "delta": null
+      },
+      {
+        "tool_id": "mission.compare_states",
+        "label": "Coverage change: derivatives.aligned_price_change_fraction",
+        "symbol": "BTCUSDT",
+        "before": null,
+        "after": "ADDED",
+        "change": "ADDED",
+        "before_evidence": null,
+        "after_evidence": "0de1f9317c77b1cac687",
+        "delta": null
+      },
+      {
+        "tool_id": "mission.compare_states",
+        "label": "Coverage change: derivatives.contextual_backtest_status",
+        "symbol": "BTCUSDT",
+        "before": null,
+        "after": "ADDED",
+        "change": "ADDED",
+        "before_evidence": null,
+        "after_evidence": "4dcdc34ab11003b5a74f",
+        "delta": null
+      },
+      {
+        "tool_id": "mission.compare_states",
+        "label": "Coverage change: derivatives.directional_implication",
+        "symbol": "BTCUSDT",
+        "before": null,
+        "after": "ADDED",
+        "change": "ADDED",
+        "before_evidence": null,
+        "after_evidence": "4c6d0152266dcf6e6f85",
+        "delta": null
+      },
+      {
+        "tool_id": "mission.compare_states",
+        "label": "Coverage change: derivatives.funding_N",
+        "symbol": "BTCUSDT",
+        "before": null,
+        "after": "ADDED",
+        "change": "ADDED",
+        "before_evidence": null,
+        "after_evidence": "80df4d24e226c7b4d925",
+        "delta": null
+      },
+      {
+        "tool_id": "mission.compare_states",
+        "label": "Coverage change: derivatives.funding_event_at",
+        "symbol": "BTCUSDT",
+        "before": null,
+        "after": "ADDED",
+        "change": "ADDED",
+        "before_evidence": null,
+        "after_evidence": "77f35c402e8c91f49ab7",
+        "delta": null
+      },
+      {
+        "tool_id": "mission.compare_states",
+        "label": "Coverage change: derivatives.funding_latest",
+        "symbol": "BTCUSDT",
+        "before": null,
+        "after": "ADDED",
+        "change": "ADDED",
+        "before_evidence": null,
+        "after_evidence": "c5369c0d4b10d7f5b2d8",
+        "delta": null
+      },
+      {
+        "tool_id": "mission.compare_states",
+        "label": "Coverage change: derivatives.funding_percentile",
+        "symbol": "BTCUSDT",
+        "before": null,
+        "after": "ADDED",
+        "change": "ADDED",
+        "before_evidence": null,
+        "after_evidence": "0c834f774b43082d5b29",
+        "delta": null
+      },
+      {
+        "tool_id": "mission.compare_states",
+        "label": "Coverage change: derivatives.funding_positive_fraction",
+        "symbol": "BTCUSDT",
+        "before": null,
+        "after": "ADDED",
+        "change": "ADDED",
+        "before_evidence": null,
+        "after_evidence": "8a5030e4152f9af297fe",
+        "delta": null
+      },
+      {
+        "tool_id": "mission.compare_states",
+        "label": "Coverage change: derivatives.funding_same_sign_events",
+        "symbol": "BTCUSDT",
+        "before": null,
+        "after": "ADDED",
+        "change": "ADDED",
+        "before_evidence": null,
+        "after_evidence": "a3b3053309178e91f9bd",
+        "delta": null
+      },
+      {
+        "tool_id": "mission.compare_states",
+        "label": "Coverage change: derivatives.funding_unit",
+        "symbol": "BTCUSDT",
+        "before": null,
+        "after": "ADDED",
+        "change": "ADDED",
+        "before_evidence": null,
+        "after_evidence": "4eadc2d4f10171d84a80",
+        "delta": null
+      },
+      {
+        "tool_id": "mission.compare_states",
+        "label": "Coverage change: derivatives.mark_index_premium_fraction",
+        "symbol": "BTCUSDT",
+        "before": null,
+        "after": "ADDED",
+        "change": "ADDED",
+        "before_evidence": null,
+        "after_evidence": "176a52cb151ed4faf192",
+        "delta": null
+      },
+      {
+        "tool_id": "mission.compare_states",
+        "label": "Coverage change: derivatives.oi_N",
+        "symbol": "BTCUSDT",
+        "before": null,
+        "after": "ADDED",
+        "change": "ADDED",
+        "before_evidence": null,
+        "after_evidence": "1193734a76e111c601ed",
+        "delta": null
+      },
+      {
+        "tool_id": "mission.compare_states",
+        "label": "Coverage change: derivatives.oi_change_fraction",
+        "symbol": "BTCUSDT",
+        "before": null,
+        "after": "ADDED",
+        "change": "ADDED",
+        "before_evidence": null,
+        "after_evidence": "ab6e9f6c1679dc53f933",
+        "delta": null
+      },
+      {
+        "tool_id": "mission.compare_states",
+        "label": "Coverage change: derivatives.oi_event_at",
+        "symbol": "BTCUSDT",
+        "before": null,
+        "after": "ADDED",
+        "change": "ADDED",
+        "before_evidence": null,
+        "after_evidence": "a6dffb48d9f138fa2271",
+        "delta": null
+      },
+      {
+        "tool_id": "mission.compare_states",
+        "label": "Coverage change: derivatives.oi_latest",
+        "symbol": "BTCUSDT",
+        "before": null,
+        "after": "ADDED",
+        "change": "ADDED",
+        "before_evidence": null,
+        "after_evidence": "c591244928ac9b0b886e",
+        "delta": null
+      },
+      {
+        "tool_id": "mission.compare_states",
+        "label": "Coverage change: derivatives.oi_unit",
+        "symbol": "BTCUSDT",
+        "before": null,
+        "after": "ADDED",
+        "change": "ADDED",
+        "before_evidence": null,
+        "after_evidence": "d556ad65b83d45abb04b",
+        "delta": null
+      },
+      {
+        "tool_id": "mission.compare_states",
+        "label": "Coverage change: derivatives.premium_time",
+        "symbol": "BTCUSDT",
+        "before": null,
+        "after": "ADDED",
+        "change": "ADDED",
+        "before_evidence": null,
+        "after_evidence": "30a3a0f5e3db6dc73b2c",
+        "delta": null
+      },
+      {
+        "tool_id": "mission.compare_states",
+        "label": "Coverage change: derivatives.price_oi_alignment",
+        "symbol": "BTCUSDT",
+        "before": null,
+        "after": "ADDED",
+        "change": "ADDED",
+        "before_evidence": null,
+        "after_evidence": "a1c21cea230c979ad4de",
+        "delta": null
+      },
+      {
+        "tool_id": "mission.compare_states",
+        "label": "Coverage change: derivatives.price_oi_state",
+        "symbol": "BTCUSDT",
+        "before": null,
+        "after": "ADDED",
+        "change": "ADDED",
+        "before_evidence": null,
+        "after_evidence": "72f270e54940c457502b",
+        "delta": null
+      },
+      {
+        "tool_id": "mission.compare_states",
+        "label": "Coverage change: macro.us_treasury:US_TREASURY:AVG_INTEREST_RATE:TREASURY_BILLS:direction",
+        "symbol": "BTCUSDT",
+        "before": null,
+        "after": "ADDED",
+        "change": "ADDED",
+        "before_evidence": null,
+        "after_evidence": "a77f2e3c63dcd3cf9b19",
+        "delta": null
+      },
+      {
+        "tool_id": "mission.compare_states",
+        "label": "Coverage change: macro.us_treasury:US_TREASURY:AVG_INTEREST_RATE:TREASURY_BILLS:latest",
+        "symbol": "BTCUSDT",
+        "before": null,
+        "after": "ADDED",
+        "change": "ADDED",
+        "before_evidence": null,
+        "after_evidence": "43ab2fb1ecb736ea1a0a",
+        "delta": null
+      },
+      {
+        "tool_id": "mission.compare_states",
+        "label": "Coverage change: macro.us_treasury:US_TREASURY:AVG_INTEREST_RATE:TREASURY_BILLS:unit",
+        "symbol": "BTCUSDT",
+        "before": null,
+        "after": "ADDED",
+        "change": "ADDED",
+        "before_evidence": null,
+        "after_evidence": "d8d734b4af7386a140f2",
+        "delta": null
+      }
+    ],
+    "hypothesis_before": [
+      {
+        "hypothesis_id": "current_momentum",
+        "statement": "Positive canonical momentum is present; this does not imply future profitability or improvement over an earlier state.",
+        "originating_evidence": [
+          "dd2b71097abea0b76fee",
+          "da1416b67ada3cfa505f"
+        ],
+        "test_requirements": [
+          "rolling_return(20)",
+          "macd_histogram",
+          "freshness",
+          "aligned earlier state for improvement"
+        ],
+        "support": [
+          "dd2b71097abea0b76fee"
+        ],
+        "contradictions": [
+          "da1416b67ada3cfa505f"
+        ],
+        "status": "INCONCLUSIVE"
+      },
+      {
+        "hypothesis_id": "historical_momentum_support",
+        "statement": "Registered momentum has positive temporal OOS support in the saved Pilot 5 study.",
+        "originating_evidence": [
+          "32e6e453b98a4764a3de"
+        ],
+        "test_requirements": [
+          "independent temporal OOS",
+          "regime-aligned evidence",
+          "sufficient independent sample"
+        ],
+        "support": [],
+        "contradictions": [
+          "32e6e453b98a4764a3de"
+        ],
+        "status": "CONTRADICTED"
+      },
+      {
+        "hypothesis_id": "b658c7dc36d6774f",
+        "statement": "Broad crypto beta may explain apparent asset momentum; aligned comparison can describe participation, not causation.",
+        "originating_evidence": [
+          "3b541b792ab014b59e22",
+          "e39ef60ed36b2b34d35c"
+        ],
+        "test_requirements": [
+          "aligned returns",
+          "relative strength",
+          "broader universe"
+        ],
+        "support": [],
+        "contradictions": [],
+        "status": "INCONCLUSIVE"
+      },
+      {
+        "hypothesis_id": "786d0abd80e20715",
+        "statement": "Volatility expansion may explain unstable momentum; a single current volatility value cannot establish a change.",
+        "originating_evidence": [
+          "3557b2f1a2659a02c8e7"
+        ],
+        "test_requirements": [
+          "earlier comparable volatility",
+          "adequate regime sample"
+        ],
+        "support": [],
+        "contradictions": [],
+        "status": "INCONCLUSIVE"
+      },
+      {
+        "hypothesis_id": "35e3c3e8a9252f3e",
+        "statement": "Derivatives positioning is an alternative explanation; funding and OI do not identify short covering or causal position ownership.",
+        "originating_evidence": [
+          "8e0bc01f678ac0272502",
+          "374eab9f3b7ad233857e"
+        ],
+        "test_requirements": [
+          "contract-aligned series",
+          "position attribution unavailable"
+        ],
+        "support": [],
+        "contradictions": [],
+        "status": "INCONCLUSIVE"
+      }
+    ],
+    "hypothesis_after": [
+      {
+        "hypothesis_id": "current_momentum",
+        "statement": "Positive canonical momentum is present; this does not imply future profitability or improvement over an earlier state.",
+        "originating_evidence": [
+          "dd2b71097abea0b76fee",
+          "da1416b67ada3cfa505f"
+        ],
+        "test_requirements": [
+          "rolling_return(20)",
+          "macd_histogram",
+          "freshness",
+          "aligned earlier state for improvement"
+        ],
+        "support": [
+          "dd2b71097abea0b76fee"
+        ],
+        "contradictions": [
+          "da1416b67ada3cfa505f"
+        ],
+        "status": "INCONCLUSIVE"
+      },
+      {
+        "hypothesis_id": "historical_momentum_support",
+        "statement": "Registered momentum has positive temporal OOS support in the saved Pilot 5 study.",
+        "originating_evidence": [
+          "32e6e453b98a4764a3de"
+        ],
+        "test_requirements": [
+          "independent temporal OOS",
+          "regime-aligned evidence",
+          "sufficient independent sample"
+        ],
+        "support": [],
+        "contradictions": [
+          "32e6e453b98a4764a3de"
+        ],
+        "status": "CONTRADICTED"
+      },
+      {
+        "hypothesis_id": "b658c7dc36d6774f",
+        "statement": "Broad crypto beta may explain apparent asset momentum; aligned comparison can describe participation, not causation.",
+        "originating_evidence": [
+          "3b541b792ab014b59e22",
+          "e39ef60ed36b2b34d35c"
+        ],
+        "test_requirements": [
+          "aligned returns",
+          "relative strength",
+          "broader universe"
+        ],
+        "support": [],
+        "contradictions": [],
+        "status": "INCONCLUSIVE"
+      },
+      {
+        "hypothesis_id": "786d0abd80e20715",
+        "statement": "Volatility expansion may explain unstable momentum; a single current volatility value cannot establish a change.",
+        "originating_evidence": [
+          "3557b2f1a2659a02c8e7"
+        ],
+        "test_requirements": [
+          "earlier comparable volatility",
+          "adequate regime sample"
+        ],
+        "support": [],
+        "contradictions": [],
+        "status": "INCONCLUSIVE"
+      },
+      {
+        "hypothesis_id": "35e3c3e8a9252f3e",
+        "statement": "Derivatives positioning is an alternative explanation; funding and OI do not identify short covering or causal position ownership.",
+        "originating_evidence": [
+          "8e0bc01f678ac0272502",
+          "374eab9f3b7ad233857e"
+        ],
+        "test_requirements": [
+          "contract-aligned series",
+          "position attribution unavailable"
+        ],
+        "support": [],
+        "contradictions": [],
+        "status": "INCONCLUSIVE"
+      }
+    ],
+    "causal_inference": false,
+    "quantitative_support_before": "NO_SUPPORTED_EDGE_ESTABLISHED",
+    "quantitative_support_after": "NO_SUPPORTED_EDGE_ESTABLISHED"
+  }
+}

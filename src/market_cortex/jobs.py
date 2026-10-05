@@ -54,6 +54,15 @@ class JobQueue:
                     (kind,kind,job_id,job_id,lease_seconds)).fetchone()
                 return Job(*row) if row else None
 
+    def renew(self, job_id: UUID, attempts: int, lease_seconds: int = 60) -> bool:
+        """Renew only the still-live attempt; an abandoned job becomes reclaimable."""
+        if not 1 <= lease_seconds <= 3600:
+            raise ValueError('invalid lease')
+        with connect(self.dsn) as connection:
+            return bool(connection.execute("""UPDATE jobs SET lease_until=now()+(%s * interval '1 second')
+                WHERE job_id=%s AND state='leased' AND attempts=%s AND lease_until>now() RETURNING job_id""",
+                (lease_seconds,job_id,attempts)).fetchone())
+
     def finish(self, job_id: UUID, attempts: int, error_code: str | None = None,
                max_attempts: int = 3) -> str:
         if max_attempts < 1:

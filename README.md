@@ -1,6 +1,6 @@
 # MARKET CORTEX
 
-Private, local-first market research software. **Phases 1–9 are implemented for the five-pair Binance pilot.** The [Phase 0 blueprint](docs/architecture/PHASE_0_BASELINE_2026-09-26.md), [Phase 1 evidence](docs/planning/PHASE_1_EXIT_MATRIX_2026-10-03.md), [Phase 2 rules](docs/analytics/PHASE_2_ANALYTICS.md), [workstation guide](docs/workstation/PHASE_3_WORKSTATION.md), [CORTEX v1 guide](docs/cortex/PHASE_4_CORTEX_V1.md), [opportunity guide](docs/opportunity/PHASE_5_OPPORTUNITY_AND_THESIS.md), [risk guide](docs/risk/PHASE_6_RISK_AND_PORTFOLIO.md), [learning guide](docs/learning/PHASE_7_JOURNAL_PREDICTION_LEARNING.md), and [Phase 8 exit matrix](docs/planning/PHASE_8_EXIT_MATRIX_2026-10-05.md) describe the validated scope.
+Private, local-first market research software. **Phases 1–10 are implemented for the five-pair Binance pilot.** The [Phase 0 blueprint](docs/architecture/PHASE_0_BASELINE_2026-09-26.md), [Phase 1 evidence](docs/planning/PHASE_1_EXIT_MATRIX_2026-10-03.md), [Phase 2 rules](docs/analytics/PHASE_2_ANALYTICS.md), [workstation guide](docs/workstation/PHASE_3_WORKSTATION.md), [CORTEX v1 guide](docs/cortex/PHASE_4_CORTEX_V1.md), [opportunity guide](docs/opportunity/PHASE_5_OPPORTUNITY_AND_THESIS.md), [risk guide](docs/risk/PHASE_6_RISK_AND_PORTFOLIO.md), [learning guide](docs/learning/PHASE_7_JOURNAL_PREDICTION_LEARNING.md), and [Phase 8 exit matrix](docs/planning/PHASE_8_EXIT_MATRIX_2026-10-05.md) describe the validated scope.
 
 ## What runs now
 
@@ -18,11 +18,13 @@ Private, local-first market research software. **Phases 1–9 are implemented fo
 - Phase 8 adds Quant Lab: registered canonical detector strategies, strict historical replay, labelled reconstruction, daily execution/costs, reconciled portfolio paths, metrics/drawdowns, bounded parameter grids, train-only walk-forward selection, robustness, seeded Monte Carlo, immutable research artifacts and grounded CORTEX quant tools. See the [Quant Lab guide](docs/quant/PHASE_8_QUANT_LAB.md) and [pilot results](docs/quant/PHASE_8_PILOT_RESULTS.json). Backtests do not establish a proven edge.
 - Phase 9 adds Advanced Market Intelligence: immutable contextual facts/revisions, strict availability, partial ContextSnapshot, actual public Binance funding/OI/mark data and Treasury macro data, deterministic event risk, approved CORTEX tools, thesis/risk supplements, frozen Quant context, options/on-chain foundations, and the Intelligence workspace. See the [Phase 9 guide](docs/intelligence/PHASE_9_ADVANCED_MARKET_INTELLIGENCE.md) and [exit matrix](docs/planning/PHASE_9_EXIT_MATRIX_2026-10-05.md).
 
+- Phase 10 adds CORTEX v2 bounded research missions: policy-validated plans, zero-cost budgets, frozen scopes, checkpoints, hypotheses, skeptical and adversarial review, stored negative Quant evidence, cited dossiers, structured changes, API/CLI jobs and Research Lab. See the [Phase 10 guide](docs/cortex/PHASE_10_CORTEX_V2_AUTONOMOUS_RESEARCH.md) and [exit matrix](docs/planning/PHASE_10_EXIT_MATRIX_2026-10-05.md).
+
 There are **no order endpoints or automated trade execution paths**. Live India/US, event calendars, licensed news, option chains and on-chain feeds remain deferred. No supported edge has been established; Phase 8 momentum temporal OOS remains **−7.82%, N=82**.
 
 ## Windows quick start
 
-Use PowerShell in the extracted `market-cortex` directory. Python 3.12 is tested here; newer Python versions need compatible wheels.
+Use PowerShell in the repository root. Python 3.12 is tested here; newer Python versions need compatible wheels.
 
 ```powershell
 py -3.12 -m venv .venv
@@ -40,7 +42,7 @@ Install local PostgreSQL and create a **dedicated empty database** with a dedica
 .\.venv\Scripts\python.exe scripts\market_cortex.py serve
 ```
 
-The server binds to `127.0.0.1:8765`. `GET /api/v1/health` is available even before PostgreSQL is configured and reports `not_configured`. The `migrate` command applies migrations through `0010_context_intelligence.sql` for local research persistence and efficient summary browsing. Provider probes are separate: `python scripts\probe_sources.py --run --output data\probes\phase_0_6_local.json`.
+The server binds to `127.0.0.1:8765`. `GET /api/v1/health` is available even before PostgreSQL is configured and reports `not_configured`. The `migrate` command applies migrations through `0011_research_missions.sql` for local research persistence and mission checkpoints. Provider probes are separate: `python scripts\probe_sources.py --run --output data\probes\phase_0_6_local.json`.
 
 In a second PowerShell window, start the workstation. Node.js and npm must be installed; `npm ci` is needed only on first setup or after dependency changes.
 

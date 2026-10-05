@@ -152,9 +152,35 @@ def main(argv: list[str] | None = None) -> int:
         command.add_argument('--source', choices=('binance_usdm', 'us_treasury'), required=True)
         command.add_argument('--symbols', nargs='+', default=['BTCUSDT'])
         command.add_argument('--funding-limit', type=int, default=90)
+    mission_create=sub.add_parser('mission-create',help='Create a policy-validated bounded research plan from typed JSON')
+    mission_create.add_argument('--input',type=Path,required=True)
+    for name in ('mission-run','mission-inspect','mission-replay','mission-cancel','mission-resume'):
+        command=sub.add_parser(name,help='Inspect or operate one pinned local research mission')
+        command.add_argument('mission_id',type=UUID)
+    comparison=sub.add_parser('mission-compare',help='Compare structured evidence from two missions')
+    comparison.add_argument('older',type=UUID); comparison.add_argument('newer',type=UUID)
+    sub.add_parser('mission-history',help='List recent local missions')
+    sub.add_parser('mission-worker',help='Process one durable research job')
     args = parser.parse_args(argv)
     try:
         settings = Settings.load()
+        if args.command.startswith('mission-'):
+            from .missions import MissionService
+            from .mission_contracts import MissionRequest
+            from .storage import ArtifactStore,PostgresCatalog
+            if not settings.database_url:
+                print('DATABASE_NOT_CONFIGURED',file=sys.stderr); return 2
+            service=MissionService(PostgresCatalog(settings.database_url,ArtifactStore(settings.data_root)),settings)
+            if args.command=='mission-create': result=service.create(MissionRequest.model_validate_json(args.input.read_text(encoding='utf-8-sig')))
+            elif args.command=='mission-compare': result=service.diff(args.older,args.newer)
+            elif args.command=='mission-history': result={'items':[m.model_dump(mode='json') for m in service.store.recent()]}
+            elif args.command=='mission-worker': result=service.worker()
+            elif args.command=='mission-inspect': result=service.store.get(args.mission_id)
+            elif args.command=='mission-replay': result=service.replay(args.mission_id)
+            elif args.command=='mission-cancel': result=service.store.cancel(args.mission_id)
+            else: result=service.run(args.mission_id)
+            print(json.dumps(result.model_dump(mode='json') if hasattr(result,'model_dump') else result,default=str))
+            return 0
         if args.command.startswith('intelligence-'):
             from .intelligence import IntelligenceService
             from .intelligence_contracts import ContextRequest

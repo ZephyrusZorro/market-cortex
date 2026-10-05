@@ -1,0 +1,1828 @@
+{
+  "$defs": {
+    "BacktestDefinition": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "backtest_v1",
+          "default": "backtest_v1",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "strategy_id": {
+          "enum": [
+            "momentum",
+            "breakout",
+            "trend_continuation",
+            "pullback",
+            "buy_hold",
+            "equal_weight"
+          ],
+          "title": "Strategy Id",
+          "type": "string"
+        },
+        "strategy_version": {
+          "const": "1.0.0",
+          "default": "1.0.0",
+          "title": "Strategy Version",
+          "type": "string"
+        },
+        "manifest_id": {
+          "format": "uuid",
+          "title": "Manifest Id",
+          "type": "string"
+        },
+        "source_as_of": {
+          "format": "date-time",
+          "title": "Source As Of",
+          "type": "string"
+        },
+        "start": {
+          "format": "date",
+          "title": "Start",
+          "type": "string"
+        },
+        "end": {
+          "format": "date",
+          "title": "End",
+          "type": "string"
+        },
+        "symbols": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 5,
+          "minItems": 1,
+          "title": "Symbols",
+          "type": "array"
+        },
+        "replay_policy": {
+          "default": "AS_RECORDED",
+          "enum": [
+            "AS_RECORDED",
+            "HISTORICAL_RECONSTRUCTION"
+          ],
+          "title": "Replay Policy",
+          "type": "string"
+        },
+        "publication_lag_seconds": {
+          "default": 60,
+          "maximum": 86400,
+          "minimum": 1,
+          "title": "Publication Lag Seconds",
+          "type": "integer"
+        },
+        "interval": {
+          "const": "P1D",
+          "default": "P1D",
+          "title": "Interval",
+          "type": "string"
+        },
+        "adjustment_basis": {
+          "const": "raw",
+          "default": "raw",
+          "title": "Adjustment Basis",
+          "type": "string"
+        },
+        "universe": {
+          "const": "binance_pilot_5_selected_survivors",
+          "default": "binance_pilot_5_selected_survivors",
+          "title": "Universe",
+          "type": "string"
+        },
+        "capital": {
+          "default": 10000,
+          "exclusiveMinimum": 0,
+          "maximum": 1000000000000.0,
+          "title": "Capital",
+          "type": "number"
+        },
+        "max_positions": {
+          "default": 5,
+          "maximum": 5,
+          "minimum": 1,
+          "title": "Max Positions",
+          "type": "integer"
+        },
+        "parameters": {
+          "$ref": "#/$defs/StrategyParameters"
+        },
+        "execution": {
+          "$ref": "#/$defs/ExecutionPolicy"
+        },
+        "costs": {
+          "$ref": "#/$defs/CostModel"
+        },
+        "sizing": {
+          "$ref": "#/$defs/SizingPolicy"
+        },
+        "benchmark": {
+          "default": "same_universe_equal_weight",
+          "enum": [
+            "BTCUSDT",
+            "same_universe_equal_weight",
+            "cash"
+          ],
+          "title": "Benchmark",
+          "type": "string"
+        },
+        "annualization": {
+          "const": 365,
+          "default": 365,
+          "title": "Annualization",
+          "type": "integer"
+        },
+        "risk_free_rate": {
+          "default": 0,
+          "maximum": 0.5,
+          "minimum": -0.1,
+          "title": "Risk Free Rate",
+          "type": "number"
+        },
+        "classification": {
+          "default": "OWNER_RESEARCH",
+          "enum": [
+            "OWNER_RESEARCH",
+            "SYNTHETIC_TEST"
+          ],
+          "title": "Classification",
+          "type": "string"
+        },
+        "context_filter": {
+          "default": "none",
+          "enum": [
+            "none",
+            "funding_nonpositive",
+            "oi_expanding"
+          ],
+          "title": "Context Filter",
+          "type": "string"
+        }
+      },
+      "required": [
+        "strategy_id",
+        "manifest_id",
+        "source_as_of",
+        "start",
+        "end"
+      ],
+      "title": "BacktestDefinition",
+      "type": "object"
+    },
+    "CostModel": {
+      "additionalProperties": false,
+      "properties": {
+        "version": {
+          "const": "bps_proxy_v1",
+          "default": "bps_proxy_v1",
+          "title": "Version",
+          "type": "string"
+        },
+        "entry_fee_bps": {
+          "default": 10,
+          "maximum": 500,
+          "minimum": 0,
+          "title": "Entry Fee Bps",
+          "type": "number"
+        },
+        "exit_fee_bps": {
+          "default": 10,
+          "maximum": 500,
+          "minimum": 0,
+          "title": "Exit Fee Bps",
+          "type": "number"
+        },
+        "slippage_bps": {
+          "default": 5,
+          "maximum": 500,
+          "minimum": 0,
+          "title": "Slippage Bps",
+          "type": "number"
+        },
+        "spread_bps": {
+          "default": 0,
+          "maximum": 500,
+          "minimum": 0,
+          "title": "Spread Bps",
+          "type": "number"
+        },
+        "fixed_fee": {
+          "default": 0,
+          "maximum": 100,
+          "minimum": 0,
+          "title": "Fixed Fee",
+          "type": "number"
+        }
+      },
+      "title": "CostModel",
+      "type": "object"
+    },
+    "Evidence": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_id": {
+          "title": "Evidence Id",
+          "type": "string"
+        },
+        "tool_id": {
+          "title": "Tool Id",
+          "type": "string"
+        },
+        "kind": {
+          "title": "Kind",
+          "type": "string"
+        },
+        "label": {
+          "title": "Label",
+          "type": "string"
+        },
+        "symbol": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Symbol"
+        },
+        "instrument_id": {
+          "anyOf": [
+            {
+              "format": "uuid",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Instrument Id"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "integer"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Value"
+        },
+        "unit": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Unit"
+        },
+        "session_date": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Session Date"
+        },
+        "manifest_id": {
+          "format": "uuid",
+          "title": "Manifest Id",
+          "type": "string"
+        },
+        "as_of": {
+          "format": "date-time",
+          "title": "As Of",
+          "type": "string"
+        },
+        "source_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Id"
+        },
+        "provider_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Provider Id"
+        },
+        "source_manifest_id": {
+          "anyOf": [
+            {
+              "format": "uuid",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Manifest Id"
+        },
+        "source_as_of": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source As Of"
+        },
+        "source_recorded_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Recorded At"
+        },
+        "version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Version"
+        },
+        "parameters": {
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              }
+            ]
+          },
+          "title": "Parameters",
+          "type": "object"
+        },
+        "observation_id": {
+          "anyOf": [
+            {
+              "format": "uuid",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Observation Id"
+        },
+        "quality": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Quality"
+        },
+        "freshness": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Freshness"
+        },
+        "coverage": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Coverage"
+        },
+        "reason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reason"
+        }
+      },
+      "required": [
+        "evidence_id",
+        "tool_id",
+        "kind",
+        "label",
+        "manifest_id",
+        "as_of"
+      ],
+      "title": "Evidence",
+      "type": "object"
+    },
+    "ExecutionPolicy": {
+      "additionalProperties": false,
+      "properties": {
+        "version": {
+          "const": "daily_execution_v1",
+          "default": "daily_execution_v1",
+          "title": "Version",
+          "type": "string"
+        },
+        "timing": {
+          "default": "next_open",
+          "enum": [
+            "next_open",
+            "next_close"
+          ],
+          "title": "Timing",
+          "type": "string"
+        },
+        "delay_sessions": {
+          "default": 0,
+          "maximum": 5,
+          "minimum": 0,
+          "title": "Delay Sessions",
+          "type": "integer"
+        },
+        "ambiguity": {
+          "default": "stop_first",
+          "enum": [
+            "stop_first",
+            "target_first"
+          ],
+          "title": "Ambiguity",
+          "type": "string"
+        }
+      },
+      "title": "ExecutionPolicy",
+      "type": "object"
+    },
+    "ExperimentProposal": {
+      "additionalProperties": false,
+      "properties": {
+        "proposal_id": {
+          "title": "Proposal Id",
+          "type": "string"
+        },
+        "hypothesis": {
+          "title": "Hypothesis",
+          "type": "string"
+        },
+        "definition": {
+          "$ref": "#/$defs/BacktestDefinition"
+        },
+        "registered_at": {
+          "format": "date-time",
+          "title": "Registered At",
+          "type": "string"
+        },
+        "search_combinations": {
+          "const": 1,
+          "default": 1,
+          "title": "Search Combinations",
+          "type": "integer"
+        },
+        "selected_metrics": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Selected Metrics",
+          "type": "array"
+        },
+        "evaluation_plan": {
+          "default": "RETROSPECTIVE_COUNTERFACTUAL; descriptive in-sample; independent OOS remains required",
+          "title": "Evaluation Plan",
+          "type": "string"
+        },
+        "overfitting_risks": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Overfitting Risks",
+          "type": "array"
+        },
+        "status": {
+          "default": "REGISTERED",
+          "enum": [
+            "PROPOSED",
+            "REGISTERED",
+            "EXECUTED",
+            "UNAVAILABLE"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "run_id": {
+          "anyOf": [
+            {
+              "format": "uuid",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Run Id"
+        }
+      },
+      "required": [
+        "proposal_id",
+        "hypothesis",
+        "definition",
+        "registered_at"
+      ],
+      "title": "ExperimentProposal",
+      "type": "object"
+    },
+    "Hypothesis": {
+      "additionalProperties": false,
+      "properties": {
+        "hypothesis_id": {
+          "title": "Hypothesis Id",
+          "type": "string"
+        },
+        "statement": {
+          "title": "Statement",
+          "type": "string"
+        },
+        "originating_evidence": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Originating Evidence",
+          "type": "array"
+        },
+        "test_requirements": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Test Requirements",
+          "type": "array"
+        },
+        "support": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Support",
+          "type": "array"
+        },
+        "contradictions": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Contradictions",
+          "type": "array"
+        },
+        "status": {
+          "default": "INCONCLUSIVE",
+          "enum": [
+            "PROPOSED",
+            "TESTING",
+            "SUPPORTED_BY_CURRENT_EVIDENCE",
+            "WEAKENED",
+            "CONTRADICTED",
+            "INCONCLUSIVE"
+          ],
+          "title": "Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "hypothesis_id",
+        "statement",
+        "originating_evidence",
+        "test_requirements"
+      ],
+      "title": "Hypothesis",
+      "type": "object"
+    },
+    "MissionBudget": {
+      "additionalProperties": false,
+      "properties": {
+        "max_tool_calls": {
+          "default": 16,
+          "maximum": 32,
+          "minimum": 1,
+          "title": "Max Tool Calls",
+          "type": "integer"
+        },
+        "max_planner_iterations": {
+          "default": 2,
+          "maximum": 4,
+          "minimum": 1,
+          "title": "Max Planner Iterations",
+          "type": "integer"
+        },
+        "max_replans": {
+          "default": 1,
+          "maximum": 2,
+          "minimum": 0,
+          "title": "Max Replans",
+          "type": "integer"
+        },
+        "max_quant_runs": {
+          "default": 0,
+          "maximum": 2,
+          "minimum": 0,
+          "title": "Max Quant Runs",
+          "type": "integer"
+        },
+        "max_historical_comparisons": {
+          "default": 3,
+          "maximum": 5,
+          "minimum": 0,
+          "title": "Max Historical Comparisons",
+          "type": "integer"
+        },
+        "max_model_calls": {
+          "default": 0,
+          "maximum": 2,
+          "minimum": 0,
+          "title": "Max Model Calls",
+          "type": "integer"
+        },
+        "timeout_seconds": {
+          "default": 300,
+          "maximum": 900,
+          "minimum": 1,
+          "title": "Timeout Seconds",
+          "type": "integer"
+        },
+        "api_cost_budget_inr": {
+          "const": 0,
+          "default": 0,
+          "title": "Api Cost Budget Inr",
+          "type": "integer"
+        }
+      },
+      "title": "MissionBudget",
+      "type": "object"
+    },
+    "MissionClaim": {
+      "additionalProperties": false,
+      "properties": {
+        "claim_id": {
+          "title": "Claim Id",
+          "type": "string"
+        },
+        "type": {
+          "enum": [
+            "FACT",
+            "CALCULATION",
+            "CLASSIFICATION",
+            "INTERPRETATION",
+            "HYPOTHESIS",
+            "LIMITATION",
+            "CONTRADICTION"
+          ],
+          "title": "Type",
+          "type": "string"
+        },
+        "text": {
+          "maxLength": 8000,
+          "title": "Text",
+          "type": "string"
+        },
+        "evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 50,
+          "title": "Evidence Ids",
+          "type": "array"
+        },
+        "stance": {
+          "default": "neutral",
+          "enum": [
+            "support",
+            "counter",
+            "neutral",
+            "limitation"
+          ],
+          "title": "Stance",
+          "type": "string"
+        },
+        "observed_value": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "integer"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Observed Value"
+        },
+        "numeric_evidence_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Numeric Evidence Id"
+        }
+      },
+      "required": [
+        "claim_id",
+        "type",
+        "text",
+        "evidence_ids"
+      ],
+      "title": "MissionClaim",
+      "type": "object"
+    },
+    "MissionPlan": {
+      "additionalProperties": false,
+      "properties": {
+        "version": {
+          "const": "bounded_plan_v1",
+          "default": "bounded_plan_v1",
+          "title": "Version",
+          "type": "string"
+        },
+        "steps": {
+          "items": {
+            "$ref": "#/$defs/PlanStep"
+          },
+          "maxItems": 32,
+          "title": "Steps",
+          "type": "array"
+        },
+        "passes": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Passes",
+          "type": "array"
+        },
+        "rationale": {
+          "default": "Progressive deterministic scope; unsupported domains remain explicit",
+          "title": "Rationale",
+          "type": "string"
+        }
+      },
+      "required": [
+        "steps"
+      ],
+      "title": "MissionPlan",
+      "type": "object"
+    },
+    "MissionRequest": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "mission_request_v1",
+          "default": "mission_request_v1",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "goal": {
+          "maxLength": 600,
+          "minLength": 3,
+          "title": "Goal",
+          "type": "string"
+        },
+        "mode": {
+          "default": "DEEP_RESEARCH",
+          "enum": [
+            "QUICK_RESEARCH",
+            "DEEP_RESEARCH",
+            "HISTORICAL_RESEARCH",
+            "STRATEGY_RESEARCH",
+            "THESIS_REVIEW",
+            "CHANGE_ANALYSIS"
+          ],
+          "title": "Mode",
+          "type": "string"
+        },
+        "template": {
+          "default": "instrument_deep_dive",
+          "enum": [
+            "instrument_deep_dive",
+            "market_review",
+            "thesis_challenge",
+            "strategy_review",
+            "what_changed",
+            "historical",
+            "event_context"
+          ],
+          "title": "Template",
+          "type": "string"
+        },
+        "symbol": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Symbol"
+        },
+        "compare_symbol": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Compare Symbol"
+        },
+        "strategy_id": {
+          "default": "momentum",
+          "enum": [
+            "momentum",
+            "breakout",
+            "trend_continuation",
+            "pullback",
+            "buy_hold",
+            "equal_weight"
+          ],
+          "title": "Strategy Id",
+          "type": "string"
+        },
+        "universe": {
+          "const": "binance_pilot_5",
+          "default": "binance_pilot_5",
+          "title": "Universe",
+          "type": "string"
+        },
+        "horizon_days": {
+          "default": 20,
+          "maximum": 60,
+          "minimum": 1,
+          "title": "Horizon Days",
+          "type": "integer"
+        },
+        "manifest_id": {
+          "anyOf": [
+            {
+              "format": "uuid",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Manifest Id"
+        },
+        "context_manifest_id": {
+          "anyOf": [
+            {
+              "format": "uuid",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Context Manifest Id"
+        },
+        "as_of": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "As Of"
+        },
+        "previous_mission_id": {
+          "anyOf": [
+            {
+              "format": "uuid",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Previous Mission Id"
+        },
+        "older_manifest_id": {
+          "anyOf": [
+            {
+              "format": "uuid",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Older Manifest Id"
+        },
+        "older_as_of": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Older As Of"
+        },
+        "thesis_id": {
+          "anyOf": [
+            {
+              "format": "uuid",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Thesis Id"
+        },
+        "thesis_version": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Thesis Version"
+        },
+        "candidate_id": {
+          "anyOf": [
+            {
+              "format": "uuid",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Candidate Id"
+        },
+        "portfolio_id": {
+          "anyOf": [
+            {
+              "format": "uuid",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Portfolio Id"
+        },
+        "approved_domains": {
+          "items": {
+            "enum": [
+              "market",
+              "intelligence",
+              "opportunities",
+              "quant",
+              "memory",
+              "learning",
+              "journal",
+              "portfolio",
+              "options",
+              "events",
+              "onchain",
+              "news",
+              "fundamentals"
+            ],
+            "type": "string"
+          },
+          "maxItems": 13,
+          "title": "Approved Domains",
+          "type": "array"
+        },
+        "required_domains": {
+          "items": {
+            "enum": [
+              "market",
+              "intelligence",
+              "opportunities",
+              "quant",
+              "memory",
+              "learning",
+              "journal",
+              "portfolio",
+              "options",
+              "events",
+              "onchain",
+              "news",
+              "fundamentals"
+            ],
+            "type": "string"
+          },
+          "maxItems": 13,
+          "title": "Required Domains",
+          "type": "array"
+        },
+        "excluded_domains": {
+          "items": {
+            "enum": [
+              "market",
+              "intelligence",
+              "opportunities",
+              "quant",
+              "memory",
+              "learning",
+              "journal",
+              "portfolio",
+              "options",
+              "events",
+              "onchain",
+              "news",
+              "fundamentals"
+            ],
+            "type": "string"
+          },
+          "maxItems": 13,
+          "title": "Excluded Domains",
+          "type": "array"
+        },
+        "budgets": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/MissionBudget"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "duplicate_policy": {
+          "default": "reuse",
+          "enum": [
+            "reuse",
+            "fresh"
+          ],
+          "title": "Duplicate Policy",
+          "type": "string"
+        },
+        "experiment": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/BacktestDefinition"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "goal"
+      ],
+      "title": "MissionRequest",
+      "type": "object"
+    },
+    "PlanStep": {
+      "additionalProperties": false,
+      "properties": {
+        "step_id": {
+          "pattern": "^[a-z][a-z0-9_]{0,50}$",
+          "title": "Step Id",
+          "type": "string"
+        },
+        "question": {
+          "maxLength": 200,
+          "title": "Question",
+          "type": "string"
+        },
+        "tool_id": {
+          "title": "Tool Id",
+          "type": "string"
+        },
+        "arguments": {
+          "additionalProperties": true,
+          "maxProperties": 30,
+          "title": "Arguments",
+          "type": "object"
+        },
+        "expected_evidence": {
+          "title": "Expected Evidence",
+          "type": "string"
+        },
+        "reason": {
+          "title": "Reason",
+          "type": "string"
+        },
+        "depends_on": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 8,
+          "title": "Depends On",
+          "type": "array"
+        },
+        "required": {
+          "default": false,
+          "title": "Required",
+          "type": "boolean"
+        },
+        "domain": {
+          "enum": [
+            "market",
+            "intelligence",
+            "opportunities",
+            "quant",
+            "memory",
+            "learning",
+            "journal",
+            "portfolio",
+            "options",
+            "events",
+            "onchain",
+            "news",
+            "fundamentals"
+          ],
+          "title": "Domain",
+          "type": "string"
+        },
+        "scope": {
+          "default": "current",
+          "enum": [
+            "current",
+            "previous"
+          ],
+          "title": "Scope",
+          "type": "string"
+        },
+        "status": {
+          "default": "PENDING",
+          "enum": [
+            "PENDING",
+            "RUNNING",
+            "DONE",
+            "FAILED",
+            "SKIPPED"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "attempts": {
+          "default": 0,
+          "maximum": 3,
+          "minimum": 0,
+          "title": "Attempts",
+          "type": "integer"
+        },
+        "error_code": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Error Code"
+        },
+        "output": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ToolRun"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "step_id",
+        "question",
+        "tool_id",
+        "expected_evidence",
+        "reason",
+        "domain"
+      ],
+      "title": "PlanStep",
+      "type": "object"
+    },
+    "ResearchContext": {
+      "additionalProperties": false,
+      "properties": {
+        "mode": {
+          "title": "Mode",
+          "type": "string"
+        },
+        "manifest_id": {
+          "format": "uuid",
+          "title": "Manifest Id",
+          "type": "string"
+        },
+        "as_of": {
+          "format": "date-time",
+          "title": "As Of",
+          "type": "string"
+        },
+        "universe_id": {
+          "default": "binance_pilot_5",
+          "title": "Universe Id",
+          "type": "string"
+        },
+        "evaluation_date": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Evaluation Date"
+        },
+        "history_start": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "History Start"
+        },
+        "members": {
+          "additionalProperties": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "title": "Members",
+          "type": "object"
+        },
+        "member_last_sessions": {
+          "additionalProperties": {
+            "format": "date",
+            "type": "string"
+          },
+          "title": "Member Last Sessions",
+          "type": "object"
+        },
+        "symbol": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Symbol"
+        },
+        "compare_symbol": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Compare Symbol"
+        },
+        "environment": {
+          "title": "Environment",
+          "type": "string"
+        },
+        "base_currency": {
+          "title": "Base Currency",
+          "type": "string"
+        },
+        "secondary_currency": {
+          "default": "USD",
+          "title": "Secondary Currency",
+          "type": "string"
+        },
+        "context_manifest_id": {
+          "anyOf": [
+            {
+              "format": "uuid",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Context Manifest Id"
+        }
+      },
+      "required": [
+        "mode",
+        "manifest_id",
+        "as_of",
+        "evaluation_date",
+        "history_start",
+        "members",
+        "symbol",
+        "compare_symbol",
+        "environment",
+        "base_currency"
+      ],
+      "title": "ResearchContext",
+      "type": "object"
+    },
+    "SizingPolicy": {
+      "additionalProperties": false,
+      "properties": {
+        "version": {
+          "const": "cash_capped_v1",
+          "default": "cash_capped_v1",
+          "title": "Version",
+          "type": "string"
+        },
+        "mode": {
+          "default": "equal_weight",
+          "enum": [
+            "equal_weight",
+            "fixed_notional",
+            "fixed_quantity",
+            "fractional_risk"
+          ],
+          "title": "Mode",
+          "type": "string"
+        },
+        "value": {
+          "default": 0.01,
+          "exclusiveMinimum": 0,
+          "title": "Value",
+          "type": "number"
+        }
+      },
+      "title": "SizingPolicy",
+      "type": "object"
+    },
+    "StrategyParameters": {
+      "additionalProperties": false,
+      "properties": {
+        "holding_sessions": {
+          "default": 10,
+          "maximum": 60,
+          "minimum": 1,
+          "title": "Holding Sessions",
+          "type": "integer"
+        },
+        "stop_fraction": {
+          "default": 0.08,
+          "exclusiveMinimum": 0,
+          "maximum": 0.5,
+          "title": "Stop Fraction",
+          "type": "number"
+        },
+        "target_r": {
+          "default": 2,
+          "exclusiveMinimum": 0,
+          "maximum": 10,
+          "title": "Target R",
+          "type": "number"
+        }
+      },
+      "title": "StrategyParameters",
+      "type": "object"
+    },
+    "ToolRun": {
+      "additionalProperties": false,
+      "properties": {
+        "tool_id": {
+          "title": "Tool Id",
+          "type": "string"
+        },
+        "version": {
+          "title": "Version",
+          "type": "string"
+        },
+        "description": {
+          "title": "Description",
+          "type": "string"
+        },
+        "inputs": {
+          "additionalProperties": true,
+          "title": "Inputs",
+          "type": "object"
+        },
+        "status": {
+          "enum": [
+            "ok",
+            "insufficient",
+            "unavailable"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "evidence": {
+          "items": {
+            "$ref": "#/$defs/Evidence"
+          },
+          "title": "Evidence",
+          "type": "array"
+        },
+        "output_hash": {
+          "title": "Output Hash",
+          "type": "string"
+        },
+        "elapsed_ms": {
+          "title": "Elapsed Ms",
+          "type": "number"
+        }
+      },
+      "required": [
+        "tool_id",
+        "version",
+        "description",
+        "inputs",
+        "status",
+        "evidence",
+        "output_hash",
+        "elapsed_ms"
+      ],
+      "title": "ToolRun",
+      "type": "object"
+    },
+    "Usage": {
+      "additionalProperties": false,
+      "properties": {
+        "tool_calls": {
+          "default": 0,
+          "title": "Tool Calls",
+          "type": "integer"
+        },
+        "planner_iterations": {
+          "default": 0,
+          "title": "Planner Iterations",
+          "type": "integer"
+        },
+        "replans": {
+          "default": 0,
+          "title": "Replans",
+          "type": "integer"
+        },
+        "quant_runs": {
+          "default": 0,
+          "title": "Quant Runs",
+          "type": "integer"
+        },
+        "historical_comparisons": {
+          "default": 0,
+          "title": "Historical Comparisons",
+          "type": "integer"
+        },
+        "model_calls": {
+          "default": 0,
+          "title": "Model Calls",
+          "type": "integer"
+        },
+        "model_input_tokens": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Model Input Tokens"
+        },
+        "model_output_tokens": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Model Output Tokens"
+        },
+        "api_cost_inr": {
+          "const": 0,
+          "default": 0,
+          "title": "Api Cost Inr",
+          "type": "integer"
+        },
+        "elapsed_ms": {
+          "default": 0,
+          "title": "Elapsed Ms",
+          "type": "number"
+        },
+        "cache_hits": {
+          "default": 0,
+          "title": "Cache Hits",
+          "type": "integer"
+        }
+      },
+      "title": "Usage",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "research_mission_v1",
+      "default": "research_mission_v1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "orchestration_version": {
+      "const": "cortex_mission_v2",
+      "default": "cortex_mission_v2",
+      "title": "Orchestration Version",
+      "type": "string"
+    },
+    "mission_id": {
+      "format": "uuid",
+      "title": "Mission Id",
+      "type": "string"
+    },
+    "revision": {
+      "default": 1,
+      "title": "Revision",
+      "type": "integer"
+    },
+    "created_at": {
+      "format": "date-time",
+      "title": "Created At",
+      "type": "string"
+    },
+    "updated_at": {
+      "format": "date-time",
+      "title": "Updated At",
+      "type": "string"
+    },
+    "request": {
+      "$ref": "#/$defs/MissionRequest"
+    },
+    "context": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ResearchContext"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "previous_context": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ResearchContext"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "budgets": {
+      "$ref": "#/$defs/MissionBudget"
+    },
+    "usage": {
+      "$ref": "#/$defs/Usage"
+    },
+    "plan": {
+      "$ref": "#/$defs/MissionPlan"
+    },
+    "status": {
+      "default": "CREATED",
+      "enum": [
+        "CREATED",
+        "PLANNING",
+        "READY",
+        "RUNNING",
+        "WAITING_FOR_DATA",
+        "PARTIAL",
+        "COMPLETED",
+        "INCONCLUSIVE",
+        "FAILED",
+        "CANCELLED"
+      ],
+      "title": "Status",
+      "type": "string"
+    },
+    "termination_reason": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Termination Reason"
+    },
+    "deadline_at": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Deadline At"
+    },
+    "claims": {
+      "items": {
+        "$ref": "#/$defs/MissionClaim"
+      },
+      "title": "Claims",
+      "type": "array"
+    },
+    "hypotheses": {
+      "items": {
+        "$ref": "#/$defs/Hypothesis"
+      },
+      "title": "Hypotheses",
+      "type": "array"
+    },
+    "contradictions": {
+      "items": {
+        "$ref": "#/$defs/MissionClaim"
+      },
+      "title": "Contradictions",
+      "type": "array"
+    },
+    "limitations": {
+      "items": {
+        "$ref": "#/$defs/MissionClaim"
+      },
+      "title": "Limitations",
+      "type": "array"
+    },
+    "experiments": {
+      "items": {
+        "$ref": "#/$defs/ExperimentProposal"
+      },
+      "title": "Experiments",
+      "type": "array"
+    },
+    "replans": {
+      "items": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "title": "Replans",
+      "type": "array"
+    },
+    "activity": {
+      "items": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "title": "Activity",
+      "type": "array"
+    },
+    "evaluator": {
+      "additionalProperties": true,
+      "title": "Evaluator",
+      "type": "object"
+    },
+    "evidence_graph": {
+      "additionalProperties": true,
+      "title": "Evidence Graph",
+      "type": "object"
+    },
+    "report": {
+      "default": "",
+      "title": "Report",
+      "type": "string"
+    },
+    "model_metadata": {
+      "additionalProperties": true,
+      "title": "Model Metadata",
+      "type": "object"
+    },
+    "similar_mission_ids": {
+      "items": {
+        "format": "uuid",
+        "type": "string"
+      },
+      "title": "Similar Mission Ids",
+      "type": "array"
+    },
+    "frozen_references": {
+      "additionalProperties": true,
+      "title": "Frozen References",
+      "type": "object"
+    },
+    "code_hash": {
+      "title": "Code Hash",
+      "type": "string"
+    },
+    "content_hash": {
+      "default": "",
+      "title": "Content Hash",
+      "type": "string"
+    }
+  },
+  "required": [
+    "mission_id",
+    "created_at",
+    "updated_at",
+    "request",
+    "budgets",
+    "code_hash"
+  ],
+  "title": "ResearchMission",
+  "type": "object"
+}
