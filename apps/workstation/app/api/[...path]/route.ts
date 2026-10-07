@@ -18,10 +18,13 @@ const intelligencePost = /^v1\/intelligence\/event-study$/;
 const missionsGet = /^v1\/cortex\/missions(?:\/(?:status|tools|templates|[0-9a-f-]{36}(?:\/(?:plan|evidence|hypotheses|report|history|diff))?))?$/;
 const missionsPost = /^v1\/cortex\/missions(?:\/[0-9a-f-]{36}\/(?:execute|cancel|resume|replay))?$/;
 
+const personalGet = /^v1\/personalization\/(?:profile|memories(?:\/[0-9a-f-]{36}(?:\/history)?)?|proposals|export|tools(?:\/personal\.[a-z_]+)?|snapshots\/[0-9a-f-]{36}|missions\/[0-9a-f-]{36}\/review)$/;
+const personalPost = /^v1\/personalization\/(?:refresh|preferences|feedback|attestations|query|memories\/[0-9a-f-]{36}\/action|proposals\/[0-9a-f-]{36}\/action|missions(?:\/[0-9a-f-]{36}\/replay)?)$/;
+
 export async function GET(request: NextRequest, context: { params: Promise<{ path: string[] }> }) {
   const { path } = await context.params;
   const route = path.join('/');
-  if (!allowed.test(route) && !learningGet.test(route) && !quantGet.test(route) && !intelligenceGet.test(route) && !missionsGet.test(route)) return NextResponse.json({ code: 'ROUTE_NOT_AVAILABLE' }, { status: 404 });
+  if (!allowed.test(route) && !learningGet.test(route) && !quantGet.test(route) && !intelligenceGet.test(route) && !missionsGet.test(route) && !personalGet.test(route)) return NextResponse.json({ code: 'ROUTE_NOT_AVAILABLE' }, { status: 404 });
   const backend = backendUrl();
   if (!backend) {
     return NextResponse.json({ code: 'BACKEND_MUST_BE_LOOPBACK' }, { status: 503 });
@@ -41,7 +44,7 @@ export async function GET(request: NextRequest, context: { params: Promise<{ pat
 export async function POST(request: NextRequest, context: { params: Promise<{ path: string[] }> }) {
   const { path } = await context.params;
   const route = path.join('/');
-  if (!postAllowed.test(route) && !learningPost.test(route) && !quantPost.test(route) && !intelligencePost.test(route) && !missionsPost.test(route)) return NextResponse.json({ code: 'ROUTE_NOT_AVAILABLE' }, { status: 404 });
+  if (!postAllowed.test(route) && !learningPost.test(route) && !quantPost.test(route) && !intelligencePost.test(route) && !missionsPost.test(route) && !personalPost.test(route)) return NextResponse.json({ code: 'ROUTE_NOT_AVAILABLE' }, { status: 404 });
   const backend = backendUrl();
   if (!backend) return NextResponse.json({ code: 'BACKEND_MUST_BE_LOOPBACK' }, { status: 503 });
   const body = await request.text();

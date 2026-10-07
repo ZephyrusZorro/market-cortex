@@ -1,0 +1,560 @@
+{
+  "$defs": {
+    "AdaptationProposal": {
+      "additionalProperties": false,
+      "properties": {
+        "proposal_id": {
+          "format": "uuid",
+          "title": "Proposal Id",
+          "type": "string"
+        },
+        "version": {
+          "default": 1,
+          "title": "Version",
+          "type": "integer"
+        },
+        "audience": {
+          "enum": [
+            "OWNER_RESEARCH",
+            "SYNTHETIC_VALIDATION"
+          ],
+          "title": "Audience",
+          "type": "string"
+        },
+        "key": {
+          "enum": [
+            "default_horizon",
+            "preferred_instrument",
+            "default_mode",
+            "preferred_view",
+            "review_emphasis"
+          ],
+          "title": "Key",
+          "type": "string"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "integer"
+            }
+          ],
+          "title": "Value"
+        },
+        "status": {
+          "default": "PROPOSED",
+          "enum": [
+            "PROPOSED",
+            "OWNER_ACCEPTED",
+            "OWNER_REJECTED",
+            "ACTIVE",
+            "RETIRED"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Ids",
+          "type": "array"
+        },
+        "memory_ids": {
+          "items": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "title": "Memory Ids",
+          "type": "array"
+        },
+        "rationale": {
+          "title": "Rationale",
+          "type": "string"
+        },
+        "expected_benefit": {
+          "title": "Expected Benefit",
+          "type": "string"
+        },
+        "affected_workflow": {
+          "title": "Affected Workflow",
+          "type": "string"
+        },
+        "risk": {
+          "enum": [
+            "LOW_PRESENTATION",
+            "WORKFLOW_APPROVAL_REQUIRED"
+          ],
+          "title": "Risk",
+          "type": "string"
+        },
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        },
+        "recorded_at": {
+          "format": "date-time",
+          "title": "Recorded At",
+          "type": "string"
+        }
+      },
+      "required": [
+        "proposal_id",
+        "audience",
+        "key",
+        "value",
+        "evidence_ids",
+        "memory_ids",
+        "rationale",
+        "expected_benefit",
+        "affected_workflow",
+        "risk",
+        "created_at",
+        "recorded_at"
+      ],
+      "title": "AdaptationProposal",
+      "type": "object"
+    },
+    "PersonalEvidence": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_id": {
+          "title": "Evidence Id",
+          "type": "string"
+        },
+        "source_kind": {
+          "enum": [
+            "journal",
+            "prediction",
+            "thesis",
+            "risk",
+            "mission",
+            "research",
+            "quant",
+            "preference",
+            "feedback",
+            "proposal"
+          ],
+          "title": "Source Kind",
+          "type": "string"
+        },
+        "source_id": {
+          "format": "uuid",
+          "title": "Source Id",
+          "type": "string"
+        },
+        "source_version": {
+          "minimum": 1,
+          "title": "Source Version",
+          "type": "integer"
+        },
+        "recorded_at": {
+          "format": "date-time",
+          "title": "Recorded At",
+          "type": "string"
+        },
+        "source_as_of": {
+          "format": "date-time",
+          "title": "Source As Of",
+          "type": "string"
+        },
+        "classification": {
+          "enum": [
+            "OWNER_RESEARCH",
+            "SYNTHETIC_VALIDATION",
+            "STRATEGY_EVIDENCE"
+          ],
+          "title": "Classification",
+          "type": "string"
+        },
+        "content_hash": {
+          "title": "Content Hash",
+          "type": "string"
+        },
+        "subject": {
+          "enum": [
+            "OWNER_PROCESS",
+            "CORTEX_PROCESS",
+            "STRATEGY_EVIDENCE"
+          ],
+          "title": "Subject",
+          "type": "string"
+        },
+        "symbol": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Symbol"
+        },
+        "strategy": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Strategy"
+        },
+        "facts": {
+          "additionalProperties": true,
+          "title": "Facts",
+          "type": "object"
+        }
+      },
+      "required": [
+        "evidence_id",
+        "source_kind",
+        "source_id",
+        "source_version",
+        "recorded_at",
+        "source_as_of",
+        "classification",
+        "content_hash",
+        "subject"
+      ],
+      "title": "PersonalEvidence",
+      "type": "object"
+    },
+    "PersonalMemory": {
+      "additionalProperties": false,
+      "properties": {
+        "memory_id": {
+          "format": "uuid",
+          "title": "Memory Id",
+          "type": "string"
+        },
+        "version": {
+          "default": 1,
+          "title": "Version",
+          "type": "integer"
+        },
+        "key": {
+          "title": "Key",
+          "type": "string"
+        },
+        "memory_type": {
+          "enum": [
+            "WORKING",
+            "EPISODIC",
+            "SEMANTIC",
+            "PROCEDURAL",
+            "MARKET",
+            "STRATEGY",
+            "FAILURE",
+            "PREDICTION"
+          ],
+          "title": "Memory Type",
+          "type": "string"
+        },
+        "source_type": {
+          "enum": [
+            "EXPLICIT",
+            "OBSERVED",
+            "LEARNED_FROM_OUTCOMES",
+            "CORTEX_PROPOSED"
+          ],
+          "title": "Source Type",
+          "type": "string"
+        },
+        "audience": {
+          "enum": [
+            "OWNER_RESEARCH",
+            "SYNTHETIC_VALIDATION"
+          ],
+          "title": "Audience",
+          "type": "string"
+        },
+        "status": {
+          "default": "TENTATIVE",
+          "enum": [
+            "ACTIVE",
+            "TENTATIVE",
+            "SUPERSEDED",
+            "REJECTED",
+            "EXPIRED",
+            "OWNER_CONFIRMED",
+            "DISABLED"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "statement": {
+          "maxLength": 600,
+          "title": "Statement",
+          "type": "string"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Value"
+        },
+        "evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 500,
+          "title": "Evidence Ids",
+          "type": "array"
+        },
+        "sample_N": {
+          "minimum": 0,
+          "title": "Sample N",
+          "type": "integer"
+        },
+        "sufficiency": {
+          "enum": [
+            "INSUFFICIENT_HISTORY",
+            "EARLY_PATTERN",
+            "REPEATED_PATTERN",
+            "STRONG_PATTERN"
+          ],
+          "title": "Sufficiency",
+          "type": "string"
+        },
+        "subject": {
+          "enum": [
+            "OWNER_PROCESS",
+            "CORTEX_PROCESS",
+            "STRATEGY_EVIDENCE"
+          ],
+          "title": "Subject",
+          "type": "string"
+        },
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        },
+        "last_validated": {
+          "format": "date-time",
+          "title": "Last Validated",
+          "type": "string"
+        },
+        "expires_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Expires At"
+        },
+        "owner_override": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Owner Override"
+        },
+        "algorithm_version": {
+          "default": "personal_patterns_v1",
+          "title": "Algorithm Version",
+          "type": "string"
+        },
+        "persisted": {
+          "default": false,
+          "title": "Persisted",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "memory_id",
+        "key",
+        "memory_type",
+        "source_type",
+        "audience",
+        "statement",
+        "sample_N",
+        "sufficiency",
+        "subject",
+        "created_at",
+        "last_validated"
+      ],
+      "title": "PersonalMemory",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "default": "personalization_snapshot_v1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "snapshot_id": {
+      "format": "uuid",
+      "title": "Snapshot Id",
+      "type": "string"
+    },
+    "audience": {
+      "enum": [
+        "OWNER_RESEARCH",
+        "SYNTHETIC_VALIDATION"
+      ],
+      "title": "Audience",
+      "type": "string"
+    },
+    "as_of": {
+      "format": "date-time",
+      "title": "As Of",
+      "type": "string"
+    },
+    "algorithm_version": {
+      "default": "personal_patterns_v1",
+      "title": "Algorithm Version",
+      "type": "string"
+    },
+    "implementation_hash": {
+      "title": "Implementation Hash",
+      "type": "string"
+    },
+    "privacy": {
+      "const": "LOCAL_ONLY",
+      "default": "LOCAL_ONLY",
+      "title": "Privacy",
+      "type": "string"
+    },
+    "reconstruction_kind": {
+      "default": "CURRENT_PROFILE",
+      "enum": [
+        "CURRENT_PROFILE",
+        "RETROSPECTIVE_RECONSTRUCTION"
+      ],
+      "title": "Reconstruction Kind",
+      "type": "string"
+    },
+    "evidence": {
+      "items": {
+        "$ref": "#/$defs/PersonalEvidence"
+      },
+      "title": "Evidence",
+      "type": "array"
+    },
+    "memories": {
+      "items": {
+        "$ref": "#/$defs/PersonalMemory"
+      },
+      "title": "Memories",
+      "type": "array"
+    },
+    "proposals": {
+      "items": {
+        "$ref": "#/$defs/AdaptationProposal"
+      },
+      "title": "Proposals",
+      "type": "array"
+    },
+    "observed_behavior": {
+      "additionalProperties": true,
+      "title": "Observed Behavior",
+      "type": "object"
+    },
+    "baseline": {
+      "additionalProperties": true,
+      "title": "Baseline",
+      "type": "object"
+    },
+    "patterns": {
+      "items": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "title": "Patterns",
+      "type": "array"
+    },
+    "coaching": {
+      "items": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "title": "Coaching",
+      "type": "array"
+    },
+    "strategy_evidence": {
+      "items": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "title": "Strategy Evidence",
+      "type": "array"
+    },
+    "review_queue": {
+      "items": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "title": "Review Queue",
+      "type": "array"
+    },
+    "study_items": {
+      "items": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "title": "Study Items",
+      "type": "array"
+    },
+    "limitations": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Limitations",
+      "type": "array"
+    },
+    "content_hash": {
+      "default": "",
+      "title": "Content Hash",
+      "type": "string"
+    }
+  },
+  "required": [
+    "snapshot_id",
+    "audience",
+    "as_of",
+    "implementation_hash",
+    "evidence",
+    "memories",
+    "proposals",
+    "observed_behavior",
+    "baseline",
+    "patterns",
+    "coaching",
+    "strategy_evidence",
+    "review_queue",
+    "study_items",
+    "limitations"
+  ],
+  "title": "PersonalizationSnapshot",
+  "type": "object"
+}

@@ -1,0 +1,149 @@
+{
+  "validated_at": "2026-10-07T21:32:00.354784+00:00",
+  "owner_connection_configured": false,
+  "owner_history_status": "UNAVAILABLE_OWNER_CONNECTION; ZERO_ELIGIBLE_OWNER_RECORDS_IN_PILOT",
+  "genuine_owner_sample_N": 0,
+  "history_state": "INSUFFICIENT_HISTORY",
+  "implementation_hash": "2816ad0a575264cd21209f83e1e459ccfac29ba76723c33d9dc0dc561cfc674c",
+  "snapshot_id": "f547134b-7169-5f88-b32f-af50bed2d44e",
+  "snapshot_hash": "98e1d5fa61550c56245b2a6dbaa64092e79278d0c12d2078cd6f6176a00aa95e",
+  "profile_source_verification": {
+    "matched": true,
+    "checks": [
+      {
+        "evidence_id": "40d8d54b1efbac214cb858db",
+        "matched": true
+      }
+    ],
+    "algorithm_available": true
+  },
+  "actual_patterns": [],
+  "actual_owner_strengths_or_mistakes": [],
+  "strategy_evidence": [
+    {
+      "N": 82,
+      "strategy": "momentum",
+      "oos_return": -0.07817165407921722,
+      "edge_status": "NO_SUPPORTED_EDGE_ESTABLISHED",
+      "limitations": "Reset-capital folds; selected survivors and dependent trades; not a continuous portfolio or established edge.",
+      "behavior_fit": "INSUFFICIENT_HISTORY",
+      "evidence_ids": [
+        "40d8d54b1efbac214cb858db"
+      ],
+      "owner_usage_N": 0
+    }
+  ],
+  "coaching": [
+    {
+      "key": "strategy:momentum",
+      "message": "Saved momentum temporal OOS return is -7.82% (N=82). Review this counter-evidence; personal preference does not establish an edge.",
+      "subject": "STRATEGY_EVIDENCE",
+      "sample_N": 82,
+      "evidence_ids": [
+        "40d8d54b1efbac214cb858db"
+      ]
+    }
+  ],
+  "personalized_mission_id": "8d6944d7-a0fa-495a-8d9e-7057db3d1b59",
+  "mission_status": "INCONCLUSIVE",
+  "personalization_activity": [
+    {
+      "action": "PERSONALIZED_PLAN_REVIEW",
+      "affected": [],
+      "reminders": [
+        {
+          "key": "strategy:momentum",
+          "message": "Saved momentum temporal OOS return is -7.82% (N=82). Review this counter-evidence; personal preference does not establish an edge.",
+          "subject": "STRATEGY_EVIDENCE",
+          "sample_N": 82,
+          "evidence_ids": [
+            "40d8d54b1efbac214cb858db"
+          ]
+        }
+      ],
+      "snapshot_id": "f547134b-7169-5f88-b32f-af50bed2d44e",
+      "owner_sample_N": 0,
+      "canonical_calculations_unchanged": true
+    }
+  ],
+  "mission_replay": {
+    "mission_id": "8d6944d7-a0fa-495a-8d9e-7057db3d1b59",
+    "status": "VERIFIED",
+    "matched": true,
+    "checks": [
+      {
+        "step_id": "availability",
+        "matched": true
+      },
+      {
+        "step_id": "features",
+        "matched": true
+      },
+      {
+        "step_id": "state",
+        "matched": true
+      },
+      {
+        "step_id": "context",
+        "matched": true
+      },
+      {
+        "step_id": "opportunities",
+        "matched": true
+      },
+      {
+        "step_id": "quant",
+        "matched": true
+      },
+      {
+        "step_id": "memory",
+        "matched": true
+      },
+      {
+        "step_id": "adversarial_challenge",
+        "matched": true
+      }
+    ],
+    "grounding_rejected": [],
+    "model_narrative_reexecuted": false,
+    "scope_unchanged": true,
+    "personalization_verified": true,
+    "personal_algorithm": "personal_patterns_v1",
+    "personal_implementation_available": true,
+    "personal_source_checks": {
+      "matched": true,
+      "checks": [
+        {
+          "evidence_id": "40d8d54b1efbac214cb858db",
+          "matched": true
+        }
+      ],
+      "algorithm_available": true
+    }
+  },
+  "canonical_counts_before": {
+    "observations": 5035,
+    "context_facts": 1234,
+    "opportunity_candidates": 433,
+    "research_thesis_versions": 54,
+    "portfolio_versions": 10,
+    "prediction_records": 3,
+    "journal_revisions": 2,
+    "quant_artifacts": 164
+  },
+  "canonical_counts_after": {
+    "observations": 5035,
+    "context_facts": 1234,
+    "opportunity_candidates": 433,
+    "research_thesis_versions": 54,
+    "portfolio_versions": 10,
+    "prediction_records": 3,
+    "journal_revisions": 2,
+    "quant_artifacts": 164
+  },
+  "paid_api_cost_inr": 0,
+  "model_provider": "deterministic",
+  "elapsed_s": 23.55,
+  "owner_main_database_and_data": "UNTOUCHED",
+  "synthetic_habits_adopted_as_owner": false
+}

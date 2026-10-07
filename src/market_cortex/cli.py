@@ -161,9 +161,42 @@ def main(argv: list[str] | None = None) -> int:
     comparison.add_argument('older',type=UUID); comparison.add_argument('newer',type=UUID)
     sub.add_parser('mission-history',help='List recent local missions')
     sub.add_parser('mission-worker',help='Process one durable research job')
+    for name in ('personal-profile','personal-memories','personal-proposals','personal-timeline','personal-export'):
+        command=sub.add_parser(name,help='Inspect local research personalization metadata')
+        command.add_argument('--as-of',type=datetime.fromisoformat)
+        command.add_argument('--audience',choices=('OWNER_RESEARCH','SYNTHETIC_VALIDATION'),default='OWNER_RESEARCH')
+    for name in ('personal-preference','personal-memory-action','personal-proposal-action','personal-feedback','personal-attest','personal-query','personal-mission'):
+        command=sub.add_parser(name,help='Owner-controlled typed local personalization workflow')
+        command.add_argument('--input',type=Path,required=True)
+        if name in ('personal-memory-action','personal-proposal-action'): command.add_argument('record_id',type=UUID)
     args = parser.parse_args(argv)
     try:
         settings = Settings.load()
+        if args.command.startswith('personal-'):
+            from .storage import PostgresCatalog,ArtifactStore
+            from .personalization import PersonalizationService
+            from .personal_contracts import ProfileQuery,PreferenceInput,MemoryAction,ProposalAction,FeedbackInput,AttestationInput,PersonalQuestion,PersonalizedMissionInput
+            from .personal_tools import execute
+            from .personal_missions import PersonalizedMissionService
+            if not settings.database_url: print('DATABASE_NOT_CONFIGURED',file=sys.stderr); return 2
+            service=PersonalizationService(PostgresCatalog(settings.database_url,ArtifactStore(settings.data_root)),settings)
+            action=args.command.removeprefix('personal-')
+            if hasattr(args,'input'):
+                models={'preference':PreferenceInput,'memory-action':MemoryAction,'proposal-action':ProposalAction,'feedback':FeedbackInput,'attest':AttestationInput,'query':PersonalQuestion,'mission':PersonalizedMissionInput}
+                request=models[action].model_validate_json(args.input.read_text(encoding='utf-8-sig'))
+                if action=='memory-action': result=service.memory_action(args.record_id,request)
+                elif action=='proposal-action': result=service.proposal_action(args.record_id,request)
+                elif action=='mission':
+                    snapshot=service.store.snapshot(request.snapshot_id) if request.snapshot_id else service.profile(ProfileQuery(as_of=request.request.as_of),save=True)
+                    result=PersonalizedMissionService(service.catalog,settings,snapshot).create_personalized(request)
+                else: result=getattr(service,{'attest':'attest','query':'answer'}.get(action,action))(request)
+            else:
+                query=ProfileQuery(as_of=args.as_of,audience=args.audience)
+                if action=='profile': result=service.profile(query)
+                elif action=='export': result=service.export_metadata(query)
+                else: result=execute(service,{'memories':'personal.memories','proposals':'personal.proposals','timeline':'personal.timeline','export':'personal.profile'}[action],query)
+            print(json.dumps(result.model_dump(mode='json') if hasattr(result,'model_dump') else result,default=lambda x:x.model_dump(mode='json') if hasattr(x,'model_dump') else str(x)))
+            return 0
         if args.command.startswith('mission-'):
             from .missions import MissionService
             from .mission_contracts import MissionRequest

@@ -8,6 +8,7 @@ import { Activity, ArrowDownRight, ArrowUpRight, BarChart3, BookOpenText, Check,
 import { PriceChart, SeriesChart } from './charts';
 import CortexPane from './CortexPane';
 import ResearchLabPane from './ResearchLabPane';
+import MyResearchPane from './MyResearchPane';
 import OpportunityPane from './OpportunityPane';
 import PortfolioPane from './PortfolioPane';
 import LearningPane from './LearningPane';
@@ -18,7 +19,7 @@ import { ApiError, appendParams, category, contextParams, getJson, number, perce
   type InstrumentView, type ManifestDetail, type MarketState, type Mode, type Overview, type OverviewItem,
   type ResearchSelection } from '@/lib/api';
 
-type View = 'overview' | 'instruments' | 'analytics' | 'market-state' | 'compare' | 'coverage' | 'research' | 'system' | 'cortex' | 'opportunities' | 'portfolio' | 'learning' | 'quant' | 'intelligence' | 'research-lab';
+type View = 'overview' | 'instruments' | 'analytics' | 'market-state' | 'compare' | 'coverage' | 'research' | 'system' | 'cortex' | 'opportunities' | 'portfolio' | 'learning' | 'quant' | 'intelligence' | 'research-lab' | 'my-research';
 const NAV: { id: View; label: string; icon: typeof LayoutDashboard; key: string }[] = [
   { id: 'overview', label: 'Overview', icon: LayoutDashboard, key: '1' },
   { id: 'instruments', label: 'Instruments', icon: BarChart3, key: '2' },
@@ -30,6 +31,7 @@ const NAV: { id: View; label: string; icon: typeof LayoutDashboard; key: string 
   { id: 'system', label: 'System & Lineage', icon: Settings2, key: '8' },
   { id: 'cortex', label: 'CORTEX Research', icon: HeartPulse, key: '9' },
   { id: 'research-lab', label: 'Research Lab', icon: BookOpenText, key: 'r' },
+  { id: 'my-research', label: 'My Research', icon: BookOpenText, key: 'm' },
   { id: 'opportunities', label: 'Opportunities', icon: Lightbulb, key: '0' },
   { id: 'portfolio', label: 'Portfolio & Risk', icon: ShieldCheck, key: 'p' },
   { id: 'learning', label: 'Journal & Learning', icon: FileClock, key: 'j' },
@@ -159,12 +161,20 @@ export default function Workstation() {
     try {
       const stored = JSON.parse(localStorage.getItem(WATCH_KEY) ?? '[]') as Watchlist[];
       if (Array.isArray(stored)) setWatchlists(stored);
-      const prefs = JSON.parse(localStorage.getItem(PREF_KEY) ?? '{}') as { instrumentId?: string; range?: string };
+      const prefs = JSON.parse(localStorage.getItem(PREF_KEY) ?? '{}') as { instrumentId?: string; range?: string; view?: View };
+      if (!candidate && prefs.view && NAV.some(item=>item.id===prefs.view)) setView(prefs.view);
       if (prefs.instrumentId) setInstrumentId(prefs.instrumentId);
       if (prefs.range) setRange(prefs.range);
     } catch { /* Local preferences may be absent or corrupt; no market data is affected. */ }
   }, []);
-  useEffect(() => { if (instrumentId) localStorage.setItem(PREF_KEY, JSON.stringify({ instrumentId, range })); }, [instrumentId, range]);
+  useEffect(() => {
+    if(dataEnvironment!=='OWNER_MAIN'||new URLSearchParams(window.location.search).get('view'))return;
+    void getJson<{memories:{key:string;source_type:string;status:string;value:string}[]}>('personalization/profile').then(p=>{
+      const pref=p.memories.find(m=>m.key==='preferred_view'&&m.source_type==='EXPLICIT'&&['ACTIVE','OWNER_CONFIRMED'].includes(m.status));
+      if(pref&&NAV.some(n=>n.id===pref.value))setView(pref.value as View);
+    }).catch(()=>{});
+  },[dataEnvironment]);
+  useEffect(() => { if (instrumentId) localStorage.setItem(PREF_KEY, JSON.stringify({ instrumentId, range, view })); }, [instrumentId, range, view]);
   useEffect(() => { localStorage.setItem(WATCH_KEY, JSON.stringify(watchlists)); }, [watchlists]);
   const navigate = useCallback((next: View) => {
     setView(next); window.history.pushState({}, '', next === 'overview' ? '/' : `/?view=${next}`);
@@ -625,7 +635,7 @@ export default function Workstation() {
       const Icon = item.icon; return <button key={item.id} onClick={() => { if (item.id === 'cortex') setCortexFocus(view === 'market-state' ? 'market' : 'instrument'); navigate(item.id); }} className={view === item.id ? 'active' : ''}>
         <Icon />{item.label}<span className="key">{item.key}</span></button>;
     })}</nav><div className="rail-spacer"/><div className="rail-bottom"><div><span className={`tiny-dot ${health === 'ready' ? 'good' : 'bad'}`}/><strong>{health === 'ready' ? 'LOCAL SYSTEM READY' : category(health).toUpperCase()}</strong></div>
-      <div>Research only · No execution</div><div>CORTEX v2 · v0.10.0</div></div></aside>
+      <div>Research only · No execution</div><div>CORTEX v2 · v0.11.0</div></div></aside>
     <main className="main"><header className="topbar"><button className="search-trigger" onClick={() => setCommandOpen(true)}><Search size={15} /> Search markets, features, pages <kbd>Ctrl K</kbd></button>
       <div className="top-grow" /><span className={`top-tag env-badge ${dataEnvironment === 'UNLABELED' ? 'warning' : ''}`}>{dataEnvironment.replaceAll('_', ' / ')}</span><span className="top-tag"><span className={`tiny-dot ${health === 'ready' ? 'good' : 'bad'}`} /> API {category(health)}</span>
       <span className="top-tag"><FileClock size={13} /> {selection.mode === 'latest' ? 'Latest head' : selection.mode === 'pinned' ? 'Pinned research' : 'Historical research'}</span>
@@ -661,7 +671,8 @@ export default function Workstation() {
           <LearningPane key={`${context.source_manifest_id}.${context.as_of}`} context={context} /> : view === 'quant' ?
           <QuantPane key={`${context.source_manifest_id}.${context.as_of}`} context={context} /> : view === 'intelligence' ?
           <IntelligencePane key={`${context.source_manifest_id}.${context.as_of}`} context={context} instrumentId={instrumentId} /> : view === 'research-lab' ?
-          <ResearchLabPane key={`${context.source_manifest_id}.${context.as_of}`} context={context} symbol={selectedMember?.symbol ?? null} /> : view === 'cortex' ?
+          <ResearchLabPane key={`${context.source_manifest_id}.${context.as_of}`} context={context} symbol={selectedMember?.symbol ?? null} /> : view === 'my-research' ?
+          <MyResearchPane context={context} environment={dataEnvironment} /> : view === 'cortex' ?
           <CortexPane key={`${context.source_manifest_id}.${context.as_of}.${cortexFocus}`} context={context}
             mode={selection.mode} symbol={cortexFocus === 'market' ? null : selectedMember?.symbol ?? null} /> : systemPage()}
       </div></main>
