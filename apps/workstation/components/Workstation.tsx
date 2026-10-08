@@ -12,7 +12,7 @@ import MyResearchPane from './MyResearchPane';
 import OpportunityPane from './OpportunityPane';
 import PortfolioPane from './PortfolioPane';
 import LearningPane from './LearningPane';
-import QuantPane from './QuantPane';
+import QuantPane from './QuantWorkspace';
 import IntelligencePane from './IntelligencePane';
 import { ApiError, appendParams, category, contextParams, getJson, number, percent, pinnedParams, shortId,
   type ChartFeature, type Comparison, type Context, type Dimension, type FeatureDefinition, type FeatureSeries,
@@ -635,7 +635,7 @@ export default function Workstation() {
       const Icon = item.icon; return <button key={item.id} onClick={() => { if (item.id === 'cortex') setCortexFocus(view === 'market-state' ? 'market' : 'instrument'); navigate(item.id); }} className={view === item.id ? 'active' : ''}>
         <Icon />{item.label}<span className="key">{item.key}</span></button>;
     })}</nav><div className="rail-spacer"/><div className="rail-bottom"><div><span className={`tiny-dot ${health === 'ready' ? 'good' : 'bad'}`}/><strong>{health === 'ready' ? 'LOCAL SYSTEM READY' : category(health).toUpperCase()}</strong></div>
-      <div>Research only · No execution</div><div>CORTEX v2 · v0.11.0</div></div></aside>
+      <div>Research only · No execution</div><div>CORTEX v2 · v1.0.0</div></div></aside>
     <main className="main"><header className="topbar"><button className="search-trigger" onClick={() => setCommandOpen(true)}><Search size={15} /> Search markets, features, pages <kbd>Ctrl K</kbd></button>
       <div className="top-grow" /><span className={`top-tag env-badge ${dataEnvironment === 'UNLABELED' ? 'warning' : ''}`}>{dataEnvironment.replaceAll('_', ' / ')}</span><span className="top-tag"><span className={`tiny-dot ${health === 'ready' ? 'good' : 'bad'}`} /> API {category(health)}</span>
       <span className="top-tag"><FileClock size={13} /> {selection.mode === 'latest' ? 'Latest head' : selection.mode === 'pinned' ? 'Pinned research' : 'Historical research'}</span>
@@ -669,7 +669,7 @@ export default function Workstation() {
             mode={selection.mode} watchlistIds={currentWatchlist?.instrumentIds ?? []} /> : view === 'portfolio' ?
           <PortfolioPane key={`${context.source_manifest_id}.${context.as_of}`} context={context} /> : view === 'learning' ?
           <LearningPane key={`${context.source_manifest_id}.${context.as_of}`} context={context} /> : view === 'quant' ?
-          <QuantPane key={`${context.source_manifest_id}.${context.as_of}`} context={context} /> : view === 'intelligence' ?
+          <QuantPane key={`${context.source_manifest_id}.${context.as_of}`} context={context} environment={dataEnvironment} /> : view === 'intelligence' ?
           <IntelligencePane key={`${context.source_manifest_id}.${context.as_of}`} context={context} instrumentId={instrumentId} /> : view === 'research-lab' ?
           <ResearchLabPane key={`${context.source_manifest_id}.${context.as_of}`} context={context} symbol={selectedMember?.symbol ?? null} /> : view === 'my-research' ?
           <MyResearchPane context={context} environment={dataEnvironment} /> : view === 'cortex' ?

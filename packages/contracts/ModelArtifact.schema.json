@@ -1,0 +1,128 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "format": {
+      "const": "restricted_json_v1",
+      "default": "restricted_json_v1",
+      "title": "Format",
+      "type": "string"
+    },
+    "registry_id": {
+      "enum": [
+        "mean",
+        "momentum",
+        "ridge",
+        "logistic",
+        "ensemble"
+      ],
+      "title": "Registry Id",
+      "type": "string"
+    },
+    "version": {
+      "const": "numpy_cpu_v1",
+      "default": "numpy_cpu_v1",
+      "title": "Version",
+      "type": "string"
+    },
+    "features": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 12,
+      "title": "Features",
+      "type": "array"
+    },
+    "means": {
+      "items": {
+        "type": "number"
+      },
+      "maxItems": 12,
+      "title": "Means",
+      "type": "array"
+    },
+    "scales": {
+      "items": {
+        "type": "number"
+      },
+      "maxItems": 12,
+      "title": "Scales",
+      "type": "array"
+    },
+    "coefficients": {
+      "items": {
+        "type": "number"
+      },
+      "maxItems": 12,
+      "title": "Coefficients",
+      "type": "array"
+    },
+    "intercept": {
+      "title": "Intercept",
+      "type": "number"
+    },
+    "alpha": {
+      "title": "Alpha",
+      "type": "number"
+    },
+    "training_cutoff": {
+      "format": "date-time",
+      "title": "Training Cutoff",
+      "type": "string"
+    },
+    "training_rows": {
+      "minimum": 1,
+      "title": "Training Rows",
+      "type": "integer"
+    },
+    "task": {
+      "enum": [
+        "regression",
+        "classification"
+      ],
+      "title": "Task",
+      "type": "string"
+    },
+    "calibration": {
+      "anyOf": [
+        {
+          "maxItems": 2,
+          "minItems": 2,
+          "prefixItems": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "type": "array"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Calibration"
+    },
+    "calibration_rows": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Calibration Rows",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "registry_id",
+    "features",
+    "means",
+    "scales",
+    "coefficients",
+    "intercept",
+    "alpha",
+    "training_cutoff",
+    "training_rows",
+    "task"
+  ],
+  "title": "ModelArtifact",
+  "type": "object"
+}

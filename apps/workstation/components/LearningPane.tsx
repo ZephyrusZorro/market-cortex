@@ -1,5 +1,6 @@
 'use client';
 
+import ExperimentalEdgeEvidence from './ExperimentalEdgeEvidence';
 import { useCallback, useEffect, useState } from 'react';
 import { ApiError, getJson, postJson, shortId, type Context } from '@/lib/api';
 
@@ -220,6 +221,6 @@ export default function LearningPane({context}:{context:Context}) {
       <label>Title <input className="input" aria-label="Edge title" value={edgeTitle} onChange={e=>setEdgeTitle(e.target.value)}/></label><label>Hypothesis <textarea className="input" aria-label="Edge hypothesis" value={edgeHypothesis} onChange={e=>setEdgeHypothesis(e.target.value)}/></label>
       <div className="row wrap"><label>Detector <input className="input" aria-label="Edge detector" value={edgeDetector} onChange={e=>setEdgeDetector(e.target.value)}/></label><label>Version <input className="input" aria-label="Edge detector version" value={edgeVersion} onChange={e=>setEdgeVersion(e.target.value)}/></label><label>Registration <select className="select" aria-label="Edge registration" value={edgeRegistration} onChange={e=>setEdgeRegistration(e.target.value)}><option>RETROSPECTIVE_EVALUATION</option><option>PRE_REGISTERED</option></select></label></div>
       <button className="button primary mt12" disabled={busy||edgeTitle.length<5||edgeHypothesis.length<10} onClick={()=>run(async()=>{await postJson('learning/edges',{title:edgeTitle,hypothesis:edgeHypothesis,detector_id:edgeDetector,detector_version:edgeVersion,registration:edgeRegistration});setEdgeTitle('');setEdgeHypothesis('');})}>Save edge hypothesis</button>
-      {edges.map(e=><div className="data-row mt12" key={e.edge_id}><span>{e.title} · {e.registration} · v{e.detector_version}</span><strong>{e.status} · usable N={e.usable_N}</strong></div>)}</div></section></>}
+      <ExperimentalEdgeEvidence/>{edges.map(e=><div className="data-row mt12" key={e.edge_id}><span>{e.title} · {e.registration} · v{e.detector_version}</span><strong>{e.status} · usable N={e.usable_N}</strong></div>)}</div></section></>}
   </div>;
 }

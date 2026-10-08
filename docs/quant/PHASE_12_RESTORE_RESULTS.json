@@ -1,0 +1,101 @@
+{
+  "status": "VERIFIED",
+  "drill": "REAL_PILOT_ENCRYPTED_BACKUP_TO_NEW_DISPOSABLE_TEST_DATABASE",
+  "market_head": "3bf002d2-15f2-4f9d-8c54-cc7eb3fb349c",
+  "parquet_artifact_N": 188,
+  "encrypted_bytes": 824043573,
+  "experiment_checks": [
+    {
+      "experiment_id": "0bcf4e65-f9af-5c44-a025-d886bb40252f",
+      "result_hash": "94b0d4127f340dcccbdbbbcc6bb38c015ebd3a38588d3a11de5df67dd30f99a4",
+      "dataset": "CHECKSUM_VERIFIED",
+      "models": 4,
+      "definition": "CHECKSUM_VERIFIED"
+    },
+    {
+      "experiment_id": "d9a8b090-2bbd-5900-aa7f-6e0c1aeec104",
+      "result_hash": "457064ff35fb81eae2f8df2a109c33fbdcf47b6171be6107c1f9ecaabc1c76f5",
+      "dataset": "CHECKSUM_VERIFIED",
+      "models": 4,
+      "definition": "CHECKSUM_VERIFIED"
+    },
+    {
+      "experiment_id": "20137c98-5a40-534c-a11c-c304a23883a1",
+      "result_hash": "2535fa6a3e8a3688192b92e70f5a77e109f26b6809c8b580d780c9cf74630201",
+      "dataset": "CHECKSUM_VERIFIED",
+      "models": 4,
+      "definition": "CHECKSUM_VERIFIED"
+    },
+    {
+      "experiment_id": "d940f3c3-d474-51b0-8d37-076ee9965af1",
+      "result_hash": "213089fdd17c21c9c7ef9f1be62e006084db66526b5f048fb4a8563442866f65",
+      "dataset": "CHECKSUM_VERIFIED",
+      "models": 4,
+      "definition": "CHECKSUM_VERIFIED"
+    },
+    {
+      "experiment_id": "8ed6ea48-ef24-5146-86b4-4d1c04b804c3",
+      "result_hash": "8cb2093a727ca1fdb3129b15b52fd9d183a532fe0c95b05373d233205121e8fd",
+      "dataset": "CHECKSUM_VERIFIED",
+      "models": 4,
+      "definition": "CHECKSUM_VERIFIED"
+    },
+    {
+      "experiment_id": "2205b094-2c42-5021-9e97-0334f181adcd",
+      "result_hash": "109506514e0a5380dee7b5ea46b35b502a9d0ef9812588fd6a30964b82793afc",
+      "dataset": "CHECKSUM_VERIFIED",
+      "models": 4,
+      "definition": "CHECKSUM_VERIFIED"
+    },
+    {
+      "experiment_id": "0cecc594-847e-54d9-8b91-7a7588b6c881",
+      "result_hash": "64b0882c76c4c16af8f17b0dfd10f7ea5152f344aa2d825bc2146a28564a42eb",
+      "dataset": "CHECKSUM_VERIFIED",
+      "models": 0,
+      "definition": "CHECKSUM_VERIFIED"
+    }
+  ],
+  "restored_counts": {
+    "research_hypotheses": 4,
+    "experiment_definitions": 32,
+    "experiment_events": 394,
+    "experiment_exposures": 144,
+    "experiment_edge_links": 4,
+    "experiment_governance": 28,
+    "experiment_proposals": 1
+  },
+  "recomputed_experiment_replay": {
+    "status": "MATCH",
+    "saved_result_hash": "2535fa6a3e8a3688192b92e70f5a77e109f26b6809c8b580d780c9cf74630201",
+    "recomputed_result_hash": "2535fa6a3e8a3688192b92e70f5a77e109f26b6809c8b580d780c9cf74630201",
+    "dataset_match": true,
+    "comparison": "EXACT_SAME_NUMPY_RUNTIME; CROSS_RUNTIME_RECOMPUTE_REQUIRES_RECORDED_VERSION"
+  },
+  "dossier_replay": {
+    "status": "MATCH",
+    "canonical_mission_replay": {
+      "mission_id": "ac73bfc0-fe45-44e1-b570-51a8ba37df1e",
+      "status": "VERIFIED",
+      "matched": true,
+      "checks": [
+        {
+          "step_id": "availability",
+          "matched": true
+        },
+        {
+          "step_id": "features",
+          "matched": true
+        }
+      ],
+      "grounding_rejected": [],
+      "model_narrative_reexecuted": false,
+      "scope_unchanged": true
+    },
+    "personalization_verified": true,
+    "experiment_result_hash": "2535fa6a3e8a3688192b92e70f5a77e109f26b6809c8b580d780c9cf74630201"
+  },
+  "edge_links": "CHECKSUM_VERIFIED",
+  "proposals_verified": 1,
+  "owner_main": "UNTOUCHED",
+  "temporary_restore_database_and_files": "CLEANED_AFTER_DRILL"
+}

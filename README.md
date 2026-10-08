@@ -61,3 +61,14 @@ Open `http://127.0.0.1:3000`. Both processes bind to loopback. The frontend serv
 `src/market_cortex` contains the Python modular monolith; `apps/api` is the ASGI entrypoint, `apps/workstation` is the Next.js application, `packages/contracts` is the authoritative JSON Schema registry, `infra/migrations` is the PostgreSQL catalog, `data/lake` contains ignored immutable Parquet artifacts, `docs` holds the ADRs and runbooks, and `tests` holds synthetic cases. The code lives under `src` rather than several importable `packages/*` directories so the installed Python package has one stable namespace while domain boundaries remain separate modules.
 
 Git is initialized locally without a remote. Do not commit owner configuration, provider tokens, journal contents, database dumps or downloaded data. [Owner actions](OWNER_ACTION_REQUIRED.md) list the deferred live-source and deployment checks.
+
+## Original roadmap v1 delivery (Phase 12)
+
+The Advanced Research Laboratory extends Quant Lab with frozen hypotheses, causal datasets and separate forward labels, bounded CPU models, purged temporal validation, safe JSON model artifacts, baseline/factor/regime/analogue/drift/robustness reports, explicit search/holdout history, CORTEX challenge dossiers and human research governance. The original architecture remains research-only.
+
+- [Phase 12 methods](docs/quant/PHASE_12_EXPERIMENTAL_ADVANCED_QUANT.md)
+- [Phase 12 acceptance and evidence](docs/planning/PHASE_12_EXIT_MATRIX_2026-10-08.md)
+- [Twelve-phase architecture map](docs/architecture/MARKET_CORTEX_V1_PHASES_1_12.md)
+- [System readiness and deferred operational work](docs/planning/MARKET_CORTEX_V1_SYSTEM_READINESS.md)
+
+Open Quant Lab → Advanced Research Laboratory. CLI commands start with `experiment-`; schemas are exported in `packages/contracts/`. Apply migration 0013 through the existing migration command to a deliberately configured catalog. Default local research costs are ₹0. Upstox/Alpaca live authentication remains deferred; genuine owner personalization remains insufficient until eligible history exists. No supported profitable edge or genuinely unseen validation is established.

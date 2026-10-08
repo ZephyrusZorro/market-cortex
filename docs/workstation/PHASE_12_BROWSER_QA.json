@@ -1,0 +1,18 @@
+{
+  "environment": "PILOT_TEST",
+  "browser": "Codex in-app browser",
+  "server": "LOCAL_DEVELOPMENT; LOOPBACK",
+  "validated": [
+    "Final ridge experiment 20137c98-5a40-534c-a11c-c304a23883a1; N=1800; negative baseline skill",
+    "Actual fold model/mean RMSE chart",
+    "Derived row N=4710; separate labels; 25 feature-only references",
+    "Latest reference 2026-10-03; five historical analogues from recorded outcomes",
+    "Regression probability unavailable",
+    "Owner baseline approval disabled in PILOT",
+    "Alpha-2 registered ensemble proposal READY before evaluation"
+  ],
+  "screenshot": "PHASE_12_ADVANCED_QUANT_QA.png",
+  "mobile_validation": "NOT_PERFORMED",
+  "production_runtime": "LAUNCH_REJECTED_BY_AUTOMATIC_APPROVAL_REVIEW: blocked by policy; builds validated separately",
+  "owner_main": "UNTOUCHED"
+}

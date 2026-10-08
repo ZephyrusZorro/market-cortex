@@ -1,0 +1,452 @@
+{
+  "status": "VERIFIED",
+  "validated_at": "2026-10-08T12:18:02.207002+00:00",
+  "steps": [
+    {
+      "step": "Trusted data",
+      "reference": "3bf002d2-15f2-4f9d-8c54-cc7eb3fb349c",
+      "instrument_id": "dbe1c9c1-a1c1-4c95-b74c-1973f640a462"
+    },
+    {
+      "step": "Canonical deterministic features",
+      "reference": "be317d69605d16bb4ec0641d40ea2dbc05b42de4fdbe03a62125a55011e40456",
+      "computed_N": 987,
+      "freshness": "stale"
+    },
+    {
+      "step": "Market state",
+      "reference": "561e350c7f6c458eb35f93e847304182eee474015014f8c861d75735b2d573c2",
+      "regime": {
+        "category": "insufficient_data",
+        "rules_fired": [
+          "R0_REQUIRED_DIMENSION_UNAVAILABLE"
+        ],
+        "evidence_refs": [
+          "cba867076ac1f13f617793f0d0d9a7384f05db452f2baa1011e43fdd08904040",
+          "f400c22add0835b5e0965203b6ea0b200327e3fcad55e1693770211eb6c24d83",
+          "536808cde859f047a1789ec0adbe4a140e10319dc271a11a9df21eea453eb988",
+          "493641301dcfacb4646e474e520ff9cb8f9c73b74d7004a36fa84f025da822fa",
+          "dc80f594070f08e0e22c56469883caf8b749639b59a82f4be08a3b07fedb9650",
+          "cc62d58733c0b3f779a9544e6113d16927845859e98b9104b537e0c8946279bd",
+          "568fbfd53188d7f739855adb933457d1986d17d92d226fefc237b20476f6c7a0",
+          "84b2924cdf96306d9bb8255fc44ba51e2602c634052b789bae8e57c066e6c88a",
+          "aef1a4b6eb2962d2792d10ba971994f2a710424f873cf4cd8dd577d4709b74d6",
+          "a6ea5522-1705-48a5-92a9-a873d1f2040d",
+          "59e965c1-229a-44b9-8e68-0d6ea0c0d645",
+          "19b3f9a0-123f-47df-a532-f1223238dbcb",
+          "3aca3fbc-08d8-4f0d-a648-62c1b16aaf6c",
+          "521d372b-0e97-40a4-8ca4-7fb4bc8210d2"
+        ],
+        "rule_version": "regime_rules_v1",
+        "rule_code_hash": "7b2af69b1692a79689ebfc615537e6b8444e8a0e7ecb2647e6a4ea9b59c941ca",
+        "unknown_reason": "REQUIRED_DIMENSION_UNAVAILABLE_OR_STALE"
+      }
+    },
+    {
+      "step": "Context",
+      "reference": "975c334b-f7a4-5805-a241-e65824510cbb",
+      "dimensions": {
+        "macro": "PARTIAL",
+        "fundamentals": "UNKNOWN",
+        "events": "UNKNOWN",
+        "news": "UNKNOWN",
+        "derivatives": "STALE",
+        "options": "UNKNOWN",
+        "onchain": "UNKNOWN",
+        "cross_asset": "UNKNOWN",
+        "market_state": "PARTIAL"
+      }
+    },
+    {
+      "step": "Opportunity scanner",
+      "reference": "9a3cbdbd-924c-59c2-a0cd-a425e210859a",
+      "status_counts": {
+        "AWAITING_CONFIRMATION": 2,
+        "NO_EDGE": 5,
+        "WATCHING": 1
+      },
+      "recorded": false
+    },
+    {
+      "step": "Frozen hypothesis",
+      "reference": "39aee8fa-1d41-5596-851a-cb9cc1e4a9b2"
+    },
+    {
+      "step": "Versioned recorded thesis",
+      "reference": "45ac545a-b5d3-44ab-ba39-23b74ec03909",
+      "version": 9,
+      "status": "AWAITING_CONFIRMATION"
+    },
+    {
+      "step": "Risk",
+      "reference": "7636917c-8755-5b3b-a52f-fcf2e1adee60",
+      "coverage": 1.0,
+      "warnings": [
+        "MARKET_STATE_UNAVAILABLE",
+        "MARKET_STATE_NOT_CURRENT:stale",
+        "PRICE_OR_FEATURE_DATA_STALE",
+        "CORRELATED_CLUSTER_CONCENTRATION",
+        "PORTFOLIO_EQUITY_SERIES_UNAVAILABLE:DRAWDOWN_UNKNOWN"
+      ],
+      "portfolio_scope": "SYNTHETIC_TEST_PORTFOLIO; NOT_OWNER_HABITS"
+    },
+    {
+      "step": "Stress",
+      "assumption": "SUPPLIED_MINUS_20_PERCENT_SHOCK; NO_FORECAST_PROBABILITY",
+      "result": {
+        "schema_version": "what_if_scenario_v1",
+        "snapshot_id": "7636917c-8755-5b3b-a52f-fcf2e1adee60",
+        "scenario": {
+          "name": "Supplied hypothetical broad crypto -20% shock",
+          "shocks": {
+            "BTCUSDT": "-0.20",
+            "ETHUSDT": "-0.20",
+            "SOLUSDT": "-0.20",
+            "BNBUSDT": "-0.20",
+            "XRPUSDT": "-0.20"
+          },
+          "kind": "broad_crypto_shock"
+        },
+        "position_pnl": {
+          "e60f5922-ac90-4776-848b-b5c267acc875": "-1695.07120000",
+          "dd4c03c1-9ead-4874-bd2e-a107cbcef543": "-1074.89200000",
+          "a3d630b4-32c5-4613-9814-c3940c5f0bf4": "-239.24000000"
+        },
+        "currency_pnl": {
+          "USDT": "-3009.20320000"
+        },
+        "portfolio_pnl": "-3009.20320000",
+        "portfolio_change_percent": "-0.03009203",
+        "coverage": 1.0,
+        "warnings": [
+          "WHAT_IF_NOT_FORECAST"
+        ]
+      }
+    },
+    {
+      "step": "Versioned experiment",
+      "reference": "20137c98-5a40-534c-a11c-c304a23883a1",
+      "result_hash": "2535fa6a3e8a3688192b92e70f5a77e109f26b6809c8b580d780c9cf74630201"
+    },
+    {
+      "step": "Purged temporal model validation",
+      "reference": {
+        "artifact_id": "1b670934-9e22-5a93-a707-00bd41170328",
+        "content_hash": "6a2b717b569710decf282be7b65cdbdde3d8c487eb9b466e9ebdb6d5509a4bd8"
+      },
+      "metrics": {
+        "N": 1800,
+        "mae": 0.06362860479604045,
+        "rmse": 0.0965288410501357,
+        "baseline_skill": -0.03980147128046263,
+        "directional_accuracy": 0.51
+      }
+    },
+    {
+      "step": "Canonical breakout backtest",
+      "reference": "07c071fa-ddc9-5d14-9e83-a83c3ad54d69",
+      "metrics": {
+        "N": 12,
+        "sessions": 61,
+        "total_return": 0.053994114194135356,
+        "gross_total_return": 0.06128240896547932,
+        "benchmark_return": 0.4212807428902485,
+        "benchmark_relative_return": -0.25841947872256155,
+        "cagr": null,
+        "annualized_volatility": 0.17738110756140255,
+        "max_drawdown": -0.04515464148314885,
+        "drawdown_duration_sessions": 34,
+        "downside_deviation": 0.10684478055489015,
+        "sharpe": 1.8614438854639832,
+        "sortino": 3.0903238918383433,
+        "risk_free_rate": 0.0,
+        "annualization": 365,
+        "win_rate": 0.4166666666666667,
+        "loss_rate": 0.5833333333333334,
+        "average_trade_return": 0.022508796354680255,
+        "median_trade_return": -0.014247203003330433,
+        "best_trade_return": 0.15733921029000011,
+        "worst_trade_return": -0.05550587610478781,
+        "average_r": 0.2812193447611228,
+        "r_expectancy": 0.2812193447611228,
+        "payoff_ratio": 3.1955947631777946,
+        "profit_factor": 2.2825676879841392,
+        "exposure_time": 0.7213114754098361,
+        "mean_exposure": 0.2959756204642825,
+        "turnover": 4.85888360836578,
+        "average_holding_sessions": 8.916666666666666,
+        "consecutive_wins": 4,
+        "consecutive_losses": 4,
+        "net_pnl": 539.9411419413555,
+        "cost_drag": 72.88294771343863
+      },
+      "regime_performance": [
+        {
+          "dimension": "overall_regime",
+          "regime": "mixed",
+          "N": 3,
+          "net_pnl": 376.1155763092679,
+          "mean_return": 0.06271727234957042,
+          "win_rate": 0.6666666666666666
+        },
+        {
+          "dimension": "overall_regime",
+          "regime": "uptrend_other",
+          "N": 2,
+          "net_pnl": 192.48448259346515,
+          "mean_return": 0.04814518120869046,
+          "win_rate": 1.0
+        },
+        {
+          "dimension": "overall_regime",
+          "regime": "uptrend_volatile",
+          "N": 7,
+          "net_pnl": -28.6589169613776,
+          "mean_return": -0.0020480890299898725,
+          "win_rate": 0.14285714285714285
+        },
+        {
+          "dimension": "breadth",
+          "regime": "broad_positive",
+          "N": 11,
+          "net_pnl": 225.41998194135522,
+          "mean_return": 0.010251485996923907,
+          "win_rate": 0.36363636363636365
+        },
+        {
+          "dimension": "breadth",
+          "regime": "mixed",
+          "N": 1,
+          "net_pnl": 314.52116000000024,
+          "mean_return": 0.15733921029000011,
+          "win_rate": 1.0
+        },
+        {
+          "dimension": "correlation_state",
+          "regime": "high",
+          "N": 12,
+          "net_pnl": 539.9411419413555,
+          "mean_return": 0.022508796354680255,
+          "win_rate": 0.4166666666666667
+        },
+        {
+          "dimension": "market_participation",
+          "regime": "complete",
+          "N": 12,
+          "net_pnl": 539.9411419413555,
+          "mean_return": 0.022508796354680255,
+          "win_rate": 0.4166666666666667
+        },
+        {
+          "dimension": "momentum",
+          "regime": "mixed",
+          "N": 3,
+          "net_pnl": 376.1155763092679,
+          "mean_return": 0.06271727234957042,
+          "win_rate": 0.6666666666666666
+        },
+        {
+          "dimension": "momentum",
+          "regime": "positive",
+          "N": 9,
+          "net_pnl": 163.82556563208755,
+          "mean_return": 0.009105971023050202,
+          "win_rate": 0.3333333333333333
+        },
+        {
+          "dimension": "trend",
+          "regime": "mixed",
+          "N": 2,
+          "net_pnl": 453.9200189173814,
+          "mean_return": 0.11353674473171002,
+          "win_rate": 1.0
+        },
+        {
+          "dimension": "trend",
+          "regime": "up",
+          "N": 10,
+          "net_pnl": 86.02112302397404,
+          "mean_return": 0.004303206679274303,
+          "win_rate": 0.3
+        },
+        {
+          "dimension": "volatility",
+          "regime": "elevated",
+          "N": 8,
+          "net_pnl": -106.4633595694911,
+          "mean_return": -0.006657286953079737,
+          "win_rate": 0.125
+        },
+        {
+          "dimension": "volatility",
+          "regime": "middle",
+          "N": 3,
+          "net_pnl": 331.8833415108463,
+          "mean_return": 0.05534154719693363,
+          "win_rate": 1.0
+        },
+        {
+          "dimension": "volatility",
+          "regime": "subdued",
+          "N": 1,
+          "net_pnl": 314.52116000000024,
+          "mean_return": 0.15733921029000011,
+          "win_rate": 1.0
+        }
+      ]
+    },
+    {
+      "step": "Canonical fill/cost/delay/asset/period robustness",
+      "reference": "2368667e-345d-5209-950a-d42d656bdb3b",
+      "classification": "INSUFFICIENT_EVIDENCE"
+    },
+    {
+      "step": "CORTEX skeptic review",
+      "reference": "11ad96ac-41a8-4b55-87eb-74b1cbe8bbce",
+      "status": "INCONCLUSIVE",
+      "usage": {
+        "tool_calls": 11,
+        "planner_iterations": 1,
+        "replans": 0,
+        "quant_runs": 0,
+        "historical_comparisons": 0,
+        "model_calls": 0,
+        "model_input_tokens": null,
+        "model_output_tokens": null,
+        "api_cost_inr": 0,
+        "elapsed_ms": 14681.88,
+        "cache_hits": 0
+      }
+    },
+    {
+      "step": "Statistical evidence",
+      "reference": {
+        "fdr": "STATISTICAL_METHOD_UNAVAILABLE: NO_VALID_P_VALUES",
+        "pbo": "STATISTICAL_METHOD_UNAVAILABLE: TEMPORAL_SEARCH_NOT_COMBINATORIAL_CV",
+        "warning": "ALL_SEARCH_ROWS_RETAINED; DEPENDENT_SAMPLE; NO_SIGNIFICANCE_CLAIM",
+        "objective": "rmse",
+        "deflated_sharpe": "STATISTICAL_METHOD_UNAVAILABLE: NO_INDEPENDENT_NET_RETURN_TRIALS",
+        "ablation_variants": 24,
+        "parameter_variants": 8
+      },
+      "uncertainty": {
+        "seed": 1208,
+        "paths": 200,
+        "method": "MOVING_DAILY_BLOCKS_AFTER_CROSS_ASSET_AGGREGATION",
+        "status": "EMPIRICAL_CONDITIONAL_UNCERTAINTY",
+        "warning": "NOT_PRICE_FORECAST_PROBABILITY; CONDITIONAL_ON_SEARCH; NO_SELECTION_CORRECTION; BLOCK_CHOICE_ASSUMPTION",
+        "session_N": 360,
+        "block_sessions": 5,
+        "conditional_95pct_interval": [
+          1.9302739539274696e-06,
+          0.0014953429066084196
+        ],
+        "mean_model_minus_baseline_squared_loss": 0.0006996814430352925
+      }
+    },
+    {
+      "step": "Edge Library",
+      "reference": "f678111a-f4cc-579f-aae0-f076e201a84d",
+      "effect": "EVIDENCE_LINK_ONLY; STATUS_UNCHANGED"
+    },
+    {
+      "step": "Experimental ResearchDossier",
+      "reference": {
+        "artifact_id": "9dad9449-e219-5896-8f67-1d14bfb43381",
+        "content_hash": "3274eb932313d391fa461b5ab322890f16ce39b851b23308b17ea866cadd1108"
+      }
+    },
+    {
+      "step": "Historical replay",
+      "experiment": {
+        "status": "MATCH",
+        "saved_result_hash": "2535fa6a3e8a3688192b92e70f5a77e109f26b6809c8b580d780c9cf74630201",
+        "recomputed_result_hash": "2535fa6a3e8a3688192b92e70f5a77e109f26b6809c8b580d780c9cf74630201",
+        "dataset_match": true,
+        "comparison": "EXACT_SAME_NUMPY_RUNTIME; CROSS_RUNTIME_RECOMPUTE_REQUIRES_RECORDED_VERSION"
+      },
+      "canonical_mission": {
+        "mission_id": "11ad96ac-41a8-4b55-87eb-74b1cbe8bbce",
+        "status": "VERIFIED",
+        "matched": true,
+        "checks": [
+          {
+            "step_id": "availability",
+            "matched": true
+          },
+          {
+            "step_id": "features",
+            "matched": true
+          },
+          {
+            "step_id": "state",
+            "matched": true
+          },
+          {
+            "step_id": "context",
+            "matched": true
+          },
+          {
+            "step_id": "opportunities",
+            "matched": true
+          },
+          {
+            "step_id": "thesis",
+            "matched": true
+          },
+          {
+            "step_id": "challenge",
+            "matched": true
+          },
+          {
+            "step_id": "quant",
+            "matched": true
+          },
+          {
+            "step_id": "learning",
+            "matched": true
+          },
+          {
+            "step_id": "predictions",
+            "matched": true
+          },
+          {
+            "step_id": "risk",
+            "matched": true
+          }
+        ],
+        "grounding_rejected": [],
+        "model_narrative_reexecuted": false,
+        "scope_unchanged": true
+      },
+      "canonical_breakout": {
+        "run_id": "07c071fa-ddc9-5d14-9e83-a83c3ad54d69",
+        "status": "MATCH",
+        "saved_result_hash": "30c98c64d8eccc0c2892de24822db8f4a1ff21fbd002fddc31d3fbe8cb99c508",
+        "recomputed_result_hash": "30c98c64d8eccc0c2892de24822db8f4a1ff21fbd002fddc31d3fbe8cb99c508"
+      }
+    }
+  ],
+  "workflow_dossier_ref": {
+    "artifact_id": "77e48a94-24e1-529e-89a8-b1cd470fa1be",
+    "content_hash": "efbe5e46c989f6b83d0dac00fe990718b0f944e59c0c9d39a29dc0e334588318"
+  },
+  "canonical_counts_before": {
+    "observations": 5035,
+    "context_facts": 1234,
+    "portfolio_versions": 10,
+    "research_thesis_versions": 56,
+    "prediction_records": 3,
+    "journal_revisions": 2
+  },
+  "canonical_counts_after": {
+    "observations": 5035,
+    "context_facts": 1234,
+    "portfolio_versions": 10,
+    "research_thesis_versions": 56,
+    "prediction_records": 3,
+    "journal_revisions": 2
+  },
+  "conclusion": "NO_SUPPORTED_EDGE_ESTABLISHED",
+  "owner_main": "UNTOUCHED"
+}

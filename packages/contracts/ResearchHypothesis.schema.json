@@ -1,0 +1,118 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "research_hypothesis_v1",
+      "default": "research_hypothesis_v1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "question": {
+      "maxLength": 600,
+      "minLength": 10,
+      "title": "Question",
+      "type": "string"
+    },
+    "rationale": {
+      "maxLength": 1200,
+      "minLength": 10,
+      "title": "Rationale",
+      "type": "string"
+    },
+    "relationship": {
+      "maxLength": 600,
+      "minLength": 10,
+      "title": "Relationship",
+      "type": "string"
+    },
+    "falsification": {
+      "maxLength": 600,
+      "minLength": 10,
+      "title": "Falsification",
+      "type": "string"
+    },
+    "concerns": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 12,
+      "title": "Concerns",
+      "type": "array"
+    },
+    "target": {
+      "default": "return",
+      "enum": [
+        "return",
+        "excess_return",
+        "volatility",
+        "mae",
+        "mfe",
+        "direction"
+      ],
+      "title": "Target",
+      "type": "string"
+    },
+    "features": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 12,
+      "minItems": 1,
+      "title": "Features",
+      "type": "array"
+    },
+    "symbols": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 5,
+      "minItems": 1,
+      "title": "Symbols",
+      "type": "array"
+    },
+    "benchmark": {
+      "const": "BTCUSDT",
+      "default": "BTCUSDT",
+      "description": "Registered cross-asset reference; forecast-error baseline is the training mean",
+      "title": "Benchmark",
+      "type": "string"
+    },
+    "registration": {
+      "default": "EXPLORATORY",
+      "enum": [
+        "EXPLORATORY",
+        "PREREGISTERED"
+      ],
+      "title": "Registration",
+      "type": "string"
+    },
+    "minimum_oos_rows": {
+      "default": 100,
+      "maximum": 10000,
+      "minimum": 30,
+      "title": "Minimum Oos Rows",
+      "type": "integer"
+    },
+    "minimum_improvement": {
+      "default": 0.02,
+      "maximum": 1,
+      "minimum": 0,
+      "title": "Minimum Improvement",
+      "type": "number"
+    },
+    "version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "question",
+    "rationale",
+    "relationship",
+    "falsification"
+  ],
+  "title": "ResearchHypothesis",
+  "type": "object"
+}

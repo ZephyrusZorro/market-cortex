@@ -20,7 +20,7 @@ logger = logging.getLogger("market_cortex.api")
 
 def create_app(settings: Settings | None = None, catalog: PostgresCatalog | None = None) -> FastAPI:
     settings = settings or Settings.load()
-    app = FastAPI(title="MARKET CORTEX", version="0.11.0", docs_url="/docs", redoc_url=None)
+    app = FastAPI(title="MARKET CORTEX", version="1.0.0", docs_url="/docs", redoc_url=None)
     store = catalog or (PostgresCatalog(settings.database_url, ArtifactStore(settings.data_root)) if settings.database_url else None)
 
     @app.middleware("http")
@@ -317,6 +317,8 @@ def create_app(settings: Settings | None = None, catalog: PostgresCatalog | None
             app.include_router(learning_router(store, settings))
             from .quant_api import router_for as quant_router
             app.include_router(quant_router(store, settings))
+            from .experiment_api import router_for as experiment_router
+            app.include_router(experiment_router(store, settings))
             from .intelligence_api import router_for as intelligence_router
             app.include_router(intelligence_router(store))
     return app

@@ -1,0 +1,384 @@
+{
+  "$defs": {
+    "CostModel": {
+      "additionalProperties": false,
+      "properties": {
+        "version": {
+          "const": "bps_proxy_v1",
+          "default": "bps_proxy_v1",
+          "title": "Version",
+          "type": "string"
+        },
+        "entry_fee_bps": {
+          "default": 10,
+          "maximum": 500,
+          "minimum": 0,
+          "title": "Entry Fee Bps",
+          "type": "number"
+        },
+        "exit_fee_bps": {
+          "default": 10,
+          "maximum": 500,
+          "minimum": 0,
+          "title": "Exit Fee Bps",
+          "type": "number"
+        },
+        "slippage_bps": {
+          "default": 5,
+          "maximum": 500,
+          "minimum": 0,
+          "title": "Slippage Bps",
+          "type": "number"
+        },
+        "spread_bps": {
+          "default": 0,
+          "maximum": 500,
+          "minimum": 0,
+          "title": "Spread Bps",
+          "type": "number"
+        },
+        "fixed_fee": {
+          "default": 0,
+          "maximum": 100,
+          "minimum": 0,
+          "title": "Fixed Fee",
+          "type": "number"
+        }
+      },
+      "title": "CostModel",
+      "type": "object"
+    },
+    "ExperimentConfiguration": {
+      "additionalProperties": false,
+      "properties": {
+        "seed": {
+          "default": 1208,
+          "maximum": 2147483647,
+          "minimum": 0,
+          "title": "Seed",
+          "type": "integer"
+        },
+        "timeout_seconds": {
+          "default": 180,
+          "maximum": 300,
+          "minimum": 10,
+          "title": "Timeout Seconds",
+          "type": "integer"
+        },
+        "max_rows": {
+          "default": 10000,
+          "maximum": 15000,
+          "minimum": 100,
+          "title": "Max Rows",
+          "type": "integer"
+        },
+        "max_artifact_bytes": {
+          "default": 12000000,
+          "maximum": 16000000,
+          "minimum": 100000,
+          "title": "Max Artifact Bytes",
+          "type": "integer"
+        },
+        "bootstrap_paths": {
+          "default": 200,
+          "maximum": 1000,
+          "minimum": 20,
+          "title": "Bootstrap Paths",
+          "type": "integer"
+        },
+        "costs": {
+          "$ref": "#/$defs/CostModel"
+        }
+      },
+      "title": "ExperimentConfiguration",
+      "type": "object"
+    },
+    "ExperimentDataset": {
+      "additionalProperties": false,
+      "properties": {
+        "manifest_id": {
+          "format": "uuid",
+          "title": "Manifest Id",
+          "type": "string"
+        },
+        "source_as_of": {
+          "format": "date-time",
+          "title": "Source As Of",
+          "type": "string"
+        },
+        "start": {
+          "format": "date",
+          "title": "Start",
+          "type": "string"
+        },
+        "end": {
+          "format": "date",
+          "title": "End",
+          "type": "string"
+        },
+        "horizon_sessions": {
+          "default": 5,
+          "maximum": 30,
+          "minimum": 1,
+          "title": "Horizon Sessions",
+          "type": "integer"
+        },
+        "replay_policy": {
+          "default": "HISTORICAL_RECONSTRUCTION",
+          "enum": [
+            "AS_RECORDED",
+            "HISTORICAL_RECONSTRUCTION"
+          ],
+          "title": "Replay Policy",
+          "type": "string"
+        },
+        "adjustment_basis": {
+          "const": "raw",
+          "default": "raw",
+          "title": "Adjustment Basis",
+          "type": "string"
+        },
+        "interval": {
+          "const": "P1D",
+          "default": "P1D",
+          "title": "Interval",
+          "type": "string"
+        },
+        "source_classification": {
+          "default": "LIVE_SOURCE",
+          "enum": [
+            "LIVE_SOURCE",
+            "SYNTHETIC_TEST"
+          ],
+          "title": "Source Classification",
+          "type": "string"
+        },
+        "universe": {
+          "const": "BINANCE_PILOT_5_SELECTED_SURVIVORS",
+          "default": "BINANCE_PILOT_5_SELECTED_SURVIVORS",
+          "title": "Universe",
+          "type": "string"
+        },
+        "publication_lag_seconds": {
+          "default": 60,
+          "maximum": 86400,
+          "minimum": 1,
+          "title": "Publication Lag Seconds",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "manifest_id",
+        "source_as_of",
+        "start",
+        "end"
+      ],
+      "title": "ExperimentDataset",
+      "type": "object"
+    },
+    "FeatureSelectionDefinition": {
+      "additionalProperties": false,
+      "properties": {
+        "version": {
+          "const": "train_only_rank_v1",
+          "default": "train_only_rank_v1",
+          "title": "Version",
+          "type": "string"
+        },
+        "top_k": {
+          "default": 12,
+          "maximum": 12,
+          "minimum": 1,
+          "title": "Top K",
+          "type": "integer"
+        }
+      },
+      "title": "FeatureSelectionDefinition",
+      "type": "object"
+    },
+    "ModelDefinition": {
+      "additionalProperties": false,
+      "properties": {
+        "registry_id": {
+          "default": "ridge",
+          "enum": [
+            "mean",
+            "momentum",
+            "ridge",
+            "logistic",
+            "ensemble"
+          ],
+          "title": "Registry Id",
+          "type": "string"
+        },
+        "version": {
+          "const": "numpy_cpu_v1",
+          "default": "numpy_cpu_v1",
+          "title": "Version",
+          "type": "string"
+        },
+        "alphas": {
+          "items": {
+            "type": "number"
+          },
+          "maxItems": 4,
+          "minItems": 1,
+          "title": "Alphas",
+          "type": "array"
+        },
+        "max_iterations": {
+          "default": 60,
+          "maximum": 100,
+          "minimum": 10,
+          "title": "Max Iterations",
+          "type": "integer"
+        }
+      },
+      "title": "ModelDefinition",
+      "type": "object"
+    },
+    "ValidationProtocol": {
+      "additionalProperties": false,
+      "properties": {
+        "version": {
+          "const": "purged_temporal_v1",
+          "default": "purged_temporal_v1",
+          "title": "Version",
+          "type": "string"
+        },
+        "mode": {
+          "default": "expanding",
+          "enum": [
+            "rolling",
+            "expanding"
+          ],
+          "title": "Mode",
+          "type": "string"
+        },
+        "train_sessions": {
+          "default": 240,
+          "maximum": 1000,
+          "minimum": 60,
+          "title": "Train Sessions",
+          "type": "integer"
+        },
+        "test_sessions": {
+          "default": 90,
+          "maximum": 180,
+          "minimum": 10,
+          "title": "Test Sessions",
+          "type": "integer"
+        },
+        "max_folds": {
+          "default": 4,
+          "maximum": 6,
+          "minimum": 1,
+          "title": "Max Folds",
+          "type": "integer"
+        },
+        "embargo_sessions": {
+          "default": 5,
+          "maximum": 30,
+          "minimum": 0,
+          "title": "Embargo Sessions",
+          "type": "integer"
+        },
+        "inner_validation_sessions": {
+          "default": 30,
+          "maximum": 90,
+          "minimum": 10,
+          "title": "Inner Validation Sessions",
+          "type": "integer"
+        },
+        "calibration_sessions": {
+          "default": 30,
+          "maximum": 90,
+          "minimum": 10,
+          "title": "Calibration Sessions",
+          "type": "integer"
+        },
+        "minimum_train_rows": {
+          "default": 80,
+          "maximum": 10000,
+          "minimum": 20,
+          "title": "Minimum Train Rows",
+          "type": "integer"
+        },
+        "feature_selection": {
+          "$ref": "#/$defs/FeatureSelectionDefinition"
+        }
+      },
+      "title": "ValidationProtocol",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "experiment_definition_v1",
+      "default": "experiment_definition_v1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "hypothesis_id": {
+      "format": "uuid",
+      "title": "Hypothesis Id",
+      "type": "string"
+    },
+    "dataset": {
+      "$ref": "#/$defs/ExperimentDataset"
+    },
+    "validation": {
+      "$ref": "#/$defs/ValidationProtocol"
+    },
+    "model": {
+      "$ref": "#/$defs/ModelDefinition"
+    },
+    "configuration": {
+      "$ref": "#/$defs/ExperimentConfiguration"
+    },
+    "experiment_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Experiment Version",
+      "type": "string"
+    },
+    "quant_run_ids": {
+      "items": {
+        "format": "uuid",
+        "type": "string"
+      },
+      "maxItems": 4,
+      "title": "Quant Run Ids",
+      "type": "array"
+    },
+    "quant_study_ids": {
+      "items": {
+        "format": "uuid",
+        "type": "string"
+      },
+      "maxItems": 4,
+      "title": "Quant Study Ids",
+      "type": "array"
+    },
+    "metrics": {
+      "default": [
+        "mae",
+        "rmse",
+        "directional_accuracy",
+        "baseline_skill"
+      ],
+      "items": {
+        "type": "string"
+      },
+      "title": "Metrics",
+      "type": "array"
+    }
+  },
+  "required": [
+    "hypothesis_id",
+    "dataset"
+  ],
+  "title": "ExperimentDefinition",
+  "type": "object"
+}

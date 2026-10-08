@@ -23,3 +23,23 @@
 
 .personal-item{display:flex;flex-direction:column;gap:8px;padding:12px 0;border-bottom:1px solid var(--line);overflow-wrap:anywhere}.personal-item small{color:var(--muted)}.personal-citations{display:flex;flex-wrap:wrap;gap:4px}.personal-memory-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:8px;max-height:340px;overflow:auto}.personal-memory-list button{white-space:normal;text-align:left;line-height:1.5}.personal-research pre{max-height:380px;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere}
 .personal-research .page-heading{display:flex;align-items:center;justify-content:space-between;gap:20px}.personal-research .page-heading h1{font-size:30px;font-weight:600;line-height:1.2;margin:8px 0;font-family:var(--font-sans)}.personal-research .page-heading p{font-size:13px;color:var(--muted)}.personal-research .research-controls{display:flex;flex-wrap:wrap;align-items:flex-end;gap:12px}.personal-research label{display:flex;flex-direction:column;gap:7px;font-size:12px;color:var(--muted)}.personal-research input:not([type=checkbox]),.personal-research select,.personal-research textarea{background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:9px 11px;color:var(--text);font-family:var(--font-sans);font-size:13px}.personal-research textarea{width:100%;min-height:90px}.personal-research .metric-value{font-size:20px;white-space:normal;overflow:visible;text-overflow:clip;overflow-wrap:anywhere}.personal-research .metric{min-height:124px}.personal-research .personal-item h3{font-size:16px}.personal-research pre{font-size:11px}
+
+/* Phase 12: research tables, provenance and bounded experimental controls. */
+.experimental-lab { display:grid; gap:14px; }
+.experiment-hero { padding:24px; display:flex; justify-content:space-between; align-items:flex-start; gap:18px; }
+.experiment-hero h1 { font-size:25px; margin:8px 0; font-weight:500; }
+.experiment-warning { border:1px solid #8c6e34; border-left:3px solid #cfab61; background:#302b1e55; padding:14px 18px; font-size:12px; line-height:1.8; }
+.experiment-metrics { display:grid; grid-template-columns:repeat(4,minmax(100px,1fr)) minmax(220px,2fr); gap:10px; }
+.experiment-metrics .panel { padding:16px; display:grid; gap:10px; }
+.experiment-metrics strong { font:500 18px var(--font-mono); }
+.experiment-table { overflow:auto; max-height:450px; }
+.experiment-table th { position:sticky; top:0; background:var(--surface); z-index:1; }
+.experiment-table td span { display:block; max-width:380px; overflow:hidden; text-overflow:ellipsis; }
+.experiment-table td { font-size:11px; vertical-align:top; }
+.experiment-form { display:grid; grid-template-columns:repeat(3,minmax(180px,1fr)); gap:12px; }
+.experiment-form label { display:grid; gap:8px; font-size:12px; }
+.experiment-form textarea { min-height:85px; resize:vertical; }
+.experiment-json { max-height:500px; overflow:auto; white-space:pre-wrap; overflow-wrap:anywhere; font-size:11px; }
+.experiment-hash { overflow-wrap:anywhere; font-family:var(--font-mono); }
+.experiment-limitations { font-size:11px; color:var(--muted); }
+@media(max-width:1050px) { .experiment-metrics { grid-template-columns:repeat(2,minmax(120px,1fr)); } .experiment-form { grid-template-columns:1fr; } }

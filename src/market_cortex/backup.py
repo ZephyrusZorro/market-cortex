@@ -148,7 +148,9 @@ def backup(settings: Settings, destination: Path, passphrase: str) -> dict:
                         raise OSError("artifact changed during copy")
                     files.append({"path": artifact.relative_path, "sha256": artifact.content_hash,
                                   "rows": artifact.row_count})
+                database_encoding = lock_connection.execute('SHOW server_encoding').fetchone()[0]
                 manifest = {"format": "MCBACKUP1", "created_at": datetime.now(timezone.utc).isoformat(),
+                            "database_encoding": database_encoding,
                             "head_manifest_id": str(head) if head else None, "catalog_sha256": _sha(dump),
                             "artifacts": files}
                 (staging / "manifest.json").write_text(json.dumps(manifest, sort_keys=True, indent=2), encoding="utf-8")
@@ -217,6 +219,9 @@ def restore(source: Path, destination_data_root: Path, restore_dsn: str, live_ds
                 WHERE schemaname NOT IN ('pg_catalog', 'information_schema')""").fetchone()[0]
             if count:
                 raise ValueError("restore database must be empty")
+            target_encoding = connection.execute('SHOW server_encoding').fetchone()[0]
+            if manifest.get('database_encoding') == 'UTF8' and target_encoding != 'UTF8':
+                raise ValueError('restore database must use UTF8 to preserve Unicode research evidence')
         _run_pg("pg_restore", restore_dsn, ["--exit-on-error", "--no-owner", "--no-privileges",
                                             "--dbname", dbname, str(extraction / "catalog.dump")])
         for file in manifest["artifacts"]:

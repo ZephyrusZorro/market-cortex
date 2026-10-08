@@ -1,0 +1,129 @@
+{
+  "$defs": {
+    "ExperimentManifest": {
+      "additionalProperties": false,
+      "properties": {
+        "definition_hash": {
+          "title": "Definition Hash",
+          "type": "string"
+        },
+        "hypothesis_hash": {
+          "title": "Hypothesis Hash",
+          "type": "string"
+        },
+        "source_hash": {
+          "title": "Source Hash",
+          "type": "string"
+        },
+        "dataset_hash": {
+          "title": "Dataset Hash",
+          "type": "string"
+        },
+        "code_hash": {
+          "title": "Code Hash",
+          "type": "string"
+        },
+        "dependencies": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Dependencies",
+          "type": "object"
+        },
+        "holdout_status": {
+          "enum": [
+            "PREVIOUSLY_EXAMINED",
+            "EXPLORATORY_FIRST_EXPOSURE"
+          ],
+          "title": "Holdout Status",
+          "type": "string"
+        },
+        "context_policy": {
+          "const": "AS_RECORDED_ONLY",
+          "default": "AS_RECORDED_ONLY",
+          "title": "Context Policy",
+          "type": "string"
+        }
+      },
+      "required": [
+        "definition_hash",
+        "hypothesis_hash",
+        "source_hash",
+        "dataset_hash",
+        "code_hash",
+        "dependencies",
+        "holdout_status"
+      ],
+      "title": "ExperimentManifest",
+      "type": "object"
+    },
+    "ExperimentResult": {
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "enum": [
+            "COMPLETED",
+            "INCONCLUSIVE"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "conclusion": {
+          "enum": [
+            "HYPOTHESIS_FALSIFIED",
+            "INSUFFICIENT_EVIDENCE",
+            "EXPLORATORY_IMPROVEMENT"
+          ],
+          "title": "Conclusion",
+          "type": "string"
+        },
+        "reports": {
+          "additionalProperties": true,
+          "title": "Reports",
+          "type": "object"
+        },
+        "warnings": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Warnings",
+          "type": "array"
+        }
+      },
+      "required": [
+        "status",
+        "conclusion",
+        "reports",
+        "warnings"
+      ],
+      "title": "ExperimentResult",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "experiment_id": {
+      "format": "uuid",
+      "title": "Experiment Id",
+      "type": "string"
+    },
+    "manifest": {
+      "$ref": "#/$defs/ExperimentManifest"
+    },
+    "result": {
+      "$ref": "#/$defs/ExperimentResult"
+    },
+    "result_hash": {
+      "title": "Result Hash",
+      "type": "string"
+    }
+  },
+  "required": [
+    "experiment_id",
+    "manifest",
+    "result",
+    "result_hash"
+  ],
+  "title": "ExperimentRun",
+  "type": "object"
+}

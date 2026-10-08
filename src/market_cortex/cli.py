@@ -169,9 +169,14 @@ def main(argv: list[str] | None = None) -> int:
         command=sub.add_parser(name,help='Owner-controlled typed local personalization workflow')
         command.add_argument('--input',type=Path,required=True)
         if name in ('personal-memory-action','personal-proposal-action'): command.add_argument('record_id',type=UUID)
+    from .experiment_cli import add_commands
+    add_commands(sub)
     args = parser.parse_args(argv)
     try:
         settings = Settings.load()
+        if args.command.startswith('experiment-'):
+            from .experiment_cli import dispatch
+            return dispatch(args, settings)
         if args.command.startswith('personal-'):
             from .storage import PostgresCatalog,ArtifactStore
             from .personalization import PersonalizationService
