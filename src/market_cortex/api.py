@@ -14,6 +14,7 @@ from .contracts import utc
 from .database import connect
 from .quality import disagreements, missing_sessions
 from .storage import ArtifactStore, PostgresCatalog
+from .operations_security import local_request_allowed
 
 logger = logging.getLogger("market_cortex.api")
 
@@ -27,6 +28,9 @@ def create_app(settings: Settings | None = None, catalog: PostgresCatalog | None
     async def loopback_only(request: Request, call_next):
         if request.client and request.client.host not in ("127.0.0.1", "::1", "testclient"):
             return JSONResponse(status_code=403, content={"code": "LOCAL_ONLY"})
+        if not local_request_allowed(request.headers.get("host", ""), request.headers.get("origin"),
+                                     test_client=bool(request.client and request.client.host == "testclient")):
+            return JSONResponse(status_code=403, content={"code": "UNTRUSTED_LOCAL_ORIGIN"})
         return await call_next(request)
 
     def utc_or_422(value: datetime) -> datetime:
@@ -303,6 +307,8 @@ def create_app(settings: Settings | None = None, catalog: PostgresCatalog | None
         from .workstation import router_for
         app.include_router(router_for(store))
         if isinstance(store, PostgresCatalog):
+            from .operations_api import router_for as operations_router
+            app.include_router(operations_router(settings))
             from .cortex_api import router_for as cortex_router
             app.include_router(cortex_router(store, settings))
             from .mission_api import router_for as mission_router

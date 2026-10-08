@@ -69,6 +69,35 @@ function mockApi() {
 }
 
 describe('research workstation', () => {
+  it('clears later comparison evidence when a historical cutoff has no visible instruments', async () => {
+    window.history.replaceState({}, '', '/?view=compare');
+    const base = mockApi();
+    const original = base.getMockImplementation()!;
+    base.mockImplementation(async (url: string) => {
+      const parsed = new URL(url, 'http://local');
+      if (parsed.pathname.endsWith('/context') && parsed.searchParams.has('as_of')) return {
+        ok: true, status: 200, json: async () => ({ ...context, evaluation_date: null, history_start: null,
+          members: members.map(m => ({ ...m, instrument_id: null, observed_sessions: 0 })) }) };
+      if (parsed.pathname.endsWith('/comparison')) return { ok: true, status: 200, json: async () => ({
+        context, members: ['BTCUSDT', 'ETHUSDT'], window: 60, performance: {}, matrix: [[
+          { target: 'BTCUSDT', reference: 'BTCUSDT', value: 1, count: 60 },
+          { target: 'BTCUSDT', reference: 'ETHUSDT', value: .7312, count: 60, coverage: 1, missingness: 0 }
+        ], [{ target: 'ETHUSDT', reference: 'BTCUSDT', value: .7312, count: 60 },
+          { target: 'ETHUSDT', reference: 'ETHUSDT', value: 1, count: 60 }]] }) };
+      return original(url);
+    });
+    try {
+      render(<Workstation />);
+      expect(await screen.findByText('0.7312')).toBeInTheDocument();
+      fireEvent.click(screen.getByRole('button', { name: 'Change context' }));
+      fireEvent.click(screen.getByRole('button', { name: /^historical$/ }));
+      fireEvent.change(screen.getByLabelText('As-of cutoff · local time'), { target: { value: '2026-09-01T12:00' } });
+      fireEvent.click(screen.getByRole('button', { name: 'Open research context' }));
+      await waitFor(() => expect(screen.getByText('Matrix unavailable')).toBeInTheDocument());
+      expect(screen.queryByText('0.7312')).not.toBeInTheDocument();
+      expect(screen.queryByText('BTCUSDT / ETHUSDT')).not.toBeInTheDocument();
+    } finally { window.history.replaceState({}, '', '/'); }
+  });
   it('opens Quant Lab without requesting an unrelated full-history overview', async () => {
     window.history.replaceState({}, '', '/?view=quant');
     try {

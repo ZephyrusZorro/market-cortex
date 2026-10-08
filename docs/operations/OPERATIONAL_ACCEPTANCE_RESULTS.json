@@ -1,0 +1,46 @@
+{
+  "backend": [
+    {
+      "pass_N": 349,
+      "subtest_N": 13,
+      "skip_N": 0,
+      "warning_N": 1,
+      "elapsed_seconds": 543.92,
+      "log": "runtime\\operational-backend-acceptance-1.log"
+    },
+    {
+      "pass_N": 349,
+      "subtest_N": 13,
+      "skip_N": 0,
+      "warning_N": 1,
+      "elapsed_seconds": 537.02,
+      "log": "runtime\\operational-backend-acceptance-2.log"
+    }
+  ],
+  "frontend": [
+    {
+      "pass_N": 54,
+      "typecheck": "PASSED",
+      "production_build": "PASSED"
+    },
+    {
+      "pass_N": 54,
+      "typecheck": "PASSED",
+      "production_build": "PASSED"
+    }
+  ],
+  "production_runtime": "BLOCKED_BY_AUTOMATIC_APPROVAL_REVIEW",
+  "owner_main": "UNTOUCHED",
+  "owner_ready": false,
+  "full_market_coverage_ready": false,
+  "preservation": {
+    "experiment_fingerprint_unchanged": true,
+    "mission_fingerprint_unchanged": true,
+    "personal_fingerprint_unchanged": true,
+    "windows_fsync_fix_retained": true
+  },
+  "startup": {
+    "startup_elapsed_ms": 3738.79
+  },
+  "operational_release_tag": "WITHHELD"
+}

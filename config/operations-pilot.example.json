@@ -1,0 +1,7 @@
+{
+  "environment": "PILOT_TEST",
+  "database_env": "MARKET_CORTEX_PILOT_DATABASE_URL",
+  "data_root": "C:/Users/faris/Downloads/MARKET_CORTEX_Phase_1_Foundation_2026-09-30/market-cortex/runtime/binance_pilot",
+  "refresh_time": "07:00",
+  "timezone": "Asia/Kolkata"
+}

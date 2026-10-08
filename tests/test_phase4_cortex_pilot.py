@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import os
+import json
+from uuid import UUID
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -34,7 +36,13 @@ def test_real_pilot_research_persistence_grounding_and_replay():
     with connect(DSN) as connection:
         old_manifest = connection.execute("SELECT manifest_id FROM dataset_manifests ORDER BY created_at ASC LIMIT 1").fetchone()[0]
 
-    btc = service.research(ResearchRequest(question="Analyze BTCUSDT.", symbol="BTCUSDT"))
+    # The historical momentum contradiction is a frozen acceptance case. A daily
+    # refresh can legitimately change today's momentum; retain the assertion
+    # against the accepted Phase 12 manifest instead of a moving market head.
+    accepted = json.loads((Path(__file__).resolve().parents[1] /
+                           "docs/quant/PHASE_12_PILOT_RESULTS.json").read_text(encoding="utf-8"))
+    btc = service.research(ResearchRequest(question="Analyze BTCUSDT.", symbol="BTCUSDT",
+                          mode="pinned", manifest_id=UUID(accepted["market_head"])))
     assert btc.failure_state is None
     assert btc.model_provider == "deterministic"
     assert btc.model_prompt_version == "cortex_claim_selection_v1"

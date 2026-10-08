@@ -1,0 +1,364 @@
+{
+  "status": "VALIDATED_WITH_LIMITATIONS",
+  "validated_at": "2026-10-08T16:30:37.079645+00:00",
+  "environment": "PILOT_TEST",
+  "market_head": "a00facd3-9c92-4500-9bef-18f427d937d7",
+  "as_of": "2026-10-08T16:30:04.778030+00:00",
+  "evaluation_date": "2026-10-07",
+  "bar_N": 5055,
+  "chart_bar_N": 1011,
+  "latest_record": {
+    "session_date": "2026-10-07",
+    "open": 85549.94,
+    "high": 85598.22,
+    "low": 82787.25,
+    "close": 83321.81,
+    "volume": 20838.08376,
+    "observation_id": "47790d65-a775-4f40-9d8b-ddba54207e4f",
+    "source_batch_id": "a5990d74-7acb-4a73-929e-bfc0e6087d4d",
+    "available_at": "2026-10-08T16:15:09.646355+00:00",
+    "quality": "valid",
+    "currency": "USDT"
+  },
+  "freshness": [
+    "current",
+    "current",
+    "current",
+    "current",
+    "current"
+  ],
+  "state_snapshot_id": "13a790c07450d92c9f5b8568b8ff0a558f85e5b18ef947859f840b1b706e318c",
+  "scan_id": "922c464c-4717-54f6-87e3-47c6a97a1690",
+  "research_run_id": "190f3cbd-858f-4f23-b834-6cb150f2e021",
+  "research_evidence_hash": "dc9e93e02c131934b1895c9cf9b5ee9426e8ae8a6e9f55a1d5b50fa04d0d7b3e",
+  "research_replay": {
+    "run_id": "190f3cbd-858f-4f23-b834-6cb150f2e021",
+    "evidence_reproducible": true,
+    "language_reproducible": false,
+    "checks": [
+      {
+        "tool_id": "dataset.context",
+        "manifest_id": "a00facd3-9c92-4500-9bef-18f427d937d7",
+        "as_of": "2026-10-08T16:30:04.778030+00:00",
+        "stored_hash": "8dc2f58b7f5ec28ce5c8e36fa35a702cd6cc1d2739c57af1c1b9f0e278c79596",
+        "replayed_hash": "8dc2f58b7f5ec28ce5c8e36fa35a702cd6cc1d2739c57af1c1b9f0e278c79596",
+        "matched": true
+      },
+      {
+        "tool_id": "instrument.features",
+        "manifest_id": "a00facd3-9c92-4500-9bef-18f427d937d7",
+        "as_of": "2026-10-08T16:30:04.778030+00:00",
+        "stored_hash": "189153330af42c8df5726d1942d4fd5a15555f1c937d50166c0a128a4e7953e3",
+        "replayed_hash": "189153330af42c8df5726d1942d4fd5a15555f1c937d50166c0a128a4e7953e3",
+        "matched": true
+      },
+      {
+        "tool_id": "market.state",
+        "manifest_id": "a00facd3-9c92-4500-9bef-18f427d937d7",
+        "as_of": "2026-10-08T16:30:04.778030+00:00",
+        "stored_hash": "c608987c053d1c65bc52778efe5a7aa315a8e29fa1f1c75edc8213ffecda45c7",
+        "replayed_hash": "c608987c053d1c65bc52778efe5a7aa315a8e29fa1f1c75edc8213ffecda45c7",
+        "matched": true
+      },
+      {
+        "tool_id": "dataset.manifest",
+        "manifest_id": "a00facd3-9c92-4500-9bef-18f427d937d7",
+        "as_of": "2026-10-08T16:30:04.778030+00:00",
+        "stored_hash": "7930ead049fad52e69737e61f141f18bc33384a2d67c246db95778f8754c9c46",
+        "replayed_hash": "7930ead049fad52e69737e61f141f18bc33384a2d67c246db95778f8754c9c46",
+        "matched": true
+      }
+    ],
+    "stored_evidence_hash": "dc9e93e02c131934b1895c9cf9b5ee9426e8ae8a6e9f55a1d5b50fa04d0d7b3e"
+  },
+  "research_model_cost": "local / \u20b90 API spend",
+  "risk_scope": "SYNTHETIC_TEST_PORTFOLIO; NOT_OWNER_HOLDINGS",
+  "risk_snapshot_id": "f73f54d3-794c-58a4-ace0-406ac709350c",
+  "timings": {
+    "health": {
+      "elapsed_ms": 168.32,
+      "http_status": 200
+    },
+    "research_context": {
+      "elapsed_ms": 218.15,
+      "http_status": 200
+    },
+    "dashboard_composition": {
+      "elapsed_ms": 7375.85,
+      "http_status": 200
+    },
+    "chart_and_11_indicators": {
+      "elapsed_ms": 836.7,
+      "http_status": 200
+    },
+    "indicator_rsi14": {
+      "elapsed_ms": 502.07,
+      "http_status": 200
+    },
+    "market_state": {
+      "elapsed_ms": 3378.5,
+      "http_status": 200
+    },
+    "opportunity_scan_read_only": {
+      "elapsed_ms": 2394.48,
+      "http_status": 200
+    },
+    "cortex_research_save": {
+      "elapsed_ms": 4002.67,
+      "http_status": 200
+    },
+    "research_reopen": {
+      "elapsed_ms": 31.33,
+      "http_status": 200
+    },
+    "research_replay": {
+      "elapsed_ms": 4422.3,
+      "http_status": 200
+    },
+    "risk_synthetic_pilot_read_only": {
+      "elapsed_ms": 3583.9,
+      "http_status": 200
+    },
+    "quant_recorded_experiment": {
+      "elapsed_ms": 87.99,
+      "http_status": 200
+    },
+    "owner_history_eligibility": {
+      "elapsed_ms": 192.32,
+      "http_status": 200
+    },
+    "model_unavailable_fallback": {
+      "elapsed_ms": 5235.63
+    }
+  },
+  "refresh_status": {
+    "environment": "PILOT_TEST",
+    "expected_closed_session": "2026-10-07",
+    "freshness_policy": "binance_utc_daily_closed_session_v1",
+    "items": [
+      {
+        "instrument_id": "294adbc0-32da-415e-b5c1-c219193d8953",
+        "last_session": "2026-10-07",
+        "freshness": "FRESH"
+      },
+      {
+        "instrument_id": "eb97fc2c-34c8-441b-b4c9-5792343ab55d",
+        "last_session": "2026-10-07",
+        "freshness": "FRESH"
+      },
+      {
+        "instrument_id": "e7069c4c-2d48-49fd-85ef-55bbda6d22c2",
+        "last_session": "2026-10-07",
+        "freshness": "FRESH"
+      },
+      {
+        "instrument_id": "dbe1c9c1-a1c1-4c95-b74c-1973f640a462",
+        "last_session": "2026-10-07",
+        "freshness": "FRESH"
+      },
+      {
+        "instrument_id": "982aa9ce-e6c8-4dee-958a-dd5c5a6d6340",
+        "last_session": "2026-10-07",
+        "freshness": "FRESH"
+      }
+    ],
+    "jobs": [
+      {
+        "job_id": "d943865f-5462-4728-9faa-5fdba33e20da",
+        "state": "done",
+        "attempts": 1,
+        "next_attempt_at": "2026-10-08T21:48:48.742920+05:30",
+        "error_code": null,
+        "symbol": "XRPUSDT",
+        "result": {
+          "pages": 1,
+          "stored": 0,
+          "symbol": "XRPUSDT",
+          "duplicates": 3,
+          "manifest_id": null,
+          "quarantined": 0,
+          "completed_at": "2026-10-08T16:18:56.856514+00:00"
+        }
+      },
+      {
+        "job_id": "676739cd-5052-4b9e-8a37-74f1db2c97bb",
+        "state": "done",
+        "attempts": 1,
+        "next_attempt_at": "2026-10-08T21:48:48.713743+05:30",
+        "error_code": null,
+        "symbol": "BNBUSDT",
+        "result": {
+          "pages": 1,
+          "stored": 0,
+          "symbol": "BNBUSDT",
+          "duplicates": 3,
+          "manifest_id": null,
+          "quarantined": 0,
+          "completed_at": "2026-10-08T16:18:55.151647+00:00"
+        }
+      },
+      {
+        "job_id": "669cf4b2-c273-4b3c-b39f-01fb3e7aa7ed",
+        "state": "done",
+        "attempts": 1,
+        "next_attempt_at": "2026-10-08T21:48:48.684361+05:30",
+        "error_code": null,
+        "symbol": "SOLUSDT",
+        "result": {
+          "pages": 1,
+          "stored": 0,
+          "symbol": "SOLUSDT",
+          "duplicates": 3,
+          "manifest_id": null,
+          "quarantined": 0,
+          "completed_at": "2026-10-08T16:18:53.570496+00:00"
+        }
+      },
+      {
+        "job_id": "027299d8-1d9a-4188-b362-9b704c82f5a4",
+        "state": "done",
+        "attempts": 1,
+        "next_attempt_at": "2026-10-08T21:48:48.655764+05:30",
+        "error_code": null,
+        "symbol": "ETHUSDT",
+        "result": {
+          "pages": 1,
+          "stored": 0,
+          "symbol": "ETHUSDT",
+          "duplicates": 3,
+          "manifest_id": null,
+          "quarantined": 0,
+          "completed_at": "2026-10-08T16:18:51.952599+00:00"
+        }
+      },
+      {
+        "job_id": "c2b5167d-b1f9-4e2c-a727-5fa4950b1f0f",
+        "state": "done",
+        "attempts": 1,
+        "next_attempt_at": "2026-10-08T21:48:48.623973+05:30",
+        "error_code": null,
+        "symbol": "BTCUSDT",
+        "result": {
+          "pages": 1,
+          "stored": 0,
+          "symbol": "BTCUSDT",
+          "duplicates": 3,
+          "manifest_id": null,
+          "quarantined": 0,
+          "completed_at": "2026-10-08T16:18:50.420272+00:00"
+        }
+      },
+      {
+        "job_id": "25470a5d-5fcb-4bd9-8e4b-b2ab38612e20",
+        "state": "done",
+        "attempts": 1,
+        "next_attempt_at": "2026-10-08T21:45:08.548156+05:30",
+        "error_code": null,
+        "symbol": "XRPUSDT",
+        "result": {
+          "pages": 1,
+          "stored": 4,
+          "symbol": "XRPUSDT",
+          "duplicates": 3,
+          "manifest_id": "a00facd3-9c92-4500-9bef-18f427d937d7",
+          "quarantined": 0,
+          "completed_at": "2026-10-08T16:15:18.942819+00:00"
+        }
+      },
+      {
+        "job_id": "c2ab5663-ac8f-497d-a1c4-bc3ee1aac393",
+        "state": "done",
+        "attempts": 1,
+        "next_attempt_at": "2026-10-08T21:45:08.519487+05:30",
+        "error_code": null,
+        "symbol": "BNBUSDT",
+        "result": {
+          "pages": 1,
+          "stored": 4,
+          "symbol": "BNBUSDT",
+          "duplicates": 3,
+          "manifest_id": "53eb880e-a5fd-46a5-b049-2f0032f608e6",
+          "quarantined": 0,
+          "completed_at": "2026-10-08T16:15:16.958864+00:00"
+        }
+      },
+      {
+        "job_id": "d03eab98-7c08-42b9-b162-dfd2df571327",
+        "state": "done",
+        "attempts": 1,
+        "next_attempt_at": "2026-10-08T21:45:08.491174+05:30",
+        "error_code": null,
+        "symbol": "SOLUSDT",
+        "result": {
+          "pages": 1,
+          "stored": 4,
+          "symbol": "SOLUSDT",
+          "duplicates": 3,
+          "manifest_id": "ce038aa2-8b6b-4556-9fb3-9419ffe168da",
+          "quarantined": 0,
+          "completed_at": "2026-10-08T16:15:15.099683+00:00"
+        }
+      },
+      {
+        "job_id": "be4fb1ef-e8af-45f4-b062-730765d3793a",
+        "state": "done",
+        "attempts": 1,
+        "next_attempt_at": "2026-10-08T21:45:08.463601+05:30",
+        "error_code": null,
+        "symbol": "ETHUSDT",
+        "result": {
+          "pages": 1,
+          "stored": 4,
+          "symbol": "ETHUSDT",
+          "duplicates": 3,
+          "manifest_id": "6803851c-39ec-4050-97e1-31772f7c7980",
+          "quarantined": 0,
+          "completed_at": "2026-10-08T16:15:12.550647+00:00"
+        }
+      },
+      {
+        "job_id": "9c224873-ed47-4a9a-9b80-01203cf783dc",
+        "state": "done",
+        "attempts": 1,
+        "next_attempt_at": "2026-10-08T21:45:08.422525+05:30",
+        "error_code": null,
+        "symbol": "BTCUSDT",
+        "result": {
+          "pages": 1,
+          "stored": 4,
+          "symbol": "BTCUSDT",
+          "duplicates": 3,
+          "manifest_id": "4592f457-b156-49d3-93b3-14a71744c6d2",
+          "quarantined": 0,
+          "completed_at": "2026-10-08T16:15:10.310908+00:00"
+        }
+      }
+    ]
+  },
+  "model_evaluation": "NO_INSTALLED_RUNTIME_OR_MODEL; ACTUAL_FAILURE_FALLBACK_ONLY",
+  "owner_history": {
+    "genuine_owner_record_N": 0,
+    "validation_record_N": 0,
+    "recent_record_N": 0,
+    "historical_record_N": 0,
+    "history_state": "INSUFFICIENT_HISTORY",
+    "source_counts": {},
+    "instrument_frequency": {},
+    "mode_frequency": {},
+    "strategy_frequency": {},
+    "feedback_counts": {},
+    "median_horizon": null,
+    "excluded_sources": {
+      "unverified_or_test_catalog_record_N": 45
+    },
+    "repeat_threshold": 3,
+    "strong_threshold": 10,
+    "recency_days": 90
+  },
+  "owner_main": "UNTOUCHED",
+  "prior_momentum_OOS": {
+    "return": -0.07817165407921722,
+    "N": 82
+  },
+  "conclusion": "NO_SUPPORTED_PROFITABLE_EDGE"
+}

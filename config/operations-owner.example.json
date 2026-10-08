@@ -1,0 +1,7 @@
+{
+  "environment": "OWNER_MAIN",
+  "database_env": "MARKET_CORTEX_DATABASE_URL",
+  "data_root": "C:/MarketCortexData",
+  "refresh_time": "07:00",
+  "timezone": "Asia/Kolkata"
+}

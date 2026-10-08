@@ -30,7 +30,8 @@ def test_real_pilot_dossier_negative_quant_no_leakage_and_replay(label):
     assert next(e.value for e in rows if e.label=='Momentum temporal OOS return')==-.07817165407921722
     assert next(e.value for e in rows if e.label=='Momentum temporal OOS N')==82
     assert '-7.82%' in m.report and 'NO SUPPORTED EDGE' in m.report
-    assert s.replay(m.mission_id)['matched']
+    replay = s.replay(m.mission_id)
+    assert replay['matched'], replay
     if label=='B': assert m.context.symbol=='ETHUSDT' and m.context.compare_symbol=='BTCUSDT'
     if label=='C': assert any(e.kind=='contradiction' and e.tool_id=='mission.challenge_candidate' for e in rows)
     if label=='D': assert any(h.hypothesis_id=='historical_momentum_support' and h.status=='CONTRADICTED' for h in m.hypotheses)

@@ -43,7 +43,7 @@ def _key(passphrase: str, salt: bytes) -> bytes:
 def encrypt_file(source: Path, destination: Path, passphrase: str) -> None:
     salt, nonce = os.urandom(SALT_BYTES), os.urandom(NONCE_BYTES)
     encryptor = Cipher(algorithms.AES(_key(passphrase, salt)), modes.GCM(nonce)).encryptor()
-    with source.open("rb") as infile, destination.open("wb") as outfile:
+    with source.open("rb") as infile, destination.open("xb") as outfile:
         outfile.write(MAGIC + salt + nonce)
         while block := infile.read(CHUNK):
             outfile.write(encryptor.update(block))
@@ -121,6 +121,11 @@ def _safe_member(name: str) -> bool:
 def backup(settings: Settings, destination: Path, passphrase: str) -> dict:
     if not settings.database_url:
         raise ValueError("database not configured")
+    destination = destination.resolve()
+    if destination.exists():
+        raise FileExistsError("backup destination already exists")
+    if len(passphrase) < 16:
+        raise ValueError("backup passphrase must have at least 16 characters")
     destination.parent.mkdir(parents=True, exist_ok=True)
     catalog = PostgresCatalog(settings.database_url, ArtifactStore(settings.data_root))
     with tempfile.TemporaryDirectory(prefix="market-cortex-backup-") as work:
@@ -163,12 +168,12 @@ def backup(settings: Settings, destination: Path, passphrase: str) -> dict:
             artifact_paths = sorted((staging / "artifacts").rglob("*.parquet")) if (staging / "artifacts").exists() else []
             for path in [staging / "manifest.json", dump, *artifact_paths]:
                 tar.add(path, arcname=path.relative_to(staging).as_posix(), recursive=False)
-        temp_output = destination.with_name(destination.name + ".partial")
-        try:
+        # Same-volume atomic publication without overwriting an existing backup,
+        # including a concurrent creator. A crash can leave only owned staging.
+        with tempfile.TemporaryDirectory(prefix=".staged-backup-", dir=destination.parent) as encrypted_staging:
+            temp_output = Path(encrypted_staging) / "cipher.partial"
             encrypt_file(tar_path, temp_output, passphrase)
-            os.replace(temp_output, destination)
-        finally:
-            temp_output.unlink(missing_ok=True)
+            os.link(temp_output, destination)
     return {"head_manifest_id": manifest["head_manifest_id"], "artifact_count": len(files),
             "encrypted_backup": str(destination)}
 

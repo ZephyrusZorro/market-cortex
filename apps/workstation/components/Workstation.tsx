@@ -14,6 +14,7 @@ import PortfolioPane from './PortfolioPane';
 import LearningPane from './LearningPane';
 import QuantPane from './QuantWorkspace';
 import IntelligencePane from './IntelligencePane';
+import OperationalStatus from './OperationalStatus';
 import { ApiError, appendParams, category, contextParams, getJson, number, percent, pinnedParams, shortId,
   type ChartFeature, type Comparison, type Context, type Dimension, type FeatureDefinition, type FeatureSeries,
   type InstrumentView, type ManifestDetail, type MarketState, type Mode, type Overview, type OverviewItem,
@@ -72,7 +73,7 @@ function Loading({ label = 'Loading pinned research data…' }: { label?: string
 }
 function ErrorPanel({ error, retry }: { error: string; retry: () => void }) {
   const message: Record<string, string> = {
-    BACKEND_UNAVAILABLE: 'The local FastAPI service is unavailable. Start it on 127.0.0.1:8765 and retry.',
+    BACKEND_UNAVAILABLE: 'The local API is unavailable. Start it with the selected environment profile and retry.',
     DATABASE_NOT_CONFIGURED: 'Set the PostgreSQL connection in the backend process environment.',
     SERVICE_UNAVAILABLE: 'The local catalog or Parquet store could not answer this request.',
     MANIFEST_NOT_FOUND: 'The selected manifest no longer exists in this catalog.',
@@ -183,6 +184,12 @@ export default function Workstation() {
   useEffect(() => {
     let cancelled = false;
     setLoading(true); setError(null); setOverviewError(null); setOverview(null); setContext(null);
+    // Context can resolve to no visible sessions. Clear caches before guards
+    // return, so a historical empty state cannot retain later evidence.
+    setChart(null); setChartError(null); setChartLoading(false);
+    setFeatureSeries(null); setFeatureError(null); setFeatureLoading(false);
+    setComparison(null); setCompareError(null); setCompareLoading(false);
+    setManifest(null); setManifestError(null);
     getJson<{ status: string; settings?: { environment?: string } }>('health').then((result) => {
       if (!cancelled) { setHealth(result.status); setDataEnvironment(result.settings?.environment ?? 'UNLABELED'); }
     })
@@ -534,7 +541,7 @@ export default function Workstation() {
           <SeriesChart series={members.map((item) => ({ name: item.symbol, points: comparison.performance[item.symbol] ?? [] }))} unit="fraction" height={320} /> :
           <Empty title="Select at least two" body="Choose two to five pilot members for a backend-aligned comparison." />}</Panel>
         <Panel title="Pearson correlation matrix" subtitle={`${compareWindow} aligned log-return pairs · Binance UTC sessions`} noPad>
-          {comparison ? <div className="matrix"><table><thead><tr><th>Pair</th>{comparison.members.map((name) => <th key={name}>{name.replace('USDT','')}</th>)}</tr></thead>
+          {compareLoading ? <Loading label="Loading aligned correlation matrix…" /> : compareError ? <ErrorPanel error={compareError} retry={reload} /> : comparison ? <div className="matrix"><table><thead><tr><th>Pair</th>{comparison.members.map((name) => <th key={name}>{name.replace('USDT','')}</th>)}</tr></thead>
             <tbody>{comparison.members.map((name, i) => <tr key={name}><th>{name.replace('USDT','')}</th>{comparison.matrix[i].map((entry, j) =>
               <td key={entry.reference}><button className={`matrix-cell ${entry.value != null && entry.value >= .75 ? 'strong' : ''} ${entry.value != null && entry.value < 0 ? 'negative' : ''} ${selectedCell[0] === i && selectedCell[1] === j ? 'selected' : ''}`}
                 title={`${entry.count}/${compareWindow} pairs · coverage ${number(entry.coverage * 100, 0)}%`} onClick={() => setSelectedCell([i,j])}>{number(entry.value, 2)}</button></td>)}</tr>)}</tbody></table></div> :
@@ -551,7 +558,7 @@ export default function Workstation() {
           <div className="data-row"><span className="label">Version</span><span className="value">{cell.version}</span></div>
         </div> : <Empty title="Select a cell" body="Correlation details appear here." />}</Panel>
         <Panel title="Breadth & participation" subtitle="Exact Binance Pilot 5 universe">
-          {breadth ? <div className="data-list">{([
+          {!overview && !overviewError ? <Loading label="Loading deterministic breadth…" /> : overviewError ? <ErrorPanel error={overviewError} retry={reload} /> : breadth ? <div className="data-list">{([
             ['Above SMA 20', breadth.above_sma], ['Positive 20D', breadth.positive_lookback],
             ['New high 20D', breadth.new_high], ['New low 20D', breadth.new_low]
           ] as const).map(([label, metric]) => <div className="data-row" key={label}><span className="label">{label}</span>
@@ -588,6 +595,7 @@ export default function Workstation() {
 
   function systemPage() {
     return <>{header('System & lineage', 'Inspect the selected dataset ancestry and local service state without exposing credentials.')}
+      <OperationalStatus />
       <div className="grid four mb14"><Metric label="Backend" value={category(health)} foot="Local loopback read API" />
         <Metric label="Manifest files" value={manifest ? number(manifest.file_count, 0) : '—'} foot="Content addressed Parquet" />
         <Metric label="Rows in files" value={manifest ? number(manifest.rows_in_files, 0) : '—'} foot="Ancestry file row total" />

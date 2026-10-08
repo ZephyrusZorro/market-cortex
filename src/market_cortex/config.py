@@ -41,8 +41,8 @@ class Settings:
         database_url = os.environ.get("MARKET_CORTEX_DATABASE_URL")
         inferred = "PILOT_TEST" if database_url and conninfo_to_dict(database_url).get("dbname", "").lower().endswith("_test") else "UNLABELED"
         environment = os.environ.get("MARKET_CORTEX_ENVIRONMENT", inferred).upper()
-        if environment not in {"PILOT_TEST", "OWNER_MAIN", "UNLABELED"}:
-            raise ValueError("MARKET_CORTEX_ENVIRONMENT must be PILOT_TEST or OWNER_MAIN")
+        if environment not in {"DEVELOPMENT_TEST", "PILOT_TEST", "OWNER_MAIN", "UNLABELED"}:
+            raise ValueError("INVALID_MARKET_CORTEX_ENVIRONMENT")
         return cls(
             database_url=database_url,
             data_root=data_root,

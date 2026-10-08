@@ -1,0 +1,7 @@
+{
+  "environment": "DEVELOPMENT_TEST",
+  "database_env": "MARKET_CORTEX_DEVELOPMENT_DATABASE_URL",
+  "data_root": "runtime/development-data",
+  "refresh_time": "07:00",
+  "timezone": "Asia/Kolkata"
+}
