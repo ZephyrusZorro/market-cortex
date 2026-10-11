@@ -1,5 +1,124 @@
 # MARKET CORTEX v1 — Operational readiness
 
+## Final owner operational acceptance — 2026-10-11
+
+**OWNER_READY for the supported Binance spot daily research scope.** The actual OWNER_MAIN production application passed startup, all sixteen browser navigation panes plus advanced laboratory reads, APIs, controlled stop/restart, exact post-restart owner inventory and persisted genuine research replay. Current owner application state: runtime/application-a9c83bf65f414697b8cda568c8b868a3.json; workstation http://127.0.0.1:3000, API http://127.0.0.1:8765. The pilot remains running separately. The complete UTC migration-row hash, schema fingerprint and all table counts are unchanged except the separately approved one CORTEX row; all 65 Parquets and six research evidence hashes match. No ingestion or migration retry occurred.
+
+| Area | Final status |
+|---|---|
+| Architecture | VALIDATED_EXISTING_TWELVE_PHASES |
+| Production runtime | VALIDATED_OWNER_AND_PILOT_START_STOP_RESTART |
+| Pilot environment | VALIDATED_ISOLATED |
+| Owner database | VALIDATED_51_TABLES_13_UNCHANGED_MIGRATIONS |
+| Owner market data | VALIDATED_1825_RAW_BARS_65_PARQUETS_FIVE_PAIRS |
+| Daily refresh | VALIDATED_FIVE_COMPLETED_OWNER_JOBS; SCHEDULER_DISABLED |
+| Local AI | VALIDATED_DETERMINISTIC_FALLBACK; OPTIONAL_LLM_NOT_CONFIGURED |
+| India/US coverage | DEFERRED_NOT_CONFIGURED; MAPPINGS_CALENDARS_ENTITLEMENTS_REQUIRED |
+| Full operational readiness | OWNER_READY_SUPPORTED_BINANCE_DAILY_RESEARCH |
+
+Full backend regression: 361 tests + 13 subtests; subsequent onboarding/helper updates have nine and three focused passing tests. Frontend 54-test recheck, typecheck and production build passed. No claim of one combined 373-test full run. Original failed receipts and all earlier phase evidence remain intact. The retained owner backups/recovery copies are pre-schema and pre-ingestion baselines, **not a current populated-owner backup**. No supported profitable edge, execution, application login or broad market coverage is claimed. Scheduler registration and further agent-driven owner record writes remain unapproved. The earlier automatic execution-review rejection remains an agent-launch restriction; every production launch/restart was owner-executed through the existing scripts.
+
+Authoritative current evidence: [Owner operational acceptance](../operations/OWNER_OPERATIONAL_ACCEPTANCE_2026-10-11.md), OWNER_OPERATIONAL_ACCEPTANCE_RESULTS.json, OWNER_PRODUCTION_RESTART_RESULTS.json and OWNER_PRODUCTION_RESTART_BROWSER_QA.json. All sections below are dated historical checkpoints superseded by this final acceptance. Local release identity: annotated v1.0.1-operational tag after committing this verified snapshot; no push.
+
+## Owner acceptance invocation correction — 2026-10-11
+
+The owner production inventory failed at import before any verifier query or application stop/restart. Direct file execution selected scripts/market_cortex.py instead of the package. The corrected invocation is `.\.venv\Scripts\python.exe -m scripts.verify_owner_production` from the repository root. The old direct-file invocation now fails early with an explicit instruction. Three focused import/read-only/count regression tests pass (1.59 s); actual module execution with credentials removed reached DATABASE_NOT_CONFIGURED as expected, without package shadowing or database access. That negative configuration check is not a live owner inventory result. The single approved owner research row is already saved/replayed; no additional research submission is authorized. OWNER_READY remains pending actual successful inventory and owner restart. See OWNER_PRODUCTION_IMPORT_CORRECTION_RESULTS.json and OWNER_PRODUCTION_RESTART_ACCEPTANCE.md.
+
+## Production validation update — 2026-10-11
+
+The owner launched the existing combined production script in the authorized pilot terminal. Actual process identity, production state, current BUILD_ID, direct FastAPI health, proxied health and the selected database were checked. The previous agent execution-policy rejection remains an agent-launch restriction; it no longer means the owner-started production application is unvalidated. **OWNER_READY remains pending saved owner research and controlled owner restart acceptance.** The owner launched application-6898cdce55e34ef1ac077e05bdd55b35.json in production on 8765/3000. Direct/proxied health, actual owner identity, all five frozen bar hashes and coverage, request boundaries, all sixteen navigation panes and the advanced laboratory read view passed. No browser errors/warnings. The single genuine research record is now explicitly authorized; its persistence/restart check is in progress. Controlled pilot shutdown/restart and artifact recovery passed. The authorized owner onboarding subsequently committed 1,825 real Binance bars, 65 Parquets and completed five refresh jobs. A timezone-dependent final hash guard was corrected; the owner-executed read-only recovery verified unchanged schema, full migration rows and pinned data. No migration rerun, recovery record write, scheduler registration, release commit, tag or push occurred.
+
+| Area | Current status | Evidence and remaining scope |
+|---|---|---|
+| Architecture | VALIDATED | Existing twelve-phase implementation; no new phase. |
+| Production runtime | VALIDATED_PILOT_START_STOP_RESTART | Owner state application-6c0ac9a5fe5244a991628cc5553d2b32.json; production next start confirmed; both health endpoints ready; BUILD_ID K4ApJcYNA_48DSptxRH31. Controlled stop released both ports; new state application-84cd888863fc48a18410415605e441da.json has new owned PIDs and confirms production next start. |
+| Production browser | VALIDATED_PILOT_READ_WORKFLOWS | All sixteen navigation panes plus Advanced Research Laboratory; 23 captured observations; candles/zoom, indicators/state, scanner, existing synthetic risk/journal/predictions, CORTEX/mission/Quant saved evidence and explicit source limits; no console errors/warnings. |
+| Pilot environment | VALIDATED | Actual market_cortex_pilot_test at 127.0.0.1:55432; PILOT_TEST; 5,070 real daily bars, 1,014 sessions per pair through October 10. Existing loopback trust authentication does not validate a password. |
+| Manifest/as-of | VALIDATED | Current head 5fda5a53-4bcd-4788-84a6-e84cf799a3da; earlier 8c66134e-2ad4-4359-bc2c-aa51c7c3e140 remains through October 9. Before-discovery cutoff clears later correlation values and reports unavailable evidence. |
+| Owner database | VALIDATED_OWNER_READ_ONLY_RECEIPT | 51 tables / 13 matching migrations; UTC full-row hash and schema fingerprint unchanged; zero pending/changed migrations. Owner-executed recovery receipt inspected; no agent direct owner connection claimed. Both retained encrypted baselines and isolated recoveries preserved. |
+| Owner market data | VALIDATED_OWNER_MARKET_DATA_READ_ONLY_RECOVERY | Five identities, 1,825 observations, five manifests and 65 immutable Parquets; zero quarantine or storage defects. All five frozen/as-of bar hashes match. Timestamp-format hash defect fixed without weakening migration checks; nine safety/tamper tests pass. No additional owner writes authorized. |
+| Daily refresh | VALIDATED_PILOT_AND_OWNER | Pilot: one new bar and three duplicates per pair. Owner: five completed jobs, zero new bars and three duplicates each; all five owner pairs fresh through October 10 at verification time. Scheduler remains disabled. |
+| Saved replay | VALIDATED_AFTER_PRODUCTION_RESTART | CORTEX hashes, mission replay VERIFIED, Quant result MATCH; completed ridge dataset/result MATCH through production API. Language is not re-generated. Same CORTEX, mission checkpoint 27, Quant and experimental IDs reopened after restart; hashes/dataset replay matched, and all 51 table counts remained unchanged. |
+| Storage | VALIDATED | Selected spot manifest ancestry: 200 files / 5,070 rows. Whole catalog including contextual artifacts: 203 referenced files; no missing/corrupt/unreferenced/staged files. All 51 table counts unchanged since launch. |
+| Security | VALIDATED_DECLARED_BOUNDARIES | Foreign Host reads and foreign-Origin POSTs rejected with 403 by API/proxy; proxy GET grants no CORS. Single-user loopback boundary; no application-login claim. |
+| Regression | PASS | Full final backend: 361 tests + 13 subtests, no skips, one existing TestClient deprecation warning, 1,047.97 s. Ran against isolated clone/copy; disposable resources cleaned. Frontend recheck: 54 tests; typecheck pass. Initial two async wait failures did not reproduce; no assertion/timeout changes. |
+| Local AI | DETERMINISTIC_FALLBACK_VALIDATED | Saved deterministic answers and citations work; local LLM remains not configured, optional. |
+| India/US | DEFERRED_NOT_CONFIGURED | Upstox/Alpaca adapters retained; credentials and verified mappings/calendars/entitlements still required. |
+| Full operational readiness | PENDING_OWNER_SAVED_RESEARCH_AND_RESTART | Owner market data, actual production startup and API/browser read views passed. Exactly one genuine CORTEX record is separately authorized; save/reopen/replay and owner restart acceptance remain. |
+
+Research conclusions remain unchanged: no supported profitable edge; prior momentum temporal OOS −7.82%, N=82. Synthetic pilot records remain separate; genuine owner history is insufficient.
+
+Current owner completion evidence: docs/operations/OWNER_MARKET_DATA_COMPLETION_2026-10-11.md and OWNER_MARKET_DATA_COMPLETION_RESULTS.json; original failure and successful read-only receipts preserved. Current pilot receipts: docs/operations/PRODUCTION_PILOT_VALIDATION_RESULTS.json, PRODUCTION_BROWSER_QA.json, PRODUCTION_API_CHECK_RESULTS.json, PRODUCTION_EXPERIMENT_REPLAY_RESULTS.json, PRODUCTION_PILOT_POST_BROWSER_PREFLIGHT.json, PRODUCTION_FULL_BACKEND_RESULTS.json and PRODUCTION_FRONTEND_CHECK_RESULTS.json. The owner executed the exact existing Stop/Start scripts without migrations or ingestion. PRODUCTION_RESTART_RESULTS.json and PRODUCTION_RESTART_BROWSER_QA.json record recovery. The current pilot application remains running at the owner’s request.
+
+## Earlier deployment snapshot — 2026-10-11
+
+Baseline: local commit `9de5113`. This earlier snapshot is superseded by the production validation update above; its evidence is retained as history. No Phase 13 or unrelated feature was added. **OWNER_READY remains BLOCKED**. No commit, release tag or push is made while the requested owner-readiness gates remain unresolved.
+
+### Independent acceptance gates
+
+| Gate | Status | Current evidence / remaining requirement |
+|---|---|---|
+| A. Production runtime launches | BLOCKED_EXECUTION_POLICY | Direct `next.cmd start --hostname 127.0.0.1 --port 3002` rejected before process creation: `blocked by policy`. No Next.js runtime output. Session approval policy is `never`; no escalation mechanism or alternate-launch attempt. |
+| B. Production browser workflow | BLOCKED_BY_A | No production browser pass claimed. Prior development browser checks remain historical only. |
+| C. Pilot end-to-end operation | VALIDATED_WITH_LIMITATIONS | Real PostgreSQL + Parquet + running FastAPI: chart/11 indicators/state/scan/CORTEX save/reopen/replay/risk/Quant/Intelligence/Journal/Research Lab. Frontend production runtime excluded. |
+| D. Secure owner connection | VALIDATED_OWNER_TERMINAL_REPORT | Inspected the refreshed owner-executed local report: market_cortex, ::1:5432, PostgreSQL 17.11, UTF8, transaction_read_only=on. Credential remains confined to the owner terminal. Agent direct connection and application authentication remain unvalidated. |
+| E. Owner migrations/data root | VALIDATED_OWNER_EXECUTED_REPORT | Owner committed 0003–0013 on October 11 at 15:08:49 Asia/Kolkata. 51 application tables, 13 matching migration entries, zero pending/changed checksums, 34 new tables empty; all original row hashes preserved. Owner integrity VALIDATED with zero referenced/missing/corrupt/unreferenced/staged artifacts. |
+| F. Environment isolation | VALIDATED_WITH_LIMITATIONS | Pilot connected identity is market_cortex_pilot_test, PostgreSQL 17.11 on loopback 55432, UTF8, read-only preflight, checksums current. Owner-terminal identity is separately ::1:5432/market_cortex with the fixed owner root. Profile guard and synthetic/owner-link regressions; owner application startup remains unvalidated. |
+| G. Safe refresh | VALIDATED_WITH_LIMITATIONS | 10 new closed daily bars, 15 recognized duplicates, zero quarantine; repeat zero stored/15 duplicates/head unchanged. Same-slot schedule IDs identical. Actual PowerShell refresh returns IDLE; Task Scheduler dry-run only, no registration/logon claim. |
+| H. Backup/isolated recovery | VALIDATED_OWNER_AND_PILOT_RECOVERY | Actual pre-upgrade owner bundle retained (41,013 bytes); encrypted-file SHA independently matches. That specific bundle restored/rehearsed before owner commit; retained recovery copy independently read live with matching 51 tables, 13 migrations and original row hashes. Earlier pilot drill additionally verified 198 Parquets and research/model replay. No cutover performed. |
+| I. Artifact persistence/replay | VALIDATED_WITH_LIMITATIONS | Saved CORTEX evidence survives graceful API shutdown/restart and replays exactly; accepted negative Quant/mission evidence retained. All restored-artifact replay checks passed. Genuine owner records untested. |
+| J. Regression | VALIDATED_WITH_RECORDED_SCOPE | Full backend: 351 passed + 13 subtests, no skips, one existing warning, 595.96 s. Collection began before the final diagnostic fix; all 20 operational tests including both added cases passed against the final implementation (11.88 s). Frontend 54 tests, typecheck and production build pass. |
+| K. No trading execution | VALIDATED | Existing provider transport issues GET only to fixed historical/context endpoints; no order adapter was added. Broker endpoint and arbitrary-tool rejection tests retained. |
+| L. Limitations documented | VALIDATED | Upstox/Alpaca DEFERRED_NOT_CONFIGURED; verified mappings/calendars/entitlements still required. Local LLM optional; actual unavailable-endpoint deterministic fallback passed. No supported profitable edge or fabricated owner habits. |
+
+### Owner schema migration and retained recovery completed
+
+The authorized procedure completed on October 11 at **15:08:49 Asia/Kolkata**. The original owner-executed report remains unchanged under runtime/owner-migration-99c3aca053254bc1a956496a431e5569/report.json. The agent inspected that report, recomputed preservation and migration-file checksums, independently verified the retained encrypted file's SHA-256, and queried the retained isolated copy read-only. The source post-commit state is verified from the owner's report; no new direct owner connection is claimed.
+
+All eleven migrations committed. Owner now has **51 application tables and 13 matching migration entries**. The original rows were preserved; 34 new tables are empty; the inspected owner data root and storage remain clean. Owner market bootstrap and genuine record creation remain unperformed because they were outside the migration authorization.
+
+The retained pre-upgrade backup is 41,013 bytes; the retained recovery database is the successfully upgraded rehearsal copy. The original requested recovery name exceeded PostgreSQL's 63-byte limit and was truncated; its actual name is documented in the completion report. Its different database/port/root and all recovery checks were verified. Future name generation is shortened and checks actual-name equality; the existing retained copy was not renamed or deleted. After that fix, **35 affected tests passed**, no skips, one existing warning, 49.73 s. Tests cleaned only their disposable fixtures; the genuine retained recovery copy and user-started validation cluster remain available.
+
+Current completion evidence: docs/operations/OWNER_MIGRATION_COMPLETION_2026-10-11.md and OWNER_MIGRATION_COMPLETION_RESULTS.json. The earlier runner-validation receipt remains a historical test record. No migration rerun is needed; no backup key or credential is requested again.
+
+**OWNER_READY is still BLOCKED** by actual production runtime/browser validation and unfinished owner market-data/application onboarding. The production execution-policy rejection remains separate. No broker execution, synthetic owner history, recovery cutover, release commit, operational tag or push was added.
+
+### What was resolved
+
+- Pilot PostgreSQL startup initially omitted its `-p 55432 -h 127.0.0.1` options and attempted the occupied owner port. Correcting the startup configuration launched the dedicated pilot without changing owner services or database configuration.
+- Preflight now reports the database's actual name, address, port, server version and read-only transaction state. After the owner supplied a failing report, fixed the skipped integrity check: pending later migrations no longer hide existing Parquet defects. Aggregate table counts are read inside the read-only transaction. Inspection failures retain CONNECTED_READ_ONLY and a safe error type rather than being mislabeled as connection failures. The owner DSN and raw driver exceptions remain excluded from output.
+- Restore validation used a hardcoded 1,011-bar count from October 8. It now compares against the selected validated pilot evidence, preserving exact source/restored hashes as history grows. Both validation scripts accept separate output paths so prior evidence is preserved.
+- Added bounded 429 recovery/exhaustion transport tests with a synthetic large Retry-After value. These do not create a real provider rate-limit incident or alter accepted financial implementations.
+
+### Actual current observations
+
+Validation date is **October 11 in Asia/Kolkata**. Raw evidence timestamps are UTC (October 10 around 20:23 onward). At that instant, October 9 is the last fully closed UTC daily session; October 10's candle was excluded.
+
+Five-pair pilot: **5,065 bars, 1,013 sessions each**, 2024-01-01 through 2026-10-09. Previous head `a00facd3-9c92-4500-9bef-18f427d937d7` remains immutable; new head `8c66134e-2ad4-4359-bc2c-aa51c7c3e140`. Refresh creates five new manifests and total referenced Parquets become **198**, with no missing/corrupt/unreferenced/staged artifacts. Each pair reports FRESH under the closed-UTC-daily policy. Context derivatives/macro and unsupported sources retain their separate stale/partial/unknown classifications.
+
+Saved real pilot CORTEX run `03f9f5b1-ab58-4898-96e9-765987da5005` reopened and replayed before and after API restart; all four evidence hashes match. Uvicorn printed `Application shutdown complete` on Ctrl+C, its port was released, and a new process passed health/environment checks. The terminal wrapper returns interrupt exit code 1; it is not described as a normal zero-exit termination. The production frontend and combined Windows launcher have not passed this test.
+
+Real API reads additionally verified existing journals, theses, synthetic portfolios, Intelligence context/coverage, canonical momentum run `7017c9e9-ee90-5fc0-9101-2a5e4e660b62`, experimental results, and Research Lab report `800e1535-acd9-474d-9d7c-3a5ba45af4be`. Research remains INCONCLUSIVE / NO SUPPORTED EDGE, with prior momentum temporal OOS **-7.82%, N=82**. Genuine owner history remains N=0 in the pilot. Browser-like foreign/null Origin and untrusted Host POSTs returned 403.
+
+### Exact remaining blockers and owner action
+
+Production rejection originates in Codex's tool process-creation review. The supplied reason is only `blocked by policy`; no rule identifier is available. Because no application process started, this attempt provides no evidence of an OS permission or Next runtime defect. The authorized escalation workflow is unavailable under this session's `never` approval policy. The owner guide gives the original direct launch command for an authorized owner terminal and the exact pilot-only browser/restart checklist. No security controls were changed or disabled.
+
+The owner configured the URL in a separate PowerShell terminal and ran preflight there. Both the initial and corrected reports were inspected directly. Connection succeeded; exit code 1 is caused by **11 unapplied migrations (0003–0013)**. The corrected report confirms 17 application tables with only two migration-ledger rows and one dataset-head row, plus zero market observations/mappings/artifacts and a clean root. This is the inspected application schema, not a claim that unrelated schemas are absent. The agent still cannot inherit that terminal's credential, and no credential was requested through chat. **No further manual preflight rerun is required to review this plan.**
+
+The complete proposal is `docs/operations/OWNER_MIGRATION_PROPOSAL_2026-10-11.md`, with exact SQL checksums/statements in `DEPLOYMENT_OWNER_MIGRATION_PLAN.json`. It adds 34 tables and reviewed indexes/columns/constraints, with no table drops, truncation, record deletes or historical price rewrites. A synthetic two-migration baseline was actually encrypted, restored into a fresh test database, upgraded through all 11 files, and verified: existing rows, bar JSON and manifest preserved; 34 new tables empty; a second migrate run made no changes. This proves the upgrade path with synthetic data, not owner backup acceptance.
+
+The owner explicitly authorized a retained encrypted baseline, isolated recovery/rehearsal of that actual baseline, then the exact schema upgrade and read-only verification on October 11. The owner subsequently executed the approved guarded command; the completed schema/recovery outcome is documented above. The approved command page is now a historical procedure and does not request another execution. The actual owner backup passphrase remains locally supplied/retained; do not substitute an ephemeral test key. The procedure creates the isolated empty restore directory explicitly, including for a zero-Parquet backup. The retained owner backup, isolated rehearsal and schema migration were subsequently completed. Owner bootstrap, record creation and cutover were not performed. Genuine owner-created records and owner production startup remain unfulfilled gates.
+
+The single-user application has loopback and browser-origin controls, not an application login. Owner database authentication is not inferred from a profile label. Existing owner services remain running and owner files remain untouched. Upstox, Alpaca and a local LLM do not block this milestone.
+
+Current evidence: `docs/operations/DEPLOYMENT_REFRESH_RESULTS.json`, `DEPLOYMENT_PILOT_RESULTS.json`, `DEPLOYMENT_API_RESULTS.json`, `DEPLOYMENT_RESTART_RESULTS.json`, `DEPLOYMENT_RESTORE_RESULTS.json`, `DEPLOYMENT_OWNER_PREFLIGHT_RESULTS.json`, `DEPLOYMENT_OWNER_MIGRATION_PLAN.json`, `DEPLOYMENT_UPGRADE_REHEARSAL_RESULTS.json`. Final regression/cleanup evidence is `DEPLOYMENT_ACCEPTANCE_RESULTS.json`. All original `OPERATIONAL_*` reports are retained.
+
+Current encrypted pilot bundle size was **833,996,853 bytes**; backup took **90.185 s**, restore **221.299 s**, and restored ridge recomputation **7.808 s**. These are single local measurements, not a service guarantee. The ephemeral drill key and bundle were not retained as an owner backup. No recovery database named operational_restore_* remains. The full backend suite ran after this drill completed. Its collection preceded the two final diagnostic regression cases; the final 20-test operational suite independently covers those changes. No claim of a single 353-test full run is made. The API was stopped gracefully, its ports and production frontend port are free, all temporary rehearsal databases were cleaned, and the dedicated validation cluster was stopped after confirming zero other clients. Owner PostgreSQL services remained running; owner root still has zero entries. No schedule, commit, tag or push was created.
+
+## Historical operational-hardening evidence — 2026-10-08
+
+
 Milestone: operational hardening and owner deployment after Phase 12; **not Phase 13**. Date: 2026-10-08. Baseline: `932f4ec` / preserved annotated `phase12-v1.0.0`. Local work only; no push. The original twelve-phase exit evidence is preserved as a historical record.
 
 ## Decision and distinct achievements

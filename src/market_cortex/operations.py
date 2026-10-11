@@ -15,6 +15,7 @@ from pathlib import Path
 from zoneinfo import ZoneInfo
 
 from psycopg.conninfo import conninfo_to_dict
+from psycopg import sql
 from psycopg.types.json import Jsonb
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -94,6 +95,12 @@ def preflight(settings: Settings, *, integrity: bool = False) -> dict:
     try:
         with connect(settings.database_url) as connection:
             connection.execute("SET TRANSACTION READ ONLY")
+            identity = connection.execute("""SELECT current_database(), host(inet_server_addr()),
+                inet_server_port(), current_setting('server_version'),
+                current_setting('transaction_read_only')""").fetchone()
+            report["checks"]["database_identity"] = dict(zip(
+                ("database", "server_address", "server_port", "server_version", "transaction_read_only"), identity))
+            report["checks"]["database"] = "CONNECTED_READ_ONLY"
             encoding = connection.execute("SHOW server_encoding").fetchone()[0]
             report["checks"]["encoding"] = encoding
             present = connection.execute("SELECT to_regclass('schema_migrations')").fetchone()[0]
@@ -107,15 +114,30 @@ def preflight(settings: Settings, *, integrity: bool = False) -> dict:
                     changed.append(path.name)
             report["checks"].update(database="CONNECTED_READ_ONLY", pending_migrations=pending, changed_migrations=changed,
                                     data_root_exists=settings.data_root.is_dir())
+            tables = [row[0] for row in connection.execute(
+                "SELECT tablename FROM pg_tables WHERE schemaname=current_schema() ORDER BY tablename")]
+            if integrity:
+                report["checks"]["table_counts"] = {
+                    name: connection.execute(sql.SQL("SELECT count(*) FROM {}").format(sql.Identifier(name))).fetchone()[0]
+                    for name in tables}
         if encoding == "UTF8" and not pending and not changed and settings.data_root.is_dir():
             report["status"] = "VALIDATED"
-            if integrity:
+        if integrity:
+            # A pending later migration must not hide missing foundation artifacts.
+            if settings.data_root.is_dir() and "dataset_files" in tables:
                 inventory = PostgresCatalog(settings.database_url, ArtifactStore(settings.data_root)).scan_storage()
                 report["checks"]["storage"] = inventory
                 if inventory["missing"] or inventory["corrupt"]:
                     report["status"] = "FAILED"
+            else:
+                report["checks"]["storage"] = {"status": "NOT_CHECKED", "reason": "DATA_ROOT_OR_FOUNDATION_SCHEMA_UNAVAILABLE"}
+                report["status"] = "FAILED"
     except Exception as error:
-        report["checks"]["database"] = "UNAVAILABLE:" + type(error).__name__
+        report["status"] = "FAILED"
+        if report["checks"].get("database") == "CONNECTED_READ_ONLY":
+            report["checks"]["inspection_error"] = type(error).__name__
+        else:
+            report["checks"]["database"] = "UNAVAILABLE:" + type(error).__name__
     return report
 
 

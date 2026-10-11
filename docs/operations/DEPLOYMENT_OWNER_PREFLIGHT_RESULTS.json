@@ -1,0 +1,110 @@
+{
+  "inspected_at": "2026-10-10T20:38:50.808970+00:00",
+  "execution": "OWNER_TERMINAL; READ_ONLY_PREFLIGHT; AGENT_INSPECTED_LOCAL_REPORT",
+  "source_sha256": "9dbec9eb51a2da1e4a87f126bc15e1f20ba24dfe7f2ee7f06fdb4f6fc1e9fd61",
+  "source_modified_at": "2026-10-10T20:35:57.690616+00:00",
+  "preflight": {
+    "settings": {
+      "database_configured": true,
+      "owner_configured": true,
+      "timezone": "Asia/Kolkata",
+      "base_currency": "INR",
+      "cloud_model_allowed": true,
+      "environment": "OWNER_MAIN"
+    },
+    "status": "FAILED",
+    "checks": {
+      "database_identity": {
+        "database": "market_cortex",
+        "server_address": "::1",
+        "server_port": 5432,
+        "server_version": "17.11",
+        "transaction_read_only": "on"
+      },
+      "database": "CONNECTED_READ_ONLY",
+      "encoding": "UTF8",
+      "pending_migrations": [
+        "0003_cortex_research.sql",
+        "0004_opportunity_theses.sql",
+        "0005_portfolio_risk.sql",
+        "0006_journal_learning.sql",
+        "0007_quant_lab.sql",
+        "0008_quant_jobs.sql",
+        "0009_quant_summaries.sql",
+        "0010_context_intelligence.sql",
+        "0011_research_missions.sql",
+        "0012_personalization.sql",
+        "0013_experimental_research.sql"
+      ],
+      "changed_migrations": [],
+      "data_root_exists": true,
+      "table_counts": {
+        "app_locks": 0,
+        "calendar_sessions": 0,
+        "consumer_receipts": 0,
+        "dataset_files": 0,
+        "dataset_head": 1,
+        "dataset_manifests": 0,
+        "identifier_mappings": 0,
+        "instruments": 0,
+        "jobs": 0,
+        "manifest_members": 0,
+        "observations": 0,
+        "outbox": 0,
+        "provider_capabilities": 0,
+        "quarantine": 0,
+        "schema_migrations": 2,
+        "source_batches": 0,
+        "venues": 0
+      },
+      "storage": {
+        "referenced": 0,
+        "unreferenced": [],
+        "missing": [],
+        "corrupt": [],
+        "staged_count": 0,
+        "deletion_performed": false
+      }
+    }
+  },
+  "agent_process_has_owner_dsn": false,
+  "scope": "Current application schema; whole-database backup must preserve other schemas too",
+  "owner_data_writes": false,
+  "initial_preflight_before_integrity_fix": {
+    "status": "FAILED",
+    "settings": {
+      "database_configured": true,
+      "owner_configured": true,
+      "timezone": "Asia/Kolkata",
+      "base_currency": "INR",
+      "cloud_model_allowed": true,
+      "environment": "OWNER_MAIN"
+    },
+    "checks": {
+      "database_identity": {
+        "database": "market_cortex",
+        "server_address": "::1",
+        "server_port": 5432,
+        "server_version": "17.11",
+        "transaction_read_only": "on"
+      },
+      "encoding": "UTF8",
+      "database": "CONNECTED_READ_ONLY",
+      "pending_migrations": [
+        "0003_cortex_research.sql",
+        "0004_opportunity_theses.sql",
+        "0005_portfolio_risk.sql",
+        "0006_journal_learning.sql",
+        "0007_quant_lab.sql",
+        "0008_quant_jobs.sql",
+        "0009_quant_summaries.sql",
+        "0010_context_intelligence.sql",
+        "0011_research_missions.sql",
+        "0012_personalization.sql",
+        "0013_experimental_research.sql"
+      ],
+      "changed_migrations": [],
+      "data_root_exists": true
+    }
+  }
+}

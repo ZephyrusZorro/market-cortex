@@ -6,6 +6,7 @@ from pathlib import Path
 from uuid import uuid4
 
 import pytest
+import httpx
 from fastapi.testclient import TestClient
 from psycopg import sql
 from psycopg.conninfo import make_conninfo
@@ -16,7 +17,7 @@ from market_cortex.database import connect, migrate
 from market_cortex.operations import (Profile, load_profile, preflight, due_slot, refresh_plan,
                                      enqueue_refresh, worker, status, KIND, profile_key)
 from market_cortex.operations_security import local_request_allowed
-from market_cortex.providers import FetchBatch, ProviderFailure
+from market_cortex.providers import FetchBatch, ProviderFailure, ReadTransport
 from market_cortex.backup import backup, encrypt_file, decrypt_file
 from market_cortex.storage import ArtifactStore, PostgresCatalog
 from market_cortex.contracts import Venue
@@ -75,6 +76,29 @@ def test_missed_schedule_uses_latest_due_slot():
     p=Profile(environment='PILOT_TEST',database_env='MARKET_CORTEX_OP_TEST_URL',data_root='runtime/test')
     assert due_slot(p,datetime(2026,10,8,0,tzinfo=UTC)) == '2026-10-07T07:00:00+05:30'
     assert due_slot(p,datetime(2026,10,8,2,tzinfo=UTC)) == '2026-10-08T07:00:00+05:30'
+
+
+@pytest.mark.parametrize('recover', [False, True])
+def test_rate_limit_is_bounded_and_retryable(monkeypatch, recover):
+    """Synthetic transport failures; never generate real provider throttling."""
+    requests, delays = [], []
+    def respond(request):
+        requests.append(request)
+        if recover and len(requests) == 2:
+            return httpx.Response(200, json=[])
+        return httpx.Response(429, headers={'Retry-After': '86400'})
+    monkeypatch.setattr('market_cortex.providers.time.sleep', delays.append)
+    with httpx.Client(transport=httpx.MockTransport(respond)) as client:
+        transport=ReadTransport(client)
+        if recover:
+            assert transport.get('data-api.binance.vision','/api/v3/klines').data == []
+            assert len(requests) == 2
+        else:
+            with pytest.raises(ProviderFailure) as caught:
+                transport.get('data-api.binance.vision','/api/v3/klines')
+            assert caught.value.code == 'RATE_LIMITED' and caught.value.retryable
+            assert len(requests) == 3
+    assert sum(delays) <= 2 and all(request.method == 'GET' for request in requests)
 
 
 def test_backup_never_overwrites_retained_evidence(task_directory):
@@ -151,7 +175,13 @@ def test_refresh_retry_interrupt_idempotence_and_freshness(operational_catalog, 
     assert catalog.head()==first_head
     assert status(settings,now)['items'][0]['freshness']=='FRESH'
     assert status(settings,now)['jobs'][0]['result']['completed_at']
-    assert preflight(settings,integrity=True)['status']=='VALIDATED'
+    report=preflight(settings,integrity=True)
+    assert report['status']=='VALIDATED'
+    identity=report['checks']['database_identity']
+    assert identity['database'].endswith('_test')
+    assert identity['server_address'] in {'127.0.0.1', '::1'}
+    assert identity['server_port'] > 0 and identity['server_version']
+    assert identity['transaction_read_only']=='on'
 
 
 def test_permanent_provider_failure_and_job_scope(operational_catalog):
@@ -177,3 +207,35 @@ def test_preflight_reports_corruption_and_database_failure(operational_catalog):
     missing=Settings('postgresql://u:SECRET@127.0.0.1:1/unavailable_test',settings.data_root,'Asia/Kolkata','INR',False,True,'PILOT_TEST')
     report=preflight(missing)
     assert report['status']=='FAILED' and 'SECRET' not in json.dumps(report)
+
+
+def test_pending_schema_still_checks_existing_artifacts(operational_catalog):
+    catalog,settings,p,i,m,cal=operational_catalog
+    now=datetime.now(UTC); batch=uuid4()
+    b=bar(i,m,cal,day=now.date()-timedelta(days=1),available=now.isoformat())
+    b=b.model_copy(update={'envelope':b.envelope.model_copy(update={'source_batch_id':batch})})
+    catalog.ingest([b],cal,source_batch_id=batch,provider_id='binance',raw_hash='0'*64,fetched_at=now)
+    # Only this disposable fixture schema loses a migration ledger entry.
+    with connect(settings.database_url) as c:
+        c.execute("DELETE FROM schema_migrations WHERE name='0013_experimental_research.sql'")
+    next(settings.data_root.rglob('*.parquet')).unlink()
+    report=preflight(settings,integrity=True)
+    assert report['status']=='FAILED'
+    assert report['checks']['database']=='CONNECTED_READ_ONLY'
+    assert report['checks']['pending_migrations']==['0013_experimental_research.sql']
+    assert report['checks']['table_counts']['observations']==1
+    assert report['checks']['storage']['referenced']==1 and report['checks']['storage']['missing']
+    with connect(settings.database_url) as c:
+        assert not c.execute("SELECT 1 FROM schema_migrations WHERE name='0013_experimental_research.sql'").fetchone()
+
+
+def test_storage_inspection_failure_is_not_authentication_failure(operational_catalog, monkeypatch):
+    _,settings,*_=operational_catalog
+    def fail(_):
+        raise OSError('PRIVATE diagnostic must never appear')
+    monkeypatch.setattr(PostgresCatalog,'scan_storage',fail)
+    report=preflight(settings,integrity=True)
+    assert report['status']=='FAILED'
+    assert report['checks']['database']=='CONNECTED_READ_ONLY'
+    assert report['checks']['inspection_error']=='OSError'
+    assert 'PRIVATE' not in json.dumps(report)

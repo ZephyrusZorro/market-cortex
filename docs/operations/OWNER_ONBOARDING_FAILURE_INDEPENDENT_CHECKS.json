@@ -1,0 +1,18 @@
+{
+  "backup_hash_verified": true,
+  "backup_bytes": 112693,
+  "restore_schema_and_rows_match_before": true,
+  "restore_tables": 51,
+  "restore_migrations": 13,
+  "utc_migration_hash_matches_before": true,
+  "timezone_changes_json_hash_without_row_changes": true,
+  "hashes": {
+    "UTC": "a10a7e8897bdfcc2830386d1ad8151fe22c6a6b7302468677e4c8893f3fd3093",
+    "Asia/Kolkata": "639655e40806f863c96fd8132ffe4ff098543a536f330ef45aca9b7b27c67e3c"
+  },
+  "owner_parquet_files": 65,
+  "owner_physical_rows": 1825,
+  "retained_restore": "mc_owner_market_4f483e3fa2424c688c5cf60cebbc49e9_test",
+  "owner_parquet_content_hashes_verified": 65,
+  "owner_corrupt_parquets": 0
+}

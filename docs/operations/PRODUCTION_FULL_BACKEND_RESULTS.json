@@ -1,0 +1,15 @@
+{
+  "status": "PASS",
+  "exit_code": 0,
+  "elapsed_seconds": 1049.66,
+  "validated_at": "2026-10-11T10:19:00.629135+00:00",
+  "scope": "FULL_SUITE; ISOLATED_PILOT_CATALOG_CLONE_AND_PARQUET_COPY",
+  "owner_database": "NEVER_USED",
+  "live_pilot_qa_database": "NOT_MUTATED_BY_REGRESSION",
+  "log": "runtime/production-full-backend.log",
+  "disposable_clone_databases_and_files": "CLEANED",
+  "tests_passed": 361,
+  "subtests_passed": 13,
+  "warnings": 1,
+  "skips": 0
+}

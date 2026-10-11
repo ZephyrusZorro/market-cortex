@@ -1,0 +1,12 @@
+{
+  "status": "VALIDATED_ISOLATED_RUNNER_SAFETY_AND_RECOVERY",
+  "tests_passed": 6,
+  "warnings": 1,
+  "elapsed_seconds": 11.38,
+  "scope": "New migrated disposable catalogs only; retained encrypted 51-table backup and isolated restore, source unchanged; failed restore preserves backup; unexpected records/env/identity/date rejected. No owner data execution.",
+  "log": "runtime/owner-onboarding-runner-tests.log",
+  "powershell": "SYNTAX_VALIDATED_WITHOUT_EXECUTION",
+  "cli_help": "VALIDATED",
+  "prior_regression": "Full 361 tests and 13 subtests passed before addition of these six tests; not a single 367-test full run.",
+  "execution_actor_required": "OWNER_TERMINAL_1; private owner connection absent from Codex process/user/machine environment"
+}

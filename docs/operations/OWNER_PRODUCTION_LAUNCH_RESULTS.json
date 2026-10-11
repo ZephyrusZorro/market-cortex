@@ -1,0 +1,27 @@
+{
+  "status": "VALIDATED_OWNER_PRODUCTION_STARTUP",
+  "application_state": "runtime/application-6898cdce55e34ef1ac077e05bdd55b35.json",
+  "state": {
+    "url": "http://127.0.0.1:3000",
+    "environment": "OWNER_MAIN",
+    "backend": {
+      "marker": "market_cortex.operations_runtime",
+      "pid": 33632,
+      "started_at": "2026-10-11T12:46:02.8478249Z"
+    },
+    "mode": "production",
+    "frontend": {
+      "marker": "C:\\Users\\faris\\OneDrive\\Documents\\MARKET_CORTEX_Phase_1_Completed\\apps\\workstation\\node_modules\\next\\dist\\bin\\next",
+      "pid": 31124,
+      "started_at": "2026-10-11T12:46:02.8771193Z"
+    }
+  },
+  "process_identity_verified": true,
+  "api_command": "market_cortex.operations_runtime --profile config/operations-owner.example.json --port 8765",
+  "frontend_command": "next start --hostname 127.0.0.1 --port 3000",
+  "build_id": "K4ApJcYNA_48DSptxRH31",
+  "owner_ready": false,
+  "owner_database_record_writes": false,
+  "agent_launch_policy": "Owner executed existing launcher; agent did not retry rejected launch.",
+  "remaining": "Read-only browser acceptance; saved owner research needs explicit record-write authorization."
+}

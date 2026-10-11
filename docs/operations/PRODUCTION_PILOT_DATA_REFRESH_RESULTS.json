@@ -1,0 +1,616 @@
+{
+  "environment": "PILOT_TEST",
+  "validated_at": "2026-10-11T09:58:27.101677+00:00",
+  "owner_database": "UNTOUCHED",
+  "old_head": "8c66134e-2ad4-4359-bc2c-aa51c7c3e140",
+  "head": "5fda5a53-4bcd-4788-84a6-e84cf799a3da",
+  "jobs": [
+    "872339e9-b284-43f2-a42b-717929c3f8ec",
+    "b51b34c7-5397-4689-92bd-52816a653339",
+    "0be58ea9-e913-4d97-aae2-f986279eec1c",
+    "ecd5a938-865a-4f77-9fd0-6fd65c11272a",
+    "2b97ca97-ac04-441f-9537-38ba58e30002"
+  ],
+  "results": [
+    {
+      "status": "DONE",
+      "job_id": "872339e9-b284-43f2-a42b-717929c3f8ec",
+      "symbol": "BTCUSDT",
+      "stored": 1,
+      "duplicates": 3,
+      "quarantined": 0,
+      "manifest_id": "585bc9f6-76a3-4084-ab7e-69fca6916922",
+      "completed_at": "2026-10-11T09:58:20.581008+00:00",
+      "pages": 1
+    },
+    {
+      "status": "DONE",
+      "job_id": "b51b34c7-5397-4689-92bd-52816a653339",
+      "symbol": "ETHUSDT",
+      "stored": 1,
+      "duplicates": 3,
+      "quarantined": 0,
+      "manifest_id": "eb7853ff-5ed0-4abb-aae1-3e8e1eb5bc58",
+      "completed_at": "2026-10-11T09:58:21.910240+00:00",
+      "pages": 1
+    },
+    {
+      "status": "DONE",
+      "job_id": "0be58ea9-e913-4d97-aae2-f986279eec1c",
+      "symbol": "SOLUSDT",
+      "stored": 1,
+      "duplicates": 3,
+      "quarantined": 0,
+      "manifest_id": "a4a90cb1-36c0-48ba-b808-cedf4c07f74c",
+      "completed_at": "2026-10-11T09:58:23.796710+00:00",
+      "pages": 1
+    },
+    {
+      "status": "DONE",
+      "job_id": "ecd5a938-865a-4f77-9fd0-6fd65c11272a",
+      "symbol": "BNBUSDT",
+      "stored": 1,
+      "duplicates": 3,
+      "quarantined": 0,
+      "manifest_id": "f49d3e7b-5c24-456b-8881-640b3e58e491",
+      "completed_at": "2026-10-11T09:58:25.288080+00:00",
+      "pages": 1
+    },
+    {
+      "status": "DONE",
+      "job_id": "2b97ca97-ac04-441f-9537-38ba58e30002",
+      "symbol": "XRPUSDT",
+      "stored": 1,
+      "duplicates": 3,
+      "quarantined": 0,
+      "manifest_id": "5fda5a53-4bcd-4788-84a6-e84cf799a3da",
+      "completed_at": "2026-10-11T09:58:27.036736+00:00",
+      "pages": 1
+    }
+  ],
+  "refresh": {
+    "environment": "PILOT_TEST",
+    "expected_closed_session": "2026-10-10",
+    "freshness_policy": "binance_utc_daily_closed_session_v1",
+    "items": [
+      {
+        "instrument_id": "294adbc0-32da-415e-b5c1-c219193d8953",
+        "last_session": "2026-10-10",
+        "freshness": "FRESH"
+      },
+      {
+        "instrument_id": "eb97fc2c-34c8-441b-b4c9-5792343ab55d",
+        "last_session": "2026-10-10",
+        "freshness": "FRESH"
+      },
+      {
+        "instrument_id": "e7069c4c-2d48-49fd-85ef-55bbda6d22c2",
+        "last_session": "2026-10-10",
+        "freshness": "FRESH"
+      },
+      {
+        "instrument_id": "dbe1c9c1-a1c1-4c95-b74c-1973f640a462",
+        "last_session": "2026-10-10",
+        "freshness": "FRESH"
+      },
+      {
+        "instrument_id": "982aa9ce-e6c8-4dee-958a-dd5c5a6d6340",
+        "last_session": "2026-10-10",
+        "freshness": "FRESH"
+      }
+    ],
+    "jobs": [
+      {
+        "job_id": "2b97ca97-ac04-441f-9537-38ba58e30002",
+        "state": "done",
+        "attempts": 1,
+        "next_attempt_at": "2026-10-11T15:28:19.325606+05:30",
+        "error_code": null,
+        "symbol": "XRPUSDT",
+        "result": {
+          "pages": 1,
+          "stored": 1,
+          "symbol": "XRPUSDT",
+          "duplicates": 3,
+          "manifest_id": "5fda5a53-4bcd-4788-84a6-e84cf799a3da",
+          "quarantined": 0,
+          "completed_at": "2026-10-11T09:58:27.036736+00:00"
+        }
+      },
+      {
+        "job_id": "ecd5a938-865a-4f77-9fd0-6fd65c11272a",
+        "state": "done",
+        "attempts": 1,
+        "next_attempt_at": "2026-10-11T15:28:19.297054+05:30",
+        "error_code": null,
+        "symbol": "BNBUSDT",
+        "result": {
+          "pages": 1,
+          "stored": 1,
+          "symbol": "BNBUSDT",
+          "duplicates": 3,
+          "manifest_id": "f49d3e7b-5c24-456b-8881-640b3e58e491",
+          "quarantined": 0,
+          "completed_at": "2026-10-11T09:58:25.288080+00:00"
+        }
+      },
+      {
+        "job_id": "0be58ea9-e913-4d97-aae2-f986279eec1c",
+        "state": "done",
+        "attempts": 1,
+        "next_attempt_at": "2026-10-11T15:28:19.268586+05:30",
+        "error_code": null,
+        "symbol": "SOLUSDT",
+        "result": {
+          "pages": 1,
+          "stored": 1,
+          "symbol": "SOLUSDT",
+          "duplicates": 3,
+          "manifest_id": "a4a90cb1-36c0-48ba-b808-cedf4c07f74c",
+          "quarantined": 0,
+          "completed_at": "2026-10-11T09:58:23.796710+00:00"
+        }
+      },
+      {
+        "job_id": "b51b34c7-5397-4689-92bd-52816a653339",
+        "state": "done",
+        "attempts": 1,
+        "next_attempt_at": "2026-10-11T15:28:19.239404+05:30",
+        "error_code": null,
+        "symbol": "ETHUSDT",
+        "result": {
+          "pages": 1,
+          "stored": 1,
+          "symbol": "ETHUSDT",
+          "duplicates": 3,
+          "manifest_id": "eb7853ff-5ed0-4abb-aae1-3e8e1eb5bc58",
+          "quarantined": 0,
+          "completed_at": "2026-10-11T09:58:21.910240+00:00"
+        }
+      },
+      {
+        "job_id": "872339e9-b284-43f2-a42b-717929c3f8ec",
+        "state": "done",
+        "attempts": 1,
+        "next_attempt_at": "2026-10-11T15:28:19.201069+05:30",
+        "error_code": null,
+        "symbol": "BTCUSDT",
+        "result": {
+          "pages": 1,
+          "stored": 1,
+          "symbol": "BTCUSDT",
+          "duplicates": 3,
+          "manifest_id": "585bc9f6-76a3-4084-ab7e-69fca6916922",
+          "quarantined": 0,
+          "completed_at": "2026-10-11T09:58:20.581008+00:00"
+        }
+      },
+      {
+        "job_id": "00d6067b-ef41-4b55-a77c-24e8a47bc31a",
+        "state": "done",
+        "attempts": 1,
+        "next_attempt_at": "2026-10-11T01:53:36.860876+05:30",
+        "error_code": null,
+        "symbol": "XRPUSDT",
+        "result": {
+          "pages": 1,
+          "stored": 0,
+          "symbol": "XRPUSDT",
+          "duplicates": 3,
+          "manifest_id": null,
+          "quarantined": 0,
+          "completed_at": "2026-10-10T20:23:42.016817+00:00"
+        }
+      },
+      {
+        "job_id": "d183cdee-5335-4b7c-bb79-0b8f3040dda3",
+        "state": "done",
+        "attempts": 1,
+        "next_attempt_at": "2026-10-11T01:53:36.829039+05:30",
+        "error_code": null,
+        "symbol": "BNBUSDT",
+        "result": {
+          "pages": 1,
+          "stored": 0,
+          "symbol": "BNBUSDT",
+          "duplicates": 3,
+          "manifest_id": null,
+          "quarantined": 0,
+          "completed_at": "2026-10-10T20:23:41.048158+00:00"
+        }
+      },
+      {
+        "job_id": "db2ba5dc-6e38-4ad8-9dee-0dcc9724bfc4",
+        "state": "done",
+        "attempts": 1,
+        "next_attempt_at": "2026-10-11T01:53:36.701639+05:30",
+        "error_code": null,
+        "symbol": "SOLUSDT",
+        "result": {
+          "pages": 1,
+          "stored": 0,
+          "symbol": "SOLUSDT",
+          "duplicates": 3,
+          "manifest_id": null,
+          "quarantined": 0,
+          "completed_at": "2026-10-10T20:23:39.902223+00:00"
+        }
+      },
+      {
+        "job_id": "76587cb6-c0eb-4190-920a-1fbbf850c8ae",
+        "state": "done",
+        "attempts": 1,
+        "next_attempt_at": "2026-10-11T01:53:36.574411+05:30",
+        "error_code": null,
+        "symbol": "ETHUSDT",
+        "result": {
+          "pages": 1,
+          "stored": 0,
+          "symbol": "ETHUSDT",
+          "duplicates": 3,
+          "manifest_id": null,
+          "quarantined": 0,
+          "completed_at": "2026-10-10T20:23:38.842216+00:00"
+        }
+      },
+      {
+        "job_id": "4d54e316-e75e-443d-bd56-8e810940dd6e",
+        "state": "done",
+        "attempts": 1,
+        "next_attempt_at": "2026-10-11T01:53:36.545848+05:30",
+        "error_code": null,
+        "symbol": "BTCUSDT",
+        "result": {
+          "pages": 1,
+          "stored": 0,
+          "symbol": "BTCUSDT",
+          "duplicates": 3,
+          "manifest_id": null,
+          "quarantined": 0,
+          "completed_at": "2026-10-10T20:23:37.917639+00:00"
+        }
+      },
+      {
+        "job_id": "60631594-8609-47c9-8ec1-f467541349f3",
+        "state": "done",
+        "attempts": 1,
+        "next_attempt_at": "2026-10-11T01:53:30.391413+05:30",
+        "error_code": null,
+        "symbol": "XRPUSDT",
+        "result": {
+          "pages": 1,
+          "stored": 2,
+          "symbol": "XRPUSDT",
+          "duplicates": 3,
+          "manifest_id": "8c66134e-2ad4-4359-bc2c-aa51c7c3e140",
+          "quarantined": 0,
+          "completed_at": "2026-10-10T20:23:36.180595+00:00"
+        }
+      },
+      {
+        "job_id": "072df0c2-1660-44ff-8ced-2176d924174b",
+        "state": "done",
+        "attempts": 1,
+        "next_attempt_at": "2026-10-11T01:53:30.362699+05:30",
+        "error_code": null,
+        "symbol": "BNBUSDT",
+        "result": {
+          "pages": 1,
+          "stored": 2,
+          "symbol": "BNBUSDT",
+          "duplicates": 3,
+          "manifest_id": "929ddde4-825d-4eea-b637-1f987f8f68dc",
+          "quarantined": 0,
+          "completed_at": "2026-10-10T20:23:35.063714+00:00"
+        }
+      },
+      {
+        "job_id": "68965269-ee5d-4409-9563-42d22815eadf",
+        "state": "done",
+        "attempts": 1,
+        "next_attempt_at": "2026-10-11T01:53:30.335877+05:30",
+        "error_code": null,
+        "symbol": "SOLUSDT",
+        "result": {
+          "pages": 1,
+          "stored": 2,
+          "symbol": "SOLUSDT",
+          "duplicates": 3,
+          "manifest_id": "c5400b11-68cc-4c13-adcd-f42814532a0d",
+          "quarantined": 0,
+          "completed_at": "2026-10-10T20:23:34.152911+00:00"
+        }
+      },
+      {
+        "job_id": "f49f70a6-32c3-4245-9d7d-2e8ccbd656f4",
+        "state": "done",
+        "attempts": 1,
+        "next_attempt_at": "2026-10-11T01:53:30.301938+05:30",
+        "error_code": null,
+        "symbol": "ETHUSDT",
+        "result": {
+          "pages": 1,
+          "stored": 2,
+          "symbol": "ETHUSDT",
+          "duplicates": 3,
+          "manifest_id": "2f51b25f-6179-41c3-a9cc-240004e258c9",
+          "quarantined": 0,
+          "completed_at": "2026-10-10T20:23:33.074773+00:00"
+        }
+      },
+      {
+        "job_id": "68cd2ddd-d9c0-4ba7-8fa0-1c93b86ac316",
+        "state": "done",
+        "attempts": 1,
+        "next_attempt_at": "2026-10-11T01:53:30.258390+05:30",
+        "error_code": null,
+        "symbol": "BTCUSDT",
+        "result": {
+          "pages": 1,
+          "stored": 2,
+          "symbol": "BTCUSDT",
+          "duplicates": 3,
+          "manifest_id": "dc854ec5-ae00-4e6a-a6aa-5913bf4cf67f",
+          "quarantined": 0,
+          "completed_at": "2026-10-10T20:23:31.966552+00:00"
+        }
+      },
+      {
+        "job_id": "d943865f-5462-4728-9faa-5fdba33e20da",
+        "state": "done",
+        "attempts": 1,
+        "next_attempt_at": "2026-10-08T21:48:48.742920+05:30",
+        "error_code": null,
+        "symbol": "XRPUSDT",
+        "result": {
+          "pages": 1,
+          "stored": 0,
+          "symbol": "XRPUSDT",
+          "duplicates": 3,
+          "manifest_id": null,
+          "quarantined": 0,
+          "completed_at": "2026-10-08T16:18:56.856514+00:00"
+        }
+      },
+      {
+        "job_id": "676739cd-5052-4b9e-8a37-74f1db2c97bb",
+        "state": "done",
+        "attempts": 1,
+        "next_attempt_at": "2026-10-08T21:48:48.713743+05:30",
+        "error_code": null,
+        "symbol": "BNBUSDT",
+        "result": {
+          "pages": 1,
+          "stored": 0,
+          "symbol": "BNBUSDT",
+          "duplicates": 3,
+          "manifest_id": null,
+          "quarantined": 0,
+          "completed_at": "2026-10-08T16:18:55.151647+00:00"
+        }
+      },
+      {
+        "job_id": "669cf4b2-c273-4b3c-b39f-01fb3e7aa7ed",
+        "state": "done",
+        "attempts": 1,
+        "next_attempt_at": "2026-10-08T21:48:48.684361+05:30",
+        "error_code": null,
+        "symbol": "SOLUSDT",
+        "result": {
+          "pages": 1,
+          "stored": 0,
+          "symbol": "SOLUSDT",
+          "duplicates": 3,
+          "manifest_id": null,
+          "quarantined": 0,
+          "completed_at": "2026-10-08T16:18:53.570496+00:00"
+        }
+      },
+      {
+        "job_id": "027299d8-1d9a-4188-b362-9b704c82f5a4",
+        "state": "done",
+        "attempts": 1,
+        "next_attempt_at": "2026-10-08T21:48:48.655764+05:30",
+        "error_code": null,
+        "symbol": "ETHUSDT",
+        "result": {
+          "pages": 1,
+          "stored": 0,
+          "symbol": "ETHUSDT",
+          "duplicates": 3,
+          "manifest_id": null,
+          "quarantined": 0,
+          "completed_at": "2026-10-08T16:18:51.952599+00:00"
+        }
+      },
+      {
+        "job_id": "c2b5167d-b1f9-4e2c-a727-5fa4950b1f0f",
+        "state": "done",
+        "attempts": 1,
+        "next_attempt_at": "2026-10-08T21:48:48.623973+05:30",
+        "error_code": null,
+        "symbol": "BTCUSDT",
+        "result": {
+          "pages": 1,
+          "stored": 0,
+          "symbol": "BTCUSDT",
+          "duplicates": 3,
+          "manifest_id": null,
+          "quarantined": 0,
+          "completed_at": "2026-10-08T16:18:50.420272+00:00"
+        }
+      },
+      {
+        "job_id": "25470a5d-5fcb-4bd9-8e4b-b2ab38612e20",
+        "state": "done",
+        "attempts": 1,
+        "next_attempt_at": "2026-10-08T21:45:08.548156+05:30",
+        "error_code": null,
+        "symbol": "XRPUSDT",
+        "result": {
+          "pages": 1,
+          "stored": 4,
+          "symbol": "XRPUSDT",
+          "duplicates": 3,
+          "manifest_id": "a00facd3-9c92-4500-9bef-18f427d937d7",
+          "quarantined": 0,
+          "completed_at": "2026-10-08T16:15:18.942819+00:00"
+        }
+      },
+      {
+        "job_id": "c2ab5663-ac8f-497d-a1c4-bc3ee1aac393",
+        "state": "done",
+        "attempts": 1,
+        "next_attempt_at": "2026-10-08T21:45:08.519487+05:30",
+        "error_code": null,
+        "symbol": "BNBUSDT",
+        "result": {
+          "pages": 1,
+          "stored": 4,
+          "symbol": "BNBUSDT",
+          "duplicates": 3,
+          "manifest_id": "53eb880e-a5fd-46a5-b049-2f0032f608e6",
+          "quarantined": 0,
+          "completed_at": "2026-10-08T16:15:16.958864+00:00"
+        }
+      },
+      {
+        "job_id": "d03eab98-7c08-42b9-b162-dfd2df571327",
+        "state": "done",
+        "attempts": 1,
+        "next_attempt_at": "2026-10-08T21:45:08.491174+05:30",
+        "error_code": null,
+        "symbol": "SOLUSDT",
+        "result": {
+          "pages": 1,
+          "stored": 4,
+          "symbol": "SOLUSDT",
+          "duplicates": 3,
+          "manifest_id": "ce038aa2-8b6b-4556-9fb3-9419ffe168da",
+          "quarantined": 0,
+          "completed_at": "2026-10-08T16:15:15.099683+00:00"
+        }
+      },
+      {
+        "job_id": "be4fb1ef-e8af-45f4-b062-730765d3793a",
+        "state": "done",
+        "attempts": 1,
+        "next_attempt_at": "2026-10-08T21:45:08.463601+05:30",
+        "error_code": null,
+        "symbol": "ETHUSDT",
+        "result": {
+          "pages": 1,
+          "stored": 4,
+          "symbol": "ETHUSDT",
+          "duplicates": 3,
+          "manifest_id": "6803851c-39ec-4050-97e1-31772f7c7980",
+          "quarantined": 0,
+          "completed_at": "2026-10-08T16:15:12.550647+00:00"
+        }
+      },
+      {
+        "job_id": "9c224873-ed47-4a9a-9b80-01203cf783dc",
+        "state": "done",
+        "attempts": 1,
+        "next_attempt_at": "2026-10-08T21:45:08.422525+05:30",
+        "error_code": null,
+        "symbol": "BTCUSDT",
+        "result": {
+          "pages": 1,
+          "stored": 4,
+          "symbol": "BTCUSDT",
+          "duplicates": 3,
+          "manifest_id": "4592f457-b156-49d3-93b3-14a71744c6d2",
+          "quarantined": 0,
+          "completed_at": "2026-10-08T16:15:10.310908+00:00"
+        }
+      }
+    ]
+  },
+  "preflight": {
+    "settings": {
+      "database_configured": true,
+      "owner_configured": true,
+      "timezone": "Asia/Kolkata",
+      "base_currency": "INR",
+      "cloud_model_allowed": true,
+      "environment": "PILOT_TEST"
+    },
+    "status": "VALIDATED",
+    "checks": {
+      "database_identity": {
+        "database": "market_cortex_pilot_test",
+        "server_address": "127.0.0.1",
+        "server_port": 55432,
+        "server_version": "17.11",
+        "transaction_read_only": "on"
+      },
+      "database": "CONNECTED_READ_ONLY",
+      "encoding": "UTF8",
+      "pending_migrations": [],
+      "changed_migrations": [],
+      "data_root_exists": true,
+      "table_counts": {
+        "app_locks": 0,
+        "calendar_sessions": 0,
+        "consumer_receipts": 0,
+        "context_facts": 1234,
+        "context_files": 3,
+        "context_head": 1,
+        "context_manifest_facts": 2468,
+        "context_manifest_files": 6,
+        "context_manifests": 3,
+        "context_snapshots": 3,
+        "cortex_research_runs": 571,
+        "dataset_files": 200,
+        "dataset_head": 1,
+        "dataset_manifests": 40,
+        "edge_library": 1,
+        "experiment_definitions": 32,
+        "experiment_edge_links": 4,
+        "experiment_events": 394,
+        "experiment_exposures": 144,
+        "experiment_governance": 28,
+        "experiment_proposals": 1,
+        "identifier_mappings": 10,
+        "instruments": 10,
+        "jobs": 81,
+        "journal_entries": 2,
+        "journal_revisions": 2,
+        "manifest_members": 200,
+        "observations": 5070,
+        "opportunity_candidates": 513,
+        "outbox": 40,
+        "personal_record_versions": 0,
+        "personal_records": 0,
+        "personalization_snapshots": 6,
+        "portfolio_risk_snapshots": 2,
+        "portfolio_versions": 10,
+        "portfolios": 3,
+        "prediction_evaluations": 6,
+        "prediction_records": 3,
+        "prediction_revisions": 9,
+        "provider_capabilities": 0,
+        "quant_artifacts": 390,
+        "quant_edge_evidence": 0,
+        "quarantine": 0,
+        "research_hypotheses": 4,
+        "research_mission_checkpoints": 609,
+        "research_missions": 27,
+        "research_theses": 12,
+        "research_thesis_versions": 66,
+        "schema_migrations": 13,
+        "source_batches": 53,
+        "venues": 2
+      },
+      "storage": {
+        "referenced": 203,
+        "unreferenced": [],
+        "missing": [],
+        "corrupt": [],
+        "staged_count": 0,
+        "deletion_performed": false
+      }
+    }
+  }
+}

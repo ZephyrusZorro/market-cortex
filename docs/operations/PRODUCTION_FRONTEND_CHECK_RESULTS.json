@@ -1,0 +1,41 @@
+{
+  "observed_at": "2026-10-11T10:09:49.494422+00:00",
+  "typecheck": {
+    "status": "PASS",
+    "log": "runtime/production-typecheck.log"
+  },
+  "frontend": {
+    "status": "PASS_ON_RECHECK",
+    "tests": 54,
+    "files": 13,
+    "initial_run": {
+      "passed": 52,
+      "failed": 2,
+      "log": "runtime/production-frontend-tests.log"
+    },
+    "focused_recheck": {
+      "passed": 10,
+      "failed": 0,
+      "log": "runtime/production-frontend-focused.log"
+    },
+    "full_recheck": {
+      "passed": 54,
+      "failed": 0,
+      "log": "runtime/production-frontend-recheck.log"
+    },
+    "note": "Initial asynchronous element waits failed; neither failure reproduced on focused or full recheck. No source/assertion/timeouts changed; cause not established."
+  },
+  "production_runtime": "PENDING_OWNER_TERMINAL_LAUNCH",
+  "production_browser_restart": "NOT_YET_VALIDATED",
+  "owner_ready": false,
+  "pilot_connection": {
+    "environment": "PILOT_TEST",
+    "database_env": "MARKET_CORTEX_PILOT_DATABASE_URL",
+    "database": "market_cortex_pilot_test",
+    "role": "cortex_test",
+    "host": "127.0.0.1",
+    "port": 55432,
+    "authentication": "Existing loopback trust; supplied password is not validated"
+  },
+  "owner_database_modified_by_this_steering": false
+}

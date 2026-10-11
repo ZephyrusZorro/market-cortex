@@ -1,0 +1,256 @@
+{
+  "status": "VALIDATED",
+  "validated_at": "2026-10-10T20:30:35.368288+00:00",
+  "environment": "PILOT_TEST",
+  "owner_main": "UNTOUCHED",
+  "market_head": "8c66134e-2ad4-4359-bc2c-aa51c7c3e140",
+  "context_head": "158ad3f7-aab9-5d41-b79f-05eef01bc207",
+  "table_counts_before_backup": {
+    "app_locks": 0,
+    "calendar_sessions": 0,
+    "consumer_receipts": 0,
+    "context_facts": 1234,
+    "context_files": 3,
+    "context_head": 1,
+    "context_manifest_facts": 2468,
+    "context_manifest_files": 6,
+    "context_manifests": 3,
+    "context_snapshots": 3,
+    "cortex_research_runs": 561,
+    "dataset_files": 195,
+    "dataset_head": 1,
+    "dataset_manifests": 35,
+    "edge_library": 1,
+    "experiment_definitions": 32,
+    "experiment_edge_links": 4,
+    "experiment_events": 394,
+    "experiment_exposures": 144,
+    "experiment_governance": 28,
+    "experiment_proposals": 1,
+    "identifier_mappings": 10,
+    "instruments": 10,
+    "jobs": 74,
+    "journal_entries": 2,
+    "journal_revisions": 2,
+    "manifest_members": 195,
+    "observations": 5065,
+    "opportunity_candidates": 473,
+    "outbox": 35,
+    "personal_record_versions": 0,
+    "personal_records": 0,
+    "personalization_snapshots": 6,
+    "portfolio_risk_snapshots": 2,
+    "portfolio_versions": 10,
+    "portfolios": 3,
+    "prediction_evaluations": 6,
+    "prediction_records": 3,
+    "prediction_revisions": 9,
+    "provider_capabilities": 0,
+    "quant_artifacts": 387,
+    "quant_edge_evidence": 0,
+    "quarantine": 0,
+    "research_hypotheses": 4,
+    "research_mission_checkpoints": 609,
+    "research_missions": 27,
+    "research_theses": 11,
+    "research_thesis_versions": 64,
+    "schema_migrations": 13,
+    "source_batches": 48,
+    "venues": 2
+  },
+  "restored_table_counts": {
+    "app_locks": 0,
+    "calendar_sessions": 0,
+    "consumer_receipts": 0,
+    "context_facts": 1234,
+    "context_files": 3,
+    "context_head": 1,
+    "context_manifest_facts": 2468,
+    "context_manifest_files": 6,
+    "context_manifests": 3,
+    "context_snapshots": 3,
+    "cortex_research_runs": 561,
+    "dataset_files": 195,
+    "dataset_head": 1,
+    "dataset_manifests": 35,
+    "edge_library": 1,
+    "experiment_definitions": 32,
+    "experiment_edge_links": 4,
+    "experiment_events": 394,
+    "experiment_exposures": 144,
+    "experiment_governance": 28,
+    "experiment_proposals": 1,
+    "identifier_mappings": 10,
+    "instruments": 10,
+    "jobs": 74,
+    "journal_entries": 2,
+    "journal_revisions": 2,
+    "manifest_members": 195,
+    "observations": 5065,
+    "opportunity_candidates": 473,
+    "outbox": 35,
+    "personal_record_versions": 0,
+    "personal_records": 0,
+    "personalization_snapshots": 6,
+    "portfolio_risk_snapshots": 2,
+    "portfolio_versions": 10,
+    "portfolios": 3,
+    "prediction_evaluations": 6,
+    "prediction_records": 3,
+    "prediction_revisions": 9,
+    "provider_capabilities": 0,
+    "quant_artifacts": 387,
+    "quant_edge_evidence": 0,
+    "quarantine": 0,
+    "research_hypotheses": 4,
+    "research_mission_checkpoints": 609,
+    "research_missions": 27,
+    "research_theses": 11,
+    "research_thesis_versions": 64,
+    "schema_migrations": 13,
+    "source_batches": 48,
+    "venues": 2
+  },
+  "count_comparison": "SOURCE_LOWER_BOUNDS; PG_DUMP_CONSISTENT_SNAPSHOT",
+  "parquet_artifact_N": 198,
+  "storage": {
+    "referenced": 198,
+    "unreferenced": [],
+    "missing": [],
+    "corrupt": [],
+    "staged_count": 0,
+    "deletion_performed": false
+  },
+  "encrypted_bytes": 833996853,
+  "market_query": {
+    "N": 1013,
+    "source_hash": "221e1b76451d9b254e65ea8789654791fe1a19c08053a6c7b31a6756a75b5c6a",
+    "restored_hash": "221e1b76451d9b254e65ea8789654791fe1a19c08053a6c7b31a6756a75b5c6a"
+  },
+  "research_run_id": "03f9f5b1-ab58-4898-96e9-765987da5005",
+  "research_replay": {
+    "run_id": "03f9f5b1-ab58-4898-96e9-765987da5005",
+    "evidence_reproducible": true,
+    "language_reproducible": false,
+    "checks": [
+      {
+        "tool_id": "dataset.context",
+        "manifest_id": "8c66134e-2ad4-4359-bc2c-aa51c7c3e140",
+        "as_of": "2026-10-10T20:24:06.298268+00:00",
+        "stored_hash": "aa9972d7a524b5d232508bf427698249042f955cbc8bb5d70b6f51654f3cc7f0",
+        "replayed_hash": "aa9972d7a524b5d232508bf427698249042f955cbc8bb5d70b6f51654f3cc7f0",
+        "matched": true
+      },
+      {
+        "tool_id": "instrument.features",
+        "manifest_id": "8c66134e-2ad4-4359-bc2c-aa51c7c3e140",
+        "as_of": "2026-10-10T20:24:06.298268+00:00",
+        "stored_hash": "f800f08d964d84098e65450cd5c5cb4c9199bf157063181011a90d53825b32d9",
+        "replayed_hash": "f800f08d964d84098e65450cd5c5cb4c9199bf157063181011a90d53825b32d9",
+        "matched": true
+      },
+      {
+        "tool_id": "market.state",
+        "manifest_id": "8c66134e-2ad4-4359-bc2c-aa51c7c3e140",
+        "as_of": "2026-10-10T20:24:06.298268+00:00",
+        "stored_hash": "ddcd53b51ae601ae396b3efdfc285cf75b8d11c031bfce5b6cf4b91cd8cab20d",
+        "replayed_hash": "ddcd53b51ae601ae396b3efdfc285cf75b8d11c031bfce5b6cf4b91cd8cab20d",
+        "matched": true
+      },
+      {
+        "tool_id": "dataset.manifest",
+        "manifest_id": "8c66134e-2ad4-4359-bc2c-aa51c7c3e140",
+        "as_of": "2026-10-10T20:24:06.298268+00:00",
+        "stored_hash": "70dc52d24b1d8961f849e0b0d248aac29612e29c47fb50281be309604cf4c3c4",
+        "replayed_hash": "70dc52d24b1d8961f849e0b0d248aac29612e29c47fb50281be309604cf4c3c4",
+        "matched": true
+      }
+    ],
+    "stored_evidence_hash": "3c93afb62916685e3f219b27422011e281f25d2d958d014e7be87bcb4f195c23"
+  },
+  "experiment_checks": [
+    {
+      "experiment_id": "0bcf4e65-f9af-5c44-a025-d886bb40252f",
+      "result_hash": "94b0d4127f340dcccbdbbbcc6bb38c015ebd3a38588d3a11de5df67dd30f99a4",
+      "models": 4
+    },
+    {
+      "experiment_id": "d9a8b090-2bbd-5900-aa7f-6e0c1aeec104",
+      "result_hash": "457064ff35fb81eae2f8df2a109c33fbdcf47b6171be6107c1f9ecaabc1c76f5",
+      "models": 4
+    },
+    {
+      "experiment_id": "20137c98-5a40-534c-a11c-c304a23883a1",
+      "result_hash": "2535fa6a3e8a3688192b92e70f5a77e109f26b6809c8b580d780c9cf74630201",
+      "models": 4
+    },
+    {
+      "experiment_id": "d940f3c3-d474-51b0-8d37-076ee9965af1",
+      "result_hash": "213089fdd17c21c9c7ef9f1be62e006084db66526b5f048fb4a8563442866f65",
+      "models": 4
+    },
+    {
+      "experiment_id": "8ed6ea48-ef24-5146-86b4-4d1c04b804c3",
+      "result_hash": "8cb2093a727ca1fdb3129b15b52fd9d183a532fe0c95b05373d233205121e8fd",
+      "models": 4
+    },
+    {
+      "experiment_id": "2205b094-2c42-5021-9e97-0334f181adcd",
+      "result_hash": "109506514e0a5380dee7b5ea46b35b502a9d0ef9812588fd6a30964b82793afc",
+      "models": 4
+    },
+    {
+      "experiment_id": "0cecc594-847e-54d9-8b91-7a7588b6c881",
+      "result_hash": "64b0882c76c4c16af8f17b0dfd10f7ea5152f344aa2d825bc2146a28564a42eb",
+      "models": 0
+    }
+  ],
+  "model_replay": {
+    "status": "MATCH",
+    "saved_result_hash": "2535fa6a3e8a3688192b92e70f5a77e109f26b6809c8b580d780c9cf74630201",
+    "recomputed_result_hash": "2535fa6a3e8a3688192b92e70f5a77e109f26b6809c8b580d780c9cf74630201",
+    "dataset_match": true,
+    "comparison": "EXACT_SAME_NUMPY_RUNTIME; CROSS_RUNTIME_RECOMPUTE_REQUIRES_RECORDED_VERSION"
+  },
+  "dossier_replay": {
+    "status": "MATCH",
+    "canonical_mission_replay": {
+      "mission_id": "ac73bfc0-fe45-44e1-b570-51a8ba37df1e",
+      "status": "VERIFIED",
+      "matched": true,
+      "checks": [
+        {
+          "step_id": "availability",
+          "matched": true
+        },
+        {
+          "step_id": "features",
+          "matched": true
+        }
+      ],
+      "grounding_rejected": [],
+      "model_narrative_reexecuted": false,
+      "scope_unchanged": true
+    },
+    "personalization_verified": true,
+    "experiment_result_hash": "2535fa6a3e8a3688192b92e70f5a77e109f26b6809c8b580d780c9cf74630201"
+  },
+  "personal_snapshot_replay": {
+    "matched": true,
+    "checks": [
+      {
+        "evidence_id": "40d8d54b1efbac214cb858db",
+        "matched": true
+      }
+    ],
+    "algorithm_available": true
+  },
+  "refresh_jobs_restored": 20,
+  "timings_ms": {
+    "backup": 90184.92,
+    "restore": 221299.15,
+    "ridge_recompute_replay": 7808.15
+  },
+  "retained_owner_backup": "NOT_ESTABLISHED",
+  "disposable_database_and_files": "CLEANED_AFTER_DRILL"
+}

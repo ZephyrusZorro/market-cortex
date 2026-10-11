@@ -1,0 +1,250 @@
+{
+  "status": "VALIDATED_OWNER_MARKET_DATA_READ_ONLY_RECOVERY",
+  "verified_at": "2026-10-11T12:45:42.293734+00:00",
+  "verification_receipt": "C:\\Users\\faris\\OneDrive\\Documents\\MARKET_CORTEX_Phase_1_Completed\\runtime\\owner-onboarding-20473f58dfda42659c60bcf6668b12bb\\verification-7c13d8d2c4534941a72e39e258d6249d.json",
+  "verification_receipt_sha256": "69b5d57bf426f494d6938b9126c376eadece130091a63b4e2b1ed9c899bcf7f8",
+  "original_report_sha256": "2b96abfc17cc7e0b671c03b83d2f4820c13f0023e9b52369a4503cb5785f925e",
+  "original_report_preserved": true,
+  "owner_ready": true,
+  "additional_owner_writes_authorized": false,
+  "owner_database_writes_during_recovery": false,
+  "root_cause": "TIMESTAMPTZ_JSON_HASH_USED_DIFFERENT_SESSION_TIMEZONE",
+  "database_identity": {
+    "database": "market_cortex",
+    "server_address": "::1",
+    "server_port": 5432,
+    "server_version": "17.11",
+    "transaction_read_only": "on"
+  },
+  "schema_hash": "596fdf250422719c6aa31852644b8329cb65137164bfc7e6d16422acd515cafd",
+  "migration_count": 13,
+  "migration_ids_checksums_and_applied_at_unchanged": true,
+  "migration_utc_hash": "a10a7e8897bdfcc2830386d1ad8151fe22c6a6b7302468677e4c8893f3fd3093",
+  "pending_migrations": [],
+  "changed_migrations": [],
+  "table_counts": {
+    "app_locks": 0,
+    "calendar_sessions": 0,
+    "consumer_receipts": 0,
+    "context_facts": 0,
+    "context_files": 0,
+    "context_head": 0,
+    "context_manifest_facts": 0,
+    "context_manifest_files": 0,
+    "context_manifests": 0,
+    "context_snapshots": 0,
+    "cortex_research_runs": 0,
+    "dataset_files": 65,
+    "dataset_head": 1,
+    "dataset_manifests": 5,
+    "edge_library": 0,
+    "experiment_definitions": 0,
+    "experiment_edge_links": 0,
+    "experiment_events": 0,
+    "experiment_exposures": 0,
+    "experiment_governance": 0,
+    "experiment_proposals": 0,
+    "identifier_mappings": 5,
+    "instruments": 5,
+    "jobs": 5,
+    "journal_entries": 0,
+    "journal_revisions": 0,
+    "manifest_members": 65,
+    "observations": 1825,
+    "opportunity_candidates": 0,
+    "outbox": 5,
+    "personal_record_versions": 0,
+    "personal_records": 0,
+    "personalization_snapshots": 0,
+    "portfolio_risk_snapshots": 0,
+    "portfolio_versions": 0,
+    "portfolios": 0,
+    "prediction_evaluations": 0,
+    "prediction_records": 0,
+    "prediction_revisions": 0,
+    "provider_capabilities": 0,
+    "quant_artifacts": 0,
+    "quant_edge_evidence": 0,
+    "quarantine": 0,
+    "research_hypotheses": 0,
+    "research_mission_checkpoints": 0,
+    "research_missions": 0,
+    "research_theses": 0,
+    "research_thesis_versions": 0,
+    "schema_migrations": 13,
+    "source_batches": 15,
+    "venues": 1
+  },
+  "storage": {
+    "referenced": 65,
+    "unreferenced": [],
+    "missing": [],
+    "corrupt": [],
+    "staged_count": 0,
+    "deletion_performed": false
+  },
+  "coverage": [
+    {
+      "symbol": "BTCUSDT",
+      "visible_sessions": 365,
+      "hash_matched": true
+    },
+    {
+      "symbol": "ETHUSDT",
+      "visible_sessions": 365,
+      "hash_matched": true
+    },
+    {
+      "symbol": "SOLUSDT",
+      "visible_sessions": 365,
+      "hash_matched": true
+    },
+    {
+      "symbol": "BNBUSDT",
+      "visible_sessions": 365,
+      "hash_matched": true
+    },
+    {
+      "symbol": "XRPUSDT",
+      "visible_sessions": 365,
+      "hash_matched": true
+    }
+  ],
+  "manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b",
+  "freshness": {
+    "environment": "OWNER_MAIN",
+    "expected_closed_session": "2026-10-10",
+    "freshness_policy": "binance_utc_daily_closed_session_v1",
+    "items": [
+      {
+        "instrument_id": "70638639-782b-4664-9ac6-f12b101fb7a6",
+        "last_session": "2026-10-10",
+        "freshness": "FRESH"
+      },
+      {
+        "instrument_id": "d79abd0c-40bf-45d8-80bf-ae9e0f2b82ff",
+        "last_session": "2026-10-10",
+        "freshness": "FRESH"
+      },
+      {
+        "instrument_id": "77066a0a-51a7-405f-a916-ade43dd4dae1",
+        "last_session": "2026-10-10",
+        "freshness": "FRESH"
+      },
+      {
+        "instrument_id": "03d92503-c70a-4042-ba01-3b70f640c17c",
+        "last_session": "2026-10-10",
+        "freshness": "FRESH"
+      },
+      {
+        "instrument_id": "affec113-6189-4613-a36b-5cc3bcf70b63",
+        "last_session": "2026-10-10",
+        "freshness": "FRESH"
+      }
+    ],
+    "jobs": [
+      {
+        "job_id": "c5671957-299b-40e9-93e8-aec0b0e9150a",
+        "state": "done",
+        "attempts": 1,
+        "next_attempt_at": "2026-10-11T17:57:52.468626+05:30",
+        "error_code": null,
+        "symbol": "XRPUSDT",
+        "result": {
+          "pages": 1,
+          "stored": 0,
+          "symbol": "XRPUSDT",
+          "duplicates": 3,
+          "manifest_id": null,
+          "quarantined": 0,
+          "completed_at": "2026-10-11T12:27:58.895766+00:00"
+        }
+      },
+      {
+        "job_id": "8a5766ec-761b-4053-be0a-29346d5f8b2d",
+        "state": "done",
+        "attempts": 1,
+        "next_attempt_at": "2026-10-11T17:57:52.439055+05:30",
+        "error_code": null,
+        "symbol": "BNBUSDT",
+        "result": {
+          "pages": 1,
+          "stored": 0,
+          "symbol": "BNBUSDT",
+          "duplicates": 3,
+          "manifest_id": null,
+          "quarantined": 0,
+          "completed_at": "2026-10-11T12:27:57.803680+00:00"
+        }
+      },
+      {
+        "job_id": "eb522b3d-cb30-4d38-93cd-943873d15c9f",
+        "state": "done",
+        "attempts": 1,
+        "next_attempt_at": "2026-10-11T17:57:52.409820+05:30",
+        "error_code": null,
+        "symbol": "SOLUSDT",
+        "result": {
+          "pages": 1,
+          "stored": 0,
+          "symbol": "SOLUSDT",
+          "duplicates": 3,
+          "manifest_id": null,
+          "quarantined": 0,
+          "completed_at": "2026-10-11T12:27:56.337275+00:00"
+        }
+      },
+      {
+        "job_id": "56c581b0-c8a0-499a-b155-9c212abfb375",
+        "state": "done",
+        "attempts": 1,
+        "next_attempt_at": "2026-10-11T17:57:52.377905+05:30",
+        "error_code": null,
+        "symbol": "ETHUSDT",
+        "result": {
+          "pages": 1,
+          "stored": 0,
+          "symbol": "ETHUSDT",
+          "duplicates": 3,
+          "manifest_id": null,
+          "quarantined": 0,
+          "completed_at": "2026-10-11T12:27:55.124801+00:00"
+        }
+      },
+      {
+        "job_id": "4b7b324a-6988-4850-88cd-43bf0e13a691",
+        "state": "done",
+        "attempts": 1,
+        "next_attempt_at": "2026-10-11T17:57:52.346646+05:30",
+        "error_code": null,
+        "symbol": "BTCUSDT",
+        "result": {
+          "pages": 1,
+          "stored": 0,
+          "symbol": "BTCUSDT",
+          "duplicates": 3,
+          "manifest_id": null,
+          "quarantined": 0,
+          "completed_at": "2026-10-11T12:27:53.779642+00:00"
+        }
+      }
+    ]
+  },
+  "retained_pre_ingestion_backup_hash_verified": true,
+  "backup_scope": "Fully migrated owner catalog before market ingestion; no Parquets. Not a backup of the now-populated owner state.",
+  "retained_recovery": "mc_owner_market_4f483e3fa2424c688c5cf60cebbc49e9_test",
+  "retained_recovery_integrity": "Independently verified schema, all baseline counts and row hashes; 51 tables, 13 migrations.",
+  "tests": {
+    "tests_passed": 9,
+    "scope": "Disposable migrated test catalogs only; UTC/Asia-Kolkata equivalence and real checksum/applied_at tamper rejection; retained backup and failed restore safety.",
+    "log": "runtime/owner-onboarding-recovery-tests.log"
+  },
+  "application_acceptance": "VALIDATED_OWNER_PRODUCTION_AND_RESTART_RECOVERY",
+  "deferred_providers": [
+    "UPSTOX_DEFERRED_NOT_CONFIGURED",
+    "ALPACA_DEFERRED_NOT_CONFIGURED"
+  ],
+  "scheduler_registered": false,
+  "owner_research_records_created_under_separate_approval": 1,
+  "current_application_state": "runtime/application-a9c83bf65f414697b8cda568c8b868a3.json"
+}

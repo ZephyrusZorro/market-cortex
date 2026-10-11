@@ -1,0 +1,12 @@
+{
+  "experiment_id": "20137c98-5a40-534c-a11c-c304a23883a1",
+  "result": {
+    "status": "MATCH",
+    "saved_result_hash": "2535fa6a3e8a3688192b92e70f5a77e109f26b6809c8b580d780c9cf74630201",
+    "recomputed_result_hash": "2535fa6a3e8a3688192b92e70f5a77e109f26b6809c8b580d780c9cf74630201",
+    "dataset_match": true,
+    "comparison": "EXACT_SAME_NUMPY_RUNTIME; CROSS_RUNTIME_RECOMPUTE_REQUIRES_RECORDED_VERSION"
+  },
+  "mode": "PRODUCTION_PILOT_TEST",
+  "mutations": "NONE; compute-only replay"
+}

@@ -24,7 +24,10 @@ from market_cortex.quant_store import digest
 
 
 def main():
-    p=argparse.ArgumentParser(); p.add_argument('--profile',type=Path,required=True); args=p.parse_args()
+    p=argparse.ArgumentParser(); p.add_argument('--profile',type=Path,required=True)
+    p.add_argument('--pilot-results',type=Path,default=Path('docs/operations/OPERATIONAL_PILOT_RESULTS.json'))
+    p.add_argument('--output',type=Path,default=Path('docs/operations/OPERATIONAL_RESTORE_RESULTS.json'))
+    args=p.parse_args()
     _,settings=load_profile(args.profile)
     if settings.environment=='OWNER_MAIN': raise ValueError('ISOLATED_PILOT_REQUIRED')
     root=Path(__file__).resolve().parents[1]; source=catalog_for(settings); dsn=settings.database_url
@@ -32,7 +35,7 @@ def main():
         tables=[r[0] for r in c.execute("SELECT tablename FROM pg_tables WHERE schemaname=current_schema() ORDER BY tablename")]
         before={name:c.execute(sql.SQL('SELECT count(*) FROM {}').format(sql.Identifier(name))).fetchone()[0] for name in tables}
         context_head=str(c.execute('SELECT manifest_id FROM context_head WHERE singleton=true').fetchone()[0])
-    pilot=json.loads((root/'docs/operations/OPERATIONAL_PILOT_RESULTS.json').read_text(encoding='utf-8'))
+    pilot=json.loads(args.pilot_results.read_text(encoding='utf-8'))
     phase12=json.loads((root/'docs/quant/PHASE_12_PILOT_RESULTS.json').read_text(encoding='utf-8'))
     personal=json.loads((root/'docs/personalization/PHASE_11_PILOT_RESULTS.json').read_text(encoding='utf-8'))
     target_name='operational_restore_'+uuid4().hex+'_test'; target_dsn=make_conninfo(dsn,dbname=target_name)
@@ -63,7 +66,7 @@ def main():
             kwargs=dict(instrument_id=instrument_id,start=start,end=end+timedelta(days=1),as_of=cutoff,manifest_id=source.head(),provider_id='binance')
             original=source.bars(**kwargs)[1]; recovered_bars=target.bars(**kwargs)[1]
             original_hash=digest([x.model_dump(mode='json') for x in original]); recovered_hash=digest([x.model_dump(mode='json') for x in recovered_bars])
-            assert original_hash==recovered_hash and len(original)==1011
+            assert original_hash==recovered_hash and len(original)==pilot['chart_bar_N']
             cortex=CortexService(target,target_settings); run=cortex.store.get(UUID(pilot['research_run_id']))
             assert run and run.evidence_hash==pilot['research_evidence_hash']
             cortex_replay=cortex.replay(run.run_id); assert cortex_replay['evidence_reproducible']
@@ -91,7 +94,7 @@ def main():
                 'model_replay':model_replay,'dossier_replay':dossier,'personal_snapshot_replay':personal_replay,
                 'refresh_jobs_restored':jobs,'timings_ms':{'backup':backup_ms,'restore':restore_ms,'ridge_recompute_replay':replay_ms},
                 'retained_owner_backup':'NOT_ESTABLISHED','disposable_database_and_files':'CLEANED_AFTER_DRILL'}
-            (root/'docs/operations/OPERATIONAL_RESTORE_RESULTS.json').write_text(json.dumps(result,indent=2,default=str),encoding='utf-8')
+            args.output.write_text(json.dumps(result,indent=2,default=str),encoding='utf-8')
             print(json.dumps({'status':'VALIDATED','artifact_N':result['parquet_artifact_N'],'encrypted_bytes':result['encrypted_bytes'],'timings_ms':result['timings_ms']}))
     finally:
         with connect(dsn) as c:

@@ -1,0 +1,27 @@
+{
+  "status": "AUTHORIZED_EXECUTED_AND_VERIFIED; DO_NOT_RESUBMIT",
+  "question": "Analyze ETHUSDT momentum and data quality in the pinned owner daily dataset. Include uncertainty and whether available evidence supports an edge.",
+  "mode": "latest",
+  "manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b",
+  "as_of": "2026-10-11T12:48:07.699784+00:00",
+  "symbol": "ETHUSDT",
+  "compare_symbol": "BTCUSDT",
+  "depth": "deep",
+  "expected_database_change": {
+    "cortex_research_runs": 1
+  },
+  "market_or_personal_record_changes": false,
+  "synthetic": false,
+  "model": "deterministic; no model configured",
+  "next_checks": [
+    "Reopen same saved ID",
+    "Read-only evidence replay",
+    "Owner-executed controlled Stop/Start",
+    "Reopen/replay same ID after restart",
+    "Read-only full table-count/storage comparison"
+  ],
+  "owner_ready": true,
+  "authorization": "Authorize this single owner research record",
+  "authorized_at_client_date": "2026-10-11",
+  "run_id": "f329f8c9-1274-4be5-8f8d-0e695cdd7e7c"
+}

@@ -1,0 +1,261 @@
+{
+  "status": "VALIDATED_PRODUCTION_PILOT_RESTART_RECOVERY",
+  "observed_at": "2026-10-11T10:36:12.158914+00:00",
+  "state_file": "runtime/application-84cd888863fc48a18410415605e441da.json",
+  "state": {
+    "url": "http://127.0.0.1:3002",
+    "environment": "PILOT_TEST",
+    "backend": {
+      "marker": "market_cortex.operations_runtime",
+      "pid": 14156,
+      "started_at": "2026-10-11T10:28:36.7519435Z"
+    },
+    "mode": "production",
+    "frontend": {
+      "marker": "C:\\Users\\faris\\OneDrive\\Documents\\MARKET_CORTEX_Phase_1_Completed\\apps\\workstation\\node_modules\\next\\dist\\bin\\next",
+      "pid": 35264,
+      "started_at": "2026-10-11T10:28:36.7619913Z"
+    }
+  },
+  "stop": {
+    "observed_at": "2026-10-11T10:28:22.3843538Z",
+    "stopped_state_file": "C:\\Users\\faris\\OneDrive\\Documents\\MARKET_CORTEX_Phase_1_Completed\\runtime\\application-6c0ac9a5fe5244a991628cc5553d2b32.json",
+    "application_ports_free": true
+  },
+  "health": {
+    "status": "ready",
+    "settings": {
+      "database_configured": true,
+      "owner_configured": true,
+      "timezone": "Asia/Kolkata",
+      "base_currency": "INR",
+      "cloud_model_allowed": true,
+      "environment": "PILOT_TEST"
+    },
+    "manifest_id": "5fda5a53-4bcd-4788-84a6-e84cf799a3da"
+  },
+  "same_manifest": true,
+  "same_cortex_evidence_hash": true,
+  "same_quant_result_hash": true,
+  "same_experiment_result_hash": true,
+  "mission_id": "11ad96ac-41a8-4b55-87eb-74b1cbe8bbce",
+  "mission_revision": 27,
+  "mission_content_hash": "ff30308df947ff44d904bcf057cf06f755258907f5fb3d291b50bc73fe34a8ba",
+  "replays": {
+    "cortex": {
+      "run_id": "5abaa90a-9182-4450-9327-0ee9f701fbcc",
+      "evidence_reproducible": true,
+      "language_reproducible": false,
+      "checks": [
+        {
+          "tool_id": "dataset.context",
+          "manifest_id": "8c66134e-2ad4-4359-bc2c-aa51c7c3e140",
+          "as_of": "2026-10-10T20:37:07.311461+00:00",
+          "stored_hash": "1e78a2620e19c42966eaef88784ddb7cd708afc3c37bbf97df444cf2a6dcbb4c",
+          "replayed_hash": "1e78a2620e19c42966eaef88784ddb7cd708afc3c37bbf97df444cf2a6dcbb4c",
+          "matched": true
+        },
+        {
+          "tool_id": "instrument.features",
+          "manifest_id": "8c66134e-2ad4-4359-bc2c-aa51c7c3e140",
+          "as_of": "2026-10-10T20:37:07.311461+00:00",
+          "stored_hash": "060065afef95b81459fb1753b0b0a81d56b9aaadfd020417064a9c2c57c71c0d",
+          "replayed_hash": "060065afef95b81459fb1753b0b0a81d56b9aaadfd020417064a9c2c57c71c0d",
+          "matched": true
+        },
+        {
+          "tool_id": "market.state",
+          "manifest_id": "8c66134e-2ad4-4359-bc2c-aa51c7c3e140",
+          "as_of": "2026-10-10T20:37:07.311461+00:00",
+          "stored_hash": "28d87df9a0486b0285c26e59f4eedbf2524e003ae4f6e9a07496ae2750bdbcb7",
+          "replayed_hash": "28d87df9a0486b0285c26e59f4eedbf2524e003ae4f6e9a07496ae2750bdbcb7",
+          "matched": true
+        },
+        {
+          "tool_id": "instrument.features",
+          "manifest_id": "8c66134e-2ad4-4359-bc2c-aa51c7c3e140",
+          "as_of": "2026-10-10T20:37:07.311461+00:00",
+          "stored_hash": "f4e98c8af76bc49a0fe1efce3bff77ff47372bcb5628f9aa7744cffac0977b18",
+          "replayed_hash": "f4e98c8af76bc49a0fe1efce3bff77ff47372bcb5628f9aa7744cffac0977b18",
+          "matched": true
+        },
+        {
+          "tool_id": "asset.compare",
+          "manifest_id": "8c66134e-2ad4-4359-bc2c-aa51c7c3e140",
+          "as_of": "2026-10-10T20:37:07.311461+00:00",
+          "stored_hash": "353d059b2d15bb1888ddcdb66fa1fd231a0f0e515daad7be15b6fd88b066f07a",
+          "replayed_hash": "353d059b2d15bb1888ddcdb66fa1fd231a0f0e515daad7be15b6fd88b066f07a",
+          "matched": true
+        },
+        {
+          "tool_id": "dataset.manifest",
+          "manifest_id": "8c66134e-2ad4-4359-bc2c-aa51c7c3e140",
+          "as_of": "2026-10-10T20:37:07.311461+00:00",
+          "stored_hash": "92e4999e7c05ae8f1ebc1fb98b09d3268e591f422a5debc794a13873a9ef37c7",
+          "replayed_hash": "92e4999e7c05ae8f1ebc1fb98b09d3268e591f422a5debc794a13873a9ef37c7",
+          "matched": true
+        }
+      ],
+      "stored_evidence_hash": "07d2c768a07b557b375ba5f692edb65e21993ff643db19698752a0100d357bd5"
+    },
+    "mission": {
+      "mission_id": "11ad96ac-41a8-4b55-87eb-74b1cbe8bbce",
+      "status": "VERIFIED",
+      "matched": true,
+      "checks": [
+        {
+          "step_id": "availability",
+          "matched": true
+        },
+        {
+          "step_id": "features",
+          "matched": true
+        },
+        {
+          "step_id": "state",
+          "matched": true
+        },
+        {
+          "step_id": "context",
+          "matched": true
+        },
+        {
+          "step_id": "opportunities",
+          "matched": true
+        },
+        {
+          "step_id": "thesis",
+          "matched": true
+        },
+        {
+          "step_id": "challenge",
+          "matched": true
+        },
+        {
+          "step_id": "quant",
+          "matched": true
+        },
+        {
+          "step_id": "learning",
+          "matched": true
+        },
+        {
+          "step_id": "predictions",
+          "matched": true
+        },
+        {
+          "step_id": "risk",
+          "matched": true
+        }
+      ],
+      "grounding_rejected": [],
+      "model_narrative_reexecuted": false,
+      "scope_unchanged": true
+    },
+    "quant": {
+      "run_id": "e8b4794e-008d-58ed-afe1-95e14498fa77",
+      "status": "MATCH",
+      "saved_result_hash": "2f5f25f561149b40397d37399d2ca81a65762b7d2284ceb2a78b7233c53e08f5",
+      "recomputed_result_hash": "2f5f25f561149b40397d37399d2ca81a65762b7d2284ceb2a78b7233c53e08f5"
+    },
+    "experimental": {
+      "status": "MATCH",
+      "saved_result_hash": "2535fa6a3e8a3688192b92e70f5a77e109f26b6809c8b580d780c9cf74630201",
+      "recomputed_result_hash": "2535fa6a3e8a3688192b92e70f5a77e109f26b6809c8b580d780c9cf74630201",
+      "dataset_match": true,
+      "comparison": "EXACT_SAME_NUMPY_RUNTIME; CROSS_RUNTIME_RECOMPUTE_REQUIRES_RECORDED_VERSION"
+    }
+  },
+  "preflight": {
+    "settings": {
+      "database_configured": true,
+      "owner_configured": true,
+      "timezone": "Asia/Kolkata",
+      "base_currency": "INR",
+      "cloud_model_allowed": true,
+      "environment": "PILOT_TEST"
+    },
+    "status": "VALIDATED",
+    "checks": {
+      "database_identity": {
+        "database": "market_cortex_pilot_test",
+        "server_address": "127.0.0.1",
+        "server_port": 55432,
+        "server_version": "17.11",
+        "transaction_read_only": "on"
+      },
+      "database": "CONNECTED_READ_ONLY",
+      "encoding": "UTF8",
+      "pending_migrations": [],
+      "changed_migrations": [],
+      "data_root_exists": true,
+      "table_counts": {
+        "app_locks": 0,
+        "calendar_sessions": 0,
+        "consumer_receipts": 0,
+        "context_facts": 1234,
+        "context_files": 3,
+        "context_head": 1,
+        "context_manifest_facts": 2468,
+        "context_manifest_files": 6,
+        "context_manifests": 3,
+        "context_snapshots": 3,
+        "cortex_research_runs": 571,
+        "dataset_files": 200,
+        "dataset_head": 1,
+        "dataset_manifests": 40,
+        "edge_library": 1,
+        "experiment_definitions": 32,
+        "experiment_edge_links": 4,
+        "experiment_events": 394,
+        "experiment_exposures": 144,
+        "experiment_governance": 28,
+        "experiment_proposals": 1,
+        "identifier_mappings": 10,
+        "instruments": 10,
+        "jobs": 81,
+        "journal_entries": 2,
+        "journal_revisions": 2,
+        "manifest_members": 200,
+        "observations": 5070,
+        "opportunity_candidates": 513,
+        "outbox": 40,
+        "personal_record_versions": 0,
+        "personal_records": 0,
+        "personalization_snapshots": 6,
+        "portfolio_risk_snapshots": 2,
+        "portfolio_versions": 10,
+        "portfolios": 3,
+        "prediction_evaluations": 6,
+        "prediction_records": 3,
+        "prediction_revisions": 9,
+        "provider_capabilities": 0,
+        "quant_artifacts": 390,
+        "quant_edge_evidence": 0,
+        "quarantine": 0,
+        "research_hypotheses": 4,
+        "research_mission_checkpoints": 609,
+        "research_missions": 27,
+        "research_theses": 12,
+        "research_thesis_versions": 66,
+        "schema_migrations": 13,
+        "source_batches": 53,
+        "venues": 2
+      },
+      "storage": {
+        "referenced": 203,
+        "unreferenced": [],
+        "missing": [],
+        "corrupt": [],
+        "staged_count": 0,
+        "deletion_performed": false
+      }
+    }
+  },
+  "table_counts_unchanged": true,
+  "owner_ready": false,
+  "browser_reopen": "VERIFIED_SAME_CORTEX_MISSION_QUANT_EXPERIMENT_IDS",
+  "receipt_repair": "Earlier assertions passed but receipt serialization used an incorrect checkpoint field; rerun captured raw replay responses before serialization.",
+  "next_start_process_confirmed": true,
+  "browser_evidence": "PRODUCTION_RESTART_BROWSER_QA.json"
+}

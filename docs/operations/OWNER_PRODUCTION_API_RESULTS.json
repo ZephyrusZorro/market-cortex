@@ -1,0 +1,2565 @@
+{
+  "observed_at": "2026-10-11T12:50:54.050042+00:00",
+  "status": "VALIDATED_OWNER_PRODUCTION_READ_ONLY_API",
+  "owner_record_writes": false,
+  "health": {
+    "status": "ready",
+    "settings": {
+      "database_configured": true,
+      "owner_configured": true,
+      "timezone": "Asia/Kolkata",
+      "base_currency": "INR",
+      "cloud_model_allowed": true,
+      "environment": "OWNER_MAIN"
+    },
+    "manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b"
+  },
+  "proxied_health_identical": true,
+  "preflight": {
+    "settings": {
+      "database_configured": true,
+      "owner_configured": true,
+      "timezone": "Asia/Kolkata",
+      "base_currency": "INR",
+      "cloud_model_allowed": true,
+      "environment": "OWNER_MAIN"
+    },
+    "status": "VALIDATED",
+    "checks": {
+      "database_identity": {
+        "database": "market_cortex",
+        "server_address": "::1",
+        "server_port": 5432,
+        "server_version": "17.11",
+        "transaction_read_only": "on"
+      },
+      "database": "CONNECTED_READ_ONLY",
+      "encoding": "UTF8",
+      "pending_migrations": [],
+      "changed_migrations": [],
+      "data_root_exists": true
+    }
+  },
+  "context": {
+    "universe_id": "binance_pilot_5",
+    "universe_label": "Binance Pilot 5",
+    "source_manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b",
+    "head_manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b",
+    "manifest": {
+      "manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b",
+      "parent_manifest_id": "51d3b0e8-46b0-4760-ac3d-1c8a228a377e",
+      "created_at": "2026-10-11T17:57:41.706839+05:30",
+      "schema_version": "1.0.0-draft",
+      "selection_policy_version": "all_providers_v1"
+    },
+    "recent_manifests": [
+      {
+        "manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b",
+        "parent_manifest_id": "51d3b0e8-46b0-4760-ac3d-1c8a228a377e",
+        "created_at": "2026-10-11T17:57:41.706839+05:30"
+      },
+      {
+        "manifest_id": "51d3b0e8-46b0-4760-ac3d-1c8a228a377e",
+        "parent_manifest_id": "a93e915a-82ad-4bbc-a6c3-0fcb700310ff",
+        "created_at": "2026-10-11T17:57:40.059117+05:30"
+      },
+      {
+        "manifest_id": "a93e915a-82ad-4bbc-a6c3-0fcb700310ff",
+        "parent_manifest_id": "1843d455-b9fb-4a7a-9747-079c287ca71c",
+        "created_at": "2026-10-11T17:57:37.656713+05:30"
+      },
+      {
+        "manifest_id": "1843d455-b9fb-4a7a-9747-079c287ca71c",
+        "parent_manifest_id": "f90603e9-e00b-4769-8aba-13d22650a7be",
+        "created_at": "2026-10-11T17:57:35.540116+05:30"
+      },
+      {
+        "manifest_id": "f90603e9-e00b-4769-8aba-13d22650a7be",
+        "parent_manifest_id": null,
+        "created_at": "2026-10-11T17:57:32.883102+05:30"
+      }
+    ],
+    "as_of": "2026-10-11T12:50:53.694444+00:00",
+    "evaluation_date": "2026-10-10",
+    "history_start": "2025-10-11",
+    "members": [
+      {
+        "symbol": "BTCUSDT",
+        "instrument_id": "03d92503-c70a-4042-ba01-3b70f640c17c",
+        "currency": "USDT",
+        "venue_id": "BINANCE_SPOT",
+        "first_session": "2025-10-11",
+        "last_session": "2026-10-10",
+        "observed_sessions": 365,
+        "status": "available"
+      },
+      {
+        "symbol": "ETHUSDT",
+        "instrument_id": "d79abd0c-40bf-45d8-80bf-ae9e0f2b82ff",
+        "currency": "USDT",
+        "venue_id": "BINANCE_SPOT",
+        "first_session": "2025-10-11",
+        "last_session": "2026-10-10",
+        "observed_sessions": 365,
+        "status": "available"
+      },
+      {
+        "symbol": "SOLUSDT",
+        "instrument_id": "77066a0a-51a7-405f-a916-ade43dd4dae1",
+        "currency": "USDT",
+        "venue_id": "BINANCE_SPOT",
+        "first_session": "2025-10-11",
+        "last_session": "2026-10-10",
+        "observed_sessions": 365,
+        "status": "available"
+      },
+      {
+        "symbol": "BNBUSDT",
+        "instrument_id": "70638639-782b-4664-9ac6-f12b101fb7a6",
+        "currency": "USDT",
+        "venue_id": "BINANCE_SPOT",
+        "first_session": "2025-10-11",
+        "last_session": "2026-10-10",
+        "observed_sessions": 365,
+        "status": "available"
+      },
+      {
+        "symbol": "XRPUSDT",
+        "instrument_id": "affec113-6189-4613-a36b-5cc3bcf70b63",
+        "currency": "USDT",
+        "venue_id": "BINANCE_SPOT",
+        "first_session": "2025-10-11",
+        "last_session": "2026-10-10",
+        "observed_sessions": 365,
+        "status": "available"
+      }
+    ],
+    "providers": [
+      {
+        "provider_id": "binance",
+        "label": "Binance public daily bars",
+        "status": "VALIDATED_PUBLIC",
+        "credential_state": "PUBLIC_NO_CREDENTIAL",
+        "interval": "P1D"
+      },
+      {
+        "provider_id": "upstox",
+        "label": "Upstox adapter",
+        "status": "DEFERRED_NOT_CONFIGURED",
+        "credential_state": "NOT_CONFIGURED",
+        "interval": "P1D"
+      },
+      {
+        "provider_id": "alpaca",
+        "label": "Alpaca adapter",
+        "status": "DEFERRED_NOT_CONFIGURED",
+        "credential_state": "NOT_CONFIGURED",
+        "interval": "P1D"
+      }
+    ],
+    "display": {
+      "primary_currency": "INR",
+      "secondary_currency": "USD",
+      "native_prices_only": true,
+      "timezone": "Asia/Kolkata"
+    }
+  },
+  "bars": [
+    {
+      "symbol": "BTCUSDT",
+      "instrument_id": "03d92503-c70a-4042-ba01-3b70f640c17c",
+      "total": 365,
+      "hash": "0bf2a662a2c59802e00502d94680be91e8fc3c0d071468d834a1cad54db815cf",
+      "frozen_hash_matched": true,
+      "coverage": {
+        "manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b",
+        "as_of": "2026-10-11T12:27:42.895339+00:00",
+        "calendar_id": "BINANCE_SPOT:utc_daily",
+        "calendar_version": "v1",
+        "provider_id": "binance",
+        "adjustment_basis": "raw",
+        "expected_sessions": 365,
+        "observed_sessions": 365,
+        "gaps": []
+      }
+    },
+    {
+      "symbol": "ETHUSDT",
+      "instrument_id": "d79abd0c-40bf-45d8-80bf-ae9e0f2b82ff",
+      "total": 365,
+      "hash": "c7cb8023aa37c6f4625fab33eed9b2fea4bc46ba79169ff75d55fae93a4904a2",
+      "frozen_hash_matched": true,
+      "coverage": {
+        "manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b",
+        "as_of": "2026-10-11T12:27:42.895339+00:00",
+        "calendar_id": "BINANCE_SPOT:utc_daily",
+        "calendar_version": "v1",
+        "provider_id": "binance",
+        "adjustment_basis": "raw",
+        "expected_sessions": 365,
+        "observed_sessions": 365,
+        "gaps": []
+      }
+    },
+    {
+      "symbol": "SOLUSDT",
+      "instrument_id": "77066a0a-51a7-405f-a916-ade43dd4dae1",
+      "total": 365,
+      "hash": "77938e64b586537d7cea9769009e86858511d39d32dbba410b3caeb46d4f0a2c",
+      "frozen_hash_matched": true,
+      "coverage": {
+        "manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b",
+        "as_of": "2026-10-11T12:27:42.895339+00:00",
+        "calendar_id": "BINANCE_SPOT:utc_daily",
+        "calendar_version": "v1",
+        "provider_id": "binance",
+        "adjustment_basis": "raw",
+        "expected_sessions": 365,
+        "observed_sessions": 365,
+        "gaps": []
+      }
+    },
+    {
+      "symbol": "BNBUSDT",
+      "instrument_id": "70638639-782b-4664-9ac6-f12b101fb7a6",
+      "total": 365,
+      "hash": "65eb27a6a926de532dfff3cd7f89c75d400f35fcf8ec5303f5745fb8526e7535",
+      "frozen_hash_matched": true,
+      "coverage": {
+        "manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b",
+        "as_of": "2026-10-11T12:27:42.895339+00:00",
+        "calendar_id": "BINANCE_SPOT:utc_daily",
+        "calendar_version": "v1",
+        "provider_id": "binance",
+        "adjustment_basis": "raw",
+        "expected_sessions": 365,
+        "observed_sessions": 365,
+        "gaps": []
+      }
+    },
+    {
+      "symbol": "XRPUSDT",
+      "instrument_id": "affec113-6189-4613-a36b-5cc3bcf70b63",
+      "total": 365,
+      "hash": "075451bb694186c98957db1e21a6a75c939643c29381ceb2fd036d87a935c032",
+      "frozen_hash_matched": true,
+      "coverage": {
+        "manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b",
+        "as_of": "2026-10-11T12:27:42.895339+00:00",
+        "calendar_id": "BINANCE_SPOT:utc_daily",
+        "calendar_version": "v1",
+        "provider_id": "binance",
+        "adjustment_basis": "raw",
+        "expected_sessions": 365,
+        "observed_sessions": 365,
+        "gaps": []
+      }
+    }
+  ],
+  "manifest": {
+    "manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b",
+    "files_in_ancestry": [
+      {
+        "sha256": "2aa9599977f9c031c4d2a3e189472c838215fcc28d555fdddb70c2f85494ec19",
+        "rows": 21,
+        "venue_id": "BINANCE_SPOT",
+        "min_event_at": "2025-10-12T05:30:00+05:30",
+        "max_event_at": "2025-11-01T05:30:00+05:30"
+      },
+      {
+        "sha256": "50bf7482d68882c0f4cae2aea21a1be3b56e959d71e786f00fe62191729cb745",
+        "rows": 21,
+        "venue_id": "BINANCE_SPOT",
+        "min_event_at": "2025-10-12T05:30:00+05:30",
+        "max_event_at": "2025-11-01T05:30:00+05:30"
+      },
+      {
+        "sha256": "588258eddd0f10d7fcd92c0e05646c82d90029cb2fc62885c090316311111813",
+        "rows": 21,
+        "venue_id": "BINANCE_SPOT",
+        "min_event_at": "2025-10-12T05:30:00+05:30",
+        "max_event_at": "2025-11-01T05:30:00+05:30"
+      },
+      {
+        "sha256": "63eaf36bdf4985e08540cdc7cf740db8d100e34e1aff5ca2055cf82023497ba5",
+        "rows": 21,
+        "venue_id": "BINANCE_SPOT",
+        "min_event_at": "2025-10-12T05:30:00+05:30",
+        "max_event_at": "2025-11-01T05:30:00+05:30"
+      },
+      {
+        "sha256": "efbbffe09527e34958660dceded4834631c17e7ea8ae1fde6020a335536f0cb7",
+        "rows": 21,
+        "venue_id": "BINANCE_SPOT",
+        "min_event_at": "2025-10-12T05:30:00+05:30",
+        "max_event_at": "2025-11-01T05:30:00+05:30"
+      },
+      {
+        "sha256": "3aa29f7d02e5ad9a2474c4764f86aceaea573a5289eaa42af51d647154023730",
+        "rows": 30,
+        "venue_id": "BINANCE_SPOT",
+        "min_event_at": "2025-11-02T05:30:00+05:30",
+        "max_event_at": "2025-12-01T05:30:00+05:30"
+      },
+      {
+        "sha256": "4d5447f1609b8eddef7758feea93648a34a2b8127f07006d271ac438457983b1",
+        "rows": 30,
+        "venue_id": "BINANCE_SPOT",
+        "min_event_at": "2025-11-02T05:30:00+05:30",
+        "max_event_at": "2025-12-01T05:30:00+05:30"
+      },
+      {
+        "sha256": "e59ba46f2765d21ca0ee2767287fd169b71d1542cdb5d420e5cb0f0b51f052a7",
+        "rows": 30,
+        "venue_id": "BINANCE_SPOT",
+        "min_event_at": "2025-11-02T05:30:00+05:30",
+        "max_event_at": "2025-12-01T05:30:00+05:30"
+      },
+      {
+        "sha256": "ee40d0475810cb9900e7b3e1d4818e7a25effca87a9ec9313ce73be71e872a43",
+        "rows": 30,
+        "venue_id": "BINANCE_SPOT",
+        "min_event_at": "2025-11-02T05:30:00+05:30",
+        "max_event_at": "2025-12-01T05:30:00+05:30"
+      },
+      {
+        "sha256": "fb270c6b794310d2e1acb0c5f97fc604931087bd5d4b41c4fadb94471fa745d7",
+        "rows": 30,
+        "venue_id": "BINANCE_SPOT",
+        "min_event_at": "2025-11-02T05:30:00+05:30",
+        "max_event_at": "2025-12-01T05:30:00+05:30"
+      },
+      {
+        "sha256": "0f70baf9f6a6e390c4dcf64a9e7d7651606be067829d10c91d3b1879cf375916",
+        "rows": 31,
+        "venue_id": "BINANCE_SPOT",
+        "min_event_at": "2025-12-02T05:30:00+05:30",
+        "max_event_at": "2026-01-01T05:30:00+05:30"
+      },
+      {
+        "sha256": "14d612b0699f8f4f14d5abcc2c7ca773df94567c959747edbb73a8e4794cb03b",
+        "rows": 31,
+        "venue_id": "BINANCE_SPOT",
+        "min_event_at": "2025-12-02T05:30:00+05:30",
+        "max_event_at": "2026-01-01T05:30:00+05:30"
+      },
+      {
+        "sha256": "1d2258b95de27ee23195ffda0722a051919a5e769b11433aa8ea7a3372a2903f",
+        "rows": 31,
+        "venue_id": "BINANCE_SPOT",
+        "min_event_at": "2025-12-02T05:30:00+05:30",
+        "max_event_at": "2026-01-01T05:30:00+05:30"
+      },
+      {
+        "sha256": "35483cbe37089754e6aefb18cd2b7f97c35d2e4a04bc5d16751be1756341102d",
+        "rows": 31,
+        "venue_id": "BINANCE_SPOT",
+        "min_event_at": "2025-12-02T05:30:00+05:30",
+        "max_event_at": "2026-01-01T05:30:00+05:30"
+      },
+      {
+        "sha256": "e674379a722aa4a5a6748b1dbc9915a28e1db97b7c11f2a3897499084a42a898",
+        "rows": 31,
+        "venue_id": "BINANCE_SPOT",
+        "min_event_at": "2025-12-02T05:30:00+05:30",
+        "max_event_at": "2026-01-01T05:30:00+05:30"
+      },
+      {
+        "sha256": "04bcbf7db1a502f75c00a55593479918987aebbfb2ec71e0ee1993fa9e464e5a",
+        "rows": 31,
+        "venue_id": "BINANCE_SPOT",
+        "min_event_at": "2026-01-02T05:30:00+05:30",
+        "max_event_at": "2026-02-01T05:30:00+05:30"
+      },
+      {
+        "sha256": "423432385561537a5fc4ca7354f8992f0597c0a258f36606457eeeb3d20cc50e",
+        "rows": 31,
+        "venue_id": "BINANCE_SPOT",
+        "min_event_at": "2026-01-02T05:30:00+05:30",
+        "max_event_at": "2026-02-01T05:30:00+05:30"
+      },
+      {
+        "sha256": "b72a7ce2b71e528ff55de5185ef5f6e22cfc7a4f47969fd52baf7a7461601d08",
+        "rows": 31,
+        "venue_id": "BINANCE_SPOT",
+        "min_event_at": "2026-01-02T05:30:00+05:30",
+        "max_event_at": "2026-02-01T05:30:00+05:30"
+      },
+      {
+        "sha256": "cb50a988f8a7edb863f3d1c5cda3b7afe13b4cb60d76346672697b88cc397b70",
+        "rows": 31,
+        "venue_id": "BINANCE_SPOT",
+        "min_event_at": "2026-01-02T05:30:00+05:30",
+        "max_event_at": "2026-02-01T05:30:00+05:30"
+      },
+      {
+        "sha256": "df8829bb7ad89021d5848e718b521734c80ddd2a7f0ea4e5bf8c7ac796f0c136",
+        "rows": 31,
+        "venue_id": "BINANCE_SPOT",
+        "min_event_at": "2026-01-02T05:30:00+05:30",
+        "max_event_at": "2026-02-01T05:30:00+05:30"
+      },
+      {
+        "sha256": "042b50a30c1ab38c8fdbed4ccc6d16c49979878fa132a743322c44b3e7b743da",
+        "rows": 28,
+        "venue_id": "BINANCE_SPOT",
+        "min_event_at": "2026-02-02T05:30:00+05:30",
+        "max_event_at": "2026-03-01T05:30:00+05:30"
+      },
+      {
+        "sha256": "1e81166db78a81f30944a4c8d73d1f471ec62e27066adba3b2e96d018e3b3960",
+        "rows": 28,
+        "venue_id": "BINANCE_SPOT",
+        "min_event_at": "2026-02-02T05:30:00+05:30",
+        "max_event_at": "2026-03-01T05:30:00+05:30"
+      },
+      {
+        "sha256": "3109f108ae9ae478a327fad11b81cbb08671418e90d84ba575ed5bef1a85379b",
+        "rows": 28,
+        "venue_id": "BINANCE_SPOT",
+        "min_event_at": "2026-02-02T05:30:00+05:30",
+        "max_event_at": "2026-03-01T05:30:00+05:30"
+      },
+      {
+        "sha256": "4a2060f19e4612f25318049ce25b15a2115d0e87b15b64d2faab26564199c703",
+        "rows": 28,
+        "venue_id": "BINANCE_SPOT",
+        "min_event_at": "2026-02-02T05:30:00+05:30",
+        "max_event_at": "2026-03-01T05:30:00+05:30"
+      },
+      {
+        "sha256": "ff6a9508eab5fdd7e3663087b5fb7e0fd9887b464c2c9463264e6d8b1881313e",
+        "rows": 28,
+        "venue_id": "BINANCE_SPOT",
+        "min_event_at": "2026-02-02T05:30:00+05:30",
+        "max_event_at": "2026-03-01T05:30:00+05:30"
+      },
+      {
+        "sha256": "a4bb970c520bec588dd3b2047f4124c4de06e84af770ffe033b11b5ead0a61fc",
+        "rows": 31,
+        "venue_id": "BINANCE_SPOT",
+        "min_event_at": "2026-03-02T05:30:00+05:30",
+        "max_event_at": "2026-04-01T05:30:00+05:30"
+      },
+      {
+        "sha256": "c094026559880d58873cccd0881a515c8f0ed97aabc35d4402084e5d02b7c97c",
+        "rows": 31,
+        "venue_id": "BINANCE_SPOT",
+        "min_event_at": "2026-03-02T05:30:00+05:30",
+        "max_event_at": "2026-04-01T05:30:00+05:30"
+      },
+      {
+        "sha256": "e77dc6352d33670833cd68eaf4063ea422e49e7ea5bb8c90de1dfae1b8dca9f0",
+        "rows": 31,
+        "venue_id": "BINANCE_SPOT",
+        "min_event_at": "2026-03-02T05:30:00+05:30",
+        "max_event_at": "2026-04-01T05:30:00+05:30"
+      },
+      {
+        "sha256": "e7e38bd5ae4f778b8bb249e4b8e989362b27dc30c8e795cfa9d8775bdffd978a",
+        "rows": 31,
+        "venue_id": "BINANCE_SPOT",
+        "min_event_at": "2026-03-02T05:30:00+05:30",
+        "max_event_at": "2026-04-01T05:30:00+05:30"
+      },
+      {
+        "sha256": "f294dbd55c99d55d917a6ac01c84fcb7a3982d907ad93948f1edf1f7f723c146",
+        "rows": 31,
+        "venue_id": "BINANCE_SPOT",
+        "min_event_at": "2026-03-02T05:30:00+05:30",
+        "max_event_at": "2026-04-01T05:30:00+05:30"
+      },
+      {
+        "sha256": "4f0fa8ea3e2735ccecfadd70894fb843a15057ffe038a18b844a065e57ec8514",
+        "rows": 30,
+        "venue_id": "BINANCE_SPOT",
+        "min_event_at": "2026-04-02T05:30:00+05:30",
+        "max_event_at": "2026-05-01T05:30:00+05:30"
+      },
+      {
+        "sha256": "847a1d38232e4bed489e7707579ccee23bd9013aad9e2b4002429a2b940b01ac",
+        "rows": 30,
+        "venue_id": "BINANCE_SPOT",
+        "min_event_at": "2026-04-02T05:30:00+05:30",
+        "max_event_at": "2026-05-01T05:30:00+05:30"
+      },
+      {
+        "sha256": "ad9e378566d28390c5cf689f40d38528fe62a5ac90d258517321d80aeee96d0b",
+        "rows": 30,
+        "venue_id": "BINANCE_SPOT",
+        "min_event_at": "2026-04-02T05:30:00+05:30",
+        "max_event_at": "2026-05-01T05:30:00+05:30"
+      },
+      {
+        "sha256": "ba64d93e0f412f7eaf683af040c7f255666c64f56186d04baa394265e42d0ecc",
+        "rows": 30,
+        "venue_id": "BINANCE_SPOT",
+        "min_event_at": "2026-04-02T05:30:00+05:30",
+        "max_event_at": "2026-05-01T05:30:00+05:30"
+      },
+      {
+        "sha256": "d4203d75f3d8876328846712f670b395312c9cbe0d5068a55a8444d62dcebfd0",
+        "rows": 30,
+        "venue_id": "BINANCE_SPOT",
+        "min_event_at": "2026-04-02T05:30:00+05:30",
+        "max_event_at": "2026-05-01T05:30:00+05:30"
+      },
+      {
+        "sha256": "337ac47a47fe6987e6f306910295a0cb80d736e52f868b61815ea4a7c42c25b1",
+        "rows": 31,
+        "venue_id": "BINANCE_SPOT",
+        "min_event_at": "2026-05-02T05:30:00+05:30",
+        "max_event_at": "2026-06-01T05:30:00+05:30"
+      },
+      {
+        "sha256": "c5329181b4cd7c2ddbfcd266c885658a249c06ac0467ae4e38fa4b9875ffe3db",
+        "rows": 31,
+        "venue_id": "BINANCE_SPOT",
+        "min_event_at": "2026-05-02T05:30:00+05:30",
+        "max_event_at": "2026-06-01T05:30:00+05:30"
+      },
+      {
+        "sha256": "ceeb93ddecfc3c49da5ed41593cd29e7bccb39af13fce6da99f6fc148deb521d",
+        "rows": 31,
+        "venue_id": "BINANCE_SPOT",
+        "min_event_at": "2026-05-02T05:30:00+05:30",
+        "max_event_at": "2026-06-01T05:30:00+05:30"
+      },
+      {
+        "sha256": "d64dc9f0da3f12ab48676ecb0cddc5c15e593bed7535f427665e756c2a2c5c4d",
+        "rows": 31,
+        "venue_id": "BINANCE_SPOT",
+        "min_event_at": "2026-05-02T05:30:00+05:30",
+        "max_event_at": "2026-06-01T05:30:00+05:30"
+      },
+      {
+        "sha256": "e7230ea11e5642351b8f9fbc60573777a7b4d6eb418905eaa59e903d747c1cd5",
+        "rows": 31,
+        "venue_id": "BINANCE_SPOT",
+        "min_event_at": "2026-05-02T05:30:00+05:30",
+        "max_event_at": "2026-06-01T05:30:00+05:30"
+      },
+      {
+        "sha256": "0dcf47466eba187db19f1b73b11d2f00593382974c040e9bf137ba1ddb067168",
+        "rows": 30,
+        "venue_id": "BINANCE_SPOT",
+        "min_event_at": "2026-06-02T05:30:00+05:30",
+        "max_event_at": "2026-07-01T05:30:00+05:30"
+      },
+      {
+        "sha256": "325f78d9e9b90d093f48646f35bef3f75ece7e643f9194d0f6d8b04df66e6813",
+        "rows": 30,
+        "venue_id": "BINANCE_SPOT",
+        "min_event_at": "2026-06-02T05:30:00+05:30",
+        "max_event_at": "2026-07-01T05:30:00+05:30"
+      },
+      {
+        "sha256": "4289aade93969216948d046e6bfc32eb0ec8ea46377b583afc0fc3e71ad5a5c0",
+        "rows": 30,
+        "venue_id": "BINANCE_SPOT",
+        "min_event_at": "2026-06-02T05:30:00+05:30",
+        "max_event_at": "2026-07-01T05:30:00+05:30"
+      },
+      {
+        "sha256": "84fc99ca3363baca30181f80767f0462b31a6eabad0c3e1d93765e2dc201c77f",
+        "rows": 30,
+        "venue_id": "BINANCE_SPOT",
+        "min_event_at": "2026-06-02T05:30:00+05:30",
+        "max_event_at": "2026-07-01T05:30:00+05:30"
+      },
+      {
+        "sha256": "9c75d0c95dc2ddbb844833dc81687b4b7f0c78481d349f45c564de5f4b64a8a0",
+        "rows": 30,
+        "venue_id": "BINANCE_SPOT",
+        "min_event_at": "2026-06-02T05:30:00+05:30",
+        "max_event_at": "2026-07-01T05:30:00+05:30"
+      },
+      {
+        "sha256": "105a9b0a871014d0395e23d8f4d74d9f95b6665739a06c15d72208987aa557dc",
+        "rows": 31,
+        "venue_id": "BINANCE_SPOT",
+        "min_event_at": "2026-07-02T05:30:00+05:30",
+        "max_event_at": "2026-08-01T05:30:00+05:30"
+      },
+      {
+        "sha256": "7bcd15f43bbddccd9113c53910e7cc4759fd15b0048a9f036f17287029c3fa43",
+        "rows": 31,
+        "venue_id": "BINANCE_SPOT",
+        "min_event_at": "2026-07-02T05:30:00+05:30",
+        "max_event_at": "2026-08-01T05:30:00+05:30"
+      },
+      {
+        "sha256": "81e2dad36f27962b6570dd5a23507ee08d77e206e4855443758d0f879fbb5d57",
+        "rows": 31,
+        "venue_id": "BINANCE_SPOT",
+        "min_event_at": "2026-07-02T05:30:00+05:30",
+        "max_event_at": "2026-08-01T05:30:00+05:30"
+      },
+      {
+        "sha256": "84a8f933017efe6b095cb536fb17360f611ed7f78abd42b286b19fe8e6e048ef",
+        "rows": 31,
+        "venue_id": "BINANCE_SPOT",
+        "min_event_at": "2026-07-02T05:30:00+05:30",
+        "max_event_at": "2026-08-01T05:30:00+05:30"
+      },
+      {
+        "sha256": "cd6e969e986b6d768d9f2acff96bb8560664e9c43826a5dcc4435c1bc42f67f7",
+        "rows": 31,
+        "venue_id": "BINANCE_SPOT",
+        "min_event_at": "2026-07-02T05:30:00+05:30",
+        "max_event_at": "2026-08-01T05:30:00+05:30"
+      },
+      {
+        "sha256": "04bee5e43bac77fd9c4ecd84abcf5840616620bca1085db0baa60d2eccabdb86",
+        "rows": 31,
+        "venue_id": "BINANCE_SPOT",
+        "min_event_at": "2026-08-02T05:30:00+05:30",
+        "max_event_at": "2026-09-01T05:30:00+05:30"
+      },
+      {
+        "sha256": "2b41a416bf57018997327555ecfc388dc3ceb2b4c786881086def3f46d5075a7",
+        "rows": 31,
+        "venue_id": "BINANCE_SPOT",
+        "min_event_at": "2026-08-02T05:30:00+05:30",
+        "max_event_at": "2026-09-01T05:30:00+05:30"
+      },
+      {
+        "sha256": "330222da56661fd565a4c90b015e85fcf1f763ab19b98a5b36269fe46408c4ee",
+        "rows": 31,
+        "venue_id": "BINANCE_SPOT",
+        "min_event_at": "2026-08-02T05:30:00+05:30",
+        "max_event_at": "2026-09-01T05:30:00+05:30"
+      },
+      {
+        "sha256": "4d3243b4438b8e0b108ddbe00473bbc935fce0617144cb10c234e361f1201ed3",
+        "rows": 31,
+        "venue_id": "BINANCE_SPOT",
+        "min_event_at": "2026-08-02T05:30:00+05:30",
+        "max_event_at": "2026-09-01T05:30:00+05:30"
+      },
+      {
+        "sha256": "fd6ddb09e0b8291a0ee8eb0fb333d72a5f4c0a4d1fc78de6cf093483401d0cdc",
+        "rows": 31,
+        "venue_id": "BINANCE_SPOT",
+        "min_event_at": "2026-08-02T05:30:00+05:30",
+        "max_event_at": "2026-09-01T05:30:00+05:30"
+      },
+      {
+        "sha256": "3145f84e86bf178af84efb947cf9d63647ce93b41f7bd9d3af3158c3befdaa83",
+        "rows": 30,
+        "venue_id": "BINANCE_SPOT",
+        "min_event_at": "2026-09-02T05:30:00+05:30",
+        "max_event_at": "2026-10-01T05:30:00+05:30"
+      },
+      {
+        "sha256": "388b52b61b6734846b15f8e642a37f4afa3d091528ceeae6c43c86ae007d6be1",
+        "rows": 30,
+        "venue_id": "BINANCE_SPOT",
+        "min_event_at": "2026-09-02T05:30:00+05:30",
+        "max_event_at": "2026-10-01T05:30:00+05:30"
+      },
+      {
+        "sha256": "7be2b91e2ec3bd3ac81e193e14c24a9981dc869ac2ba74e52dfe261d93bcaedd",
+        "rows": 30,
+        "venue_id": "BINANCE_SPOT",
+        "min_event_at": "2026-09-02T05:30:00+05:30",
+        "max_event_at": "2026-10-01T05:30:00+05:30"
+      },
+      {
+        "sha256": "ef14f2db9e95d68138cd65cae15b3955e142c65b21142532dbd97d657bc34e2b",
+        "rows": 30,
+        "venue_id": "BINANCE_SPOT",
+        "min_event_at": "2026-09-02T05:30:00+05:30",
+        "max_event_at": "2026-10-01T05:30:00+05:30"
+      },
+      {
+        "sha256": "f05af4e182f7069823e711903059d0a358dc90f8fe336ec77c003dd8dc5babff",
+        "rows": 30,
+        "venue_id": "BINANCE_SPOT",
+        "min_event_at": "2026-09-02T05:30:00+05:30",
+        "max_event_at": "2026-10-01T05:30:00+05:30"
+      },
+      {
+        "sha256": "5d926a0ba4b53f77e31e5c8e2dd733b5f39033ba049702e52e923fd0c7079217",
+        "rows": 10,
+        "venue_id": "BINANCE_SPOT",
+        "min_event_at": "2026-10-02T05:30:00+05:30",
+        "max_event_at": "2026-10-11T05:30:00+05:30"
+      },
+      {
+        "sha256": "677a2a86492c95b102b46f4ea66f317b3c281dd3e31e314bc5c10be74f8886d4",
+        "rows": 10,
+        "venue_id": "BINANCE_SPOT",
+        "min_event_at": "2026-10-02T05:30:00+05:30",
+        "max_event_at": "2026-10-11T05:30:00+05:30"
+      },
+      {
+        "sha256": "91f5758ae1f11a7354faddd76f18885cc61caccdfc91cf14b3e0feee6441cd91",
+        "rows": 10,
+        "venue_id": "BINANCE_SPOT",
+        "min_event_at": "2026-10-02T05:30:00+05:30",
+        "max_event_at": "2026-10-11T05:30:00+05:30"
+      },
+      {
+        "sha256": "9b8e70e5da409a161cb7435ff8182cf6aa4dbb70dbda66dbfd88325db1d88683",
+        "rows": 10,
+        "venue_id": "BINANCE_SPOT",
+        "min_event_at": "2026-10-02T05:30:00+05:30",
+        "max_event_at": "2026-10-11T05:30:00+05:30"
+      },
+      {
+        "sha256": "d6e463104ac7a35a228f131b853c9c9fe0628fbfd248f73e8f095a0743952648",
+        "rows": 10,
+        "venue_id": "BINANCE_SPOT",
+        "min_event_at": "2026-10-02T05:30:00+05:30",
+        "max_event_at": "2026-10-11T05:30:00+05:30"
+      }
+    ]
+  },
+  "data_health": {
+    "manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b",
+    "providers": [
+      {
+        "provider_id": "binance",
+        "observations": 1825,
+        "latest_end_at": "2026-10-11T05:30:00+05:30"
+      }
+    ],
+    "quarantined": 0,
+    "jobs": {
+      "done": 5
+    },
+    "notice": "Latest event time is not a validated per-market freshness verdict."
+  },
+  "operations": {
+    "environment": "OWNER_MAIN",
+    "expected_closed_session": "2026-10-10",
+    "freshness_policy": "binance_utc_daily_closed_session_v1",
+    "items": [
+      {
+        "instrument_id": "70638639-782b-4664-9ac6-f12b101fb7a6",
+        "last_session": "2026-10-10",
+        "freshness": "FRESH"
+      },
+      {
+        "instrument_id": "d79abd0c-40bf-45d8-80bf-ae9e0f2b82ff",
+        "last_session": "2026-10-10",
+        "freshness": "FRESH"
+      },
+      {
+        "instrument_id": "77066a0a-51a7-405f-a916-ade43dd4dae1",
+        "last_session": "2026-10-10",
+        "freshness": "FRESH"
+      },
+      {
+        "instrument_id": "03d92503-c70a-4042-ba01-3b70f640c17c",
+        "last_session": "2026-10-10",
+        "freshness": "FRESH"
+      },
+      {
+        "instrument_id": "affec113-6189-4613-a36b-5cc3bcf70b63",
+        "last_session": "2026-10-10",
+        "freshness": "FRESH"
+      }
+    ],
+    "jobs": [
+      {
+        "job_id": "c5671957-299b-40e9-93e8-aec0b0e9150a",
+        "state": "done",
+        "attempts": 1,
+        "next_attempt_at": "2026-10-11T17:57:52.468626+05:30",
+        "error_code": null,
+        "symbol": "XRPUSDT",
+        "result": {
+          "pages": 1,
+          "stored": 0,
+          "symbol": "XRPUSDT",
+          "duplicates": 3,
+          "manifest_id": null,
+          "quarantined": 0,
+          "completed_at": "2026-10-11T12:27:58.895766+00:00"
+        }
+      },
+      {
+        "job_id": "8a5766ec-761b-4053-be0a-29346d5f8b2d",
+        "state": "done",
+        "attempts": 1,
+        "next_attempt_at": "2026-10-11T17:57:52.439055+05:30",
+        "error_code": null,
+        "symbol": "BNBUSDT",
+        "result": {
+          "pages": 1,
+          "stored": 0,
+          "symbol": "BNBUSDT",
+          "duplicates": 3,
+          "manifest_id": null,
+          "quarantined": 0,
+          "completed_at": "2026-10-11T12:27:57.803680+00:00"
+        }
+      },
+      {
+        "job_id": "eb522b3d-cb30-4d38-93cd-943873d15c9f",
+        "state": "done",
+        "attempts": 1,
+        "next_attempt_at": "2026-10-11T17:57:52.409820+05:30",
+        "error_code": null,
+        "symbol": "SOLUSDT",
+        "result": {
+          "pages": 1,
+          "stored": 0,
+          "symbol": "SOLUSDT",
+          "duplicates": 3,
+          "manifest_id": null,
+          "quarantined": 0,
+          "completed_at": "2026-10-11T12:27:56.337275+00:00"
+        }
+      },
+      {
+        "job_id": "56c581b0-c8a0-499a-b155-9c212abfb375",
+        "state": "done",
+        "attempts": 1,
+        "next_attempt_at": "2026-10-11T17:57:52.377905+05:30",
+        "error_code": null,
+        "symbol": "ETHUSDT",
+        "result": {
+          "pages": 1,
+          "stored": 0,
+          "symbol": "ETHUSDT",
+          "duplicates": 3,
+          "manifest_id": null,
+          "quarantined": 0,
+          "completed_at": "2026-10-11T12:27:55.124801+00:00"
+        }
+      },
+      {
+        "job_id": "4b7b324a-6988-4850-88cd-43bf0e13a691",
+        "state": "done",
+        "attempts": 1,
+        "next_attempt_at": "2026-10-11T17:57:52.346646+05:30",
+        "error_code": null,
+        "symbol": "BTCUSDT",
+        "result": {
+          "pages": 1,
+          "stored": 0,
+          "symbol": "BTCUSDT",
+          "duplicates": 3,
+          "manifest_id": null,
+          "quarantined": 0,
+          "completed_at": "2026-10-11T12:27:53.779642+00:00"
+        }
+      }
+    ]
+  },
+  "cortex_status": {
+    "status": "ready",
+    "environment": "OWNER_MAIN",
+    "model_provider": "deterministic",
+    "model_locality": "local",
+    "deterministic_fallback": true,
+    "orchestration_version": "cortex_orchestrator_v1"
+  },
+  "cortex_runs": {
+    "items": []
+  },
+  "security": {
+    "direct": {
+      "foreign_host_get": 403,
+      "foreign_origin_invalid_post": 403
+    },
+    "proxy": {
+      "foreign_host_get": 403,
+      "foreign_origin_invalid_post": 403
+    }
+  },
+  "pilot_health": {
+    "status": "ready",
+    "settings": {
+      "database_configured": true,
+      "owner_configured": true,
+      "timezone": "Asia/Kolkata",
+      "base_currency": "INR",
+      "cloud_model_allowed": true,
+      "environment": "PILOT_TEST"
+    },
+    "manifest_id": "5fda5a53-4bcd-4788-84a6-e84cf799a3da"
+  },
+  "environment_heads_distinct": true,
+  "saved_research_persistence": "PENDING_EXPLICIT_OWNER_WRITE_AUTHORIZATION",
+  "market_state": {
+    "snapshot_id": "f31b533db3c02b0da1f5c71520d8c6c6c17403677272869e875d1a095f39fada",
+    "request": {
+      "universe_id": "binance_pilot_5",
+      "symbols": [
+        "BTCUSDT",
+        "ETHUSDT",
+        "SOLUSDT",
+        "BNBUSDT",
+        "XRPUSDT"
+      ],
+      "history_start": "2025-10-11",
+      "evaluation_date": "2026-10-10",
+      "as_of": "2026-10-11T12:50:53.694444Z",
+      "manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b",
+      "provider_id": "binance",
+      "adjustment_basis": "raw"
+    },
+    "source_manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b",
+    "calculation_version": "market_state_rules_v1",
+    "calculation_code_hash": "7b2af69b1692a79689ebfc615537e6b8444e8a0e7ecb2647e6a4ea9b59c941ca",
+    "calculated_at": "2026-10-11T12:52:05.209540Z",
+    "elapsed_ms": 2925.29,
+    "universe_members": {
+      "BTCUSDT": "03d92503-c70a-4042-ba01-3b70f640c17c",
+      "ETHUSDT": "d79abd0c-40bf-45d8-80bf-ae9e0f2b82ff",
+      "SOLUSDT": "77066a0a-51a7-405f-a916-ade43dd4dae1",
+      "BNBUSDT": "70638639-782b-4664-9ac6-f12b101fb7a6",
+      "XRPUSDT": "affec113-6189-4613-a36b-5cc3bcf70b63"
+    },
+    "missing_members": [],
+    "dimensions": [
+      {
+        "name": "trend",
+        "category": "mixed",
+        "metrics": {
+          "btc_close": 82988.36,
+          "ema20": 83246.67743771688,
+          "sma50": 80830.4472,
+          "sma20_slope_5_pct": 1.2180760431332427
+        },
+        "evidence_refs": [
+          "9d53ed6c591819e88c3efd10e1b299509db8e751d18628be55748099a29d001f",
+          "8589db5274bc64cdc224b1d0db34f1156b508bae95925129bf631359f1c0b855",
+          "f5d09461e804740dd2893bdde398591a9009c5902efc0dc946e96a089945d534"
+        ],
+        "scope": "BTCUSDT",
+        "timeframe": "P1D",
+        "source_manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b",
+        "rule_version": "market_state_rules_v1",
+        "rule_code_hash": "7b2af69b1692a79689ebfc615537e6b8444e8a0e7ecb2647e6a4ea9b59c941ca",
+        "eligible_members": 1,
+        "total_members": 1,
+        "freshness": "current",
+        "unknown_reason": null
+      },
+      {
+        "name": "momentum",
+        "category": "mixed",
+        "metrics": {
+          "rsi14": 51.7041227922225,
+          "macd_histogram": -567.8816586833746
+        },
+        "evidence_refs": [
+          "d4385407079a12469c33adbe8001644ac8bdd278916d66d55a9d6e4af29bb7ef",
+          "ea846c4633fe50e15f7f1bf4d6944181faf8e612f9d5bf9d33bcc51693963551"
+        ],
+        "scope": "BTCUSDT",
+        "timeframe": "P1D",
+        "source_manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b",
+        "rule_version": "market_state_rules_v1",
+        "rule_code_hash": "7b2af69b1692a79689ebfc615537e6b8444e8a0e7ecb2647e6a4ea9b59c941ca",
+        "eligible_members": 1,
+        "total_members": 1,
+        "freshness": "current",
+        "unknown_reason": null
+      },
+      {
+        "name": "volatility",
+        "category": "middle",
+        "metrics": {
+          "annualized_log_return_vol20": 0.3609104729414322,
+          "volatility_rank90": 53.888888888888886,
+          "atr14": 2116.370210993505
+        },
+        "evidence_refs": [
+          "5a54835052b6f281e45d45f44214b7ece6cf9fa36edd8e24df555b300159256e",
+          "1a54742c3f146271e279f47d3a7a38213f875858e870a62d9b0760ce8d41a38d",
+          "f1003f4928c55e57f07fc1982c1b92806ac3f01b35a612ba1ba81173d4aa8a2f"
+        ],
+        "scope": "BTCUSDT",
+        "timeframe": "P1D",
+        "source_manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b",
+        "rule_version": "market_state_rules_v1",
+        "rule_code_hash": "7b2af69b1692a79689ebfc615537e6b8444e8a0e7ecb2647e6a4ea9b59c941ca",
+        "eligible_members": 1,
+        "total_members": 1,
+        "freshness": "current",
+        "unknown_reason": null
+      },
+      {
+        "name": "volume_proxy",
+        "category": "thin",
+        "metrics": {
+          "btc_relative_volume20": 0.4480243513723034
+        },
+        "evidence_refs": [
+          "fa26fb004a2b4fa3a02e14efd17105d9b4c595e5b9ae4f8ee84415469fa0efeb"
+        ],
+        "scope": "BTCUSDT; traded base-asset volume, not order-book liquidity",
+        "timeframe": "P1D",
+        "source_manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b",
+        "rule_version": "market_state_rules_v1",
+        "rule_code_hash": "7b2af69b1692a79689ebfc615537e6b8444e8a0e7ecb2647e6a4ea9b59c941ca",
+        "eligible_members": 1,
+        "total_members": 1,
+        "freshness": "current",
+        "unknown_reason": null
+      },
+      {
+        "name": "market_participation",
+        "category": "complete",
+        "metrics": {
+          "observed_members": 5,
+          "expected_members": 5,
+          "fraction": 1.0
+        },
+        "evidence_refs": [
+          "796cae8af4a54979fa6adef13a786a4e32f3648010ba8ab5dbba47d765b72532"
+        ],
+        "scope": "binance_pilot_5",
+        "timeframe": "P1D",
+        "source_manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b",
+        "rule_version": "market_state_rules_v1",
+        "rule_code_hash": "7b2af69b1692a79689ebfc615537e6b8444e8a0e7ecb2647e6a4ea9b59c941ca",
+        "eligible_members": 5,
+        "total_members": 5,
+        "freshness": "current",
+        "unknown_reason": null
+      },
+      {
+        "name": "breadth",
+        "category": "broad_negative",
+        "metrics": {
+          "above_sma20_pct": 0.0,
+          "positive_return20_pct": 20.0,
+          "new_high20_pct": 0.0,
+          "new_low20_pct": 0.0
+        },
+        "evidence_refs": [
+          "796cae8af4a54979fa6adef13a786a4e32f3648010ba8ab5dbba47d765b72532"
+        ],
+        "scope": "binance_pilot_5",
+        "timeframe": "P1D",
+        "source_manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b",
+        "rule_version": "market_state_rules_v1",
+        "rule_code_hash": "7b2af69b1692a79689ebfc615537e6b8444e8a0e7ecb2647e6a4ea9b59c941ca",
+        "eligible_members": 5,
+        "total_members": 5,
+        "freshness": "current",
+        "unknown_reason": null
+      },
+      {
+        "name": "relative_strength",
+        "category": "btc_outperforming",
+        "metrics": {
+          "alt_vs_btc_mean_return_ratio20": -0.04551008321497882,
+          "alt_count": 4
+        },
+        "evidence_refs": [
+          "c77dc1178650eab5fc2294965f4f7efed530bcc0a2a14563de53dcc4652df1e9",
+          "b735dca886365029456e28d8fe78499f9f81e38da2eeac20753942ea90083994",
+          "425a49dfeff8c47a69ad5037c9d66187b8f69e6f1e820c9cbb507caa82b32596",
+          "d6c05107cdecf27445d558a899ef1ee5b4d2bf3463b46fcd70ee4c4884ba553a"
+        ],
+        "scope": "binance_pilot_5",
+        "timeframe": "P1D",
+        "source_manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b",
+        "rule_version": "market_state_rules_v1",
+        "rule_code_hash": "7b2af69b1692a79689ebfc615537e6b8444e8a0e7ecb2647e6a4ea9b59c941ca",
+        "eligible_members": 4,
+        "total_members": 4,
+        "freshness": "current",
+        "unknown_reason": null
+      },
+      {
+        "name": "correlation_state",
+        "category": "high",
+        "metrics": {
+          "alt_btc_mean_pearson60": 0.8334480368889359,
+          "pair_count": 4,
+          "window_returns": 60
+        },
+        "evidence_refs": [
+          "d076ee30211590062ccae74dc2a566f90238e5760e20f9fef238df9e2629aa77",
+          "d6401d903c927693f9822d1534d26e67e8d70127ffc99e01956987ba0a7e15cb",
+          "cca673591cfce5ae9a2f8701ddbade11179951036d7239034943a3663a17a8ed",
+          "ba9d1f03838cbd348f26f06e96163880f998239b09d5636bdbf95c66d2fe5cc5"
+        ],
+        "scope": "binance_pilot_5",
+        "timeframe": "P1D",
+        "source_manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b",
+        "rule_version": "market_state_rules_v1",
+        "rule_code_hash": "7b2af69b1692a79689ebfc615537e6b8444e8a0e7ecb2647e6a4ea9b59c941ca",
+        "eligible_members": 4,
+        "total_members": 4,
+        "freshness": "current",
+        "unknown_reason": null
+      },
+      {
+        "name": "risk_appetite_proxy",
+        "category": "risk_off_proxy",
+        "metrics": {
+          "alt_vs_btc_mean20": -0.04551008321497882,
+          "universe_positive20": 1
+        },
+        "evidence_refs": [
+          "c77dc1178650eab5fc2294965f4f7efed530bcc0a2a14563de53dcc4652df1e9",
+          "b735dca886365029456e28d8fe78499f9f81e38da2eeac20753942ea90083994",
+          "425a49dfeff8c47a69ad5037c9d66187b8f69e6f1e820c9cbb507caa82b32596",
+          "d6c05107cdecf27445d558a899ef1ee5b4d2bf3463b46fcd70ee4c4884ba553a",
+          "796cae8af4a54979fa6adef13a786a4e32f3648010ba8ab5dbba47d765b72532"
+        ],
+        "scope": "binance_pilot_5",
+        "timeframe": "P1D",
+        "source_manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b",
+        "rule_version": "market_state_rules_v1",
+        "rule_code_hash": "7b2af69b1692a79689ebfc615537e6b8444e8a0e7ecb2647e6a4ea9b59c941ca",
+        "eligible_members": 4,
+        "total_members": 4,
+        "freshness": "current",
+        "unknown_reason": null
+      },
+      {
+        "name": "data_freshness",
+        "category": "current",
+        "metrics": {
+          "current_members": 5,
+          "total_members": 5
+        },
+        "evidence_refs": [
+          "6ac53483-d671-4d9e-96c7-ee1d56a4feb2",
+          "d7ad242b-1e80-45fd-b323-9eaf15ae8ac7",
+          "4e46c2ec-9b24-4d0d-97ad-52cf3b60225e",
+          "edb526ed-ba7b-4154-bb48-1b2707777878",
+          "7e890810-452f-4e31-b1b2-bf988a8ba56a"
+        ],
+        "scope": "binance_pilot_5",
+        "timeframe": "P1D",
+        "source_manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b",
+        "rule_version": "market_state_rules_v1",
+        "rule_code_hash": "7b2af69b1692a79689ebfc615537e6b8444e8a0e7ecb2647e6a4ea9b59c941ca",
+        "eligible_members": 5,
+        "total_members": 5,
+        "freshness": "current",
+        "unknown_reason": null
+      },
+      {
+        "name": "uncertainty",
+        "category": "bounded",
+        "metrics": {
+          "unknown_dimensions": 0,
+          "missing_members": 0,
+          "noncurrent_members": 0
+        },
+        "evidence_refs": [],
+        "scope": "binance_pilot_5",
+        "timeframe": "P1D",
+        "source_manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b",
+        "rule_version": "market_state_rules_v1",
+        "rule_code_hash": "7b2af69b1692a79689ebfc615537e6b8444e8a0e7ecb2647e6a4ea9b59c941ca",
+        "eligible_members": 5,
+        "total_members": 5,
+        "freshness": "current",
+        "unknown_reason": null
+      }
+    ],
+    "regime": {
+      "category": "mixed",
+      "rules_fired": [
+        "R7_MIXED_OR_DISAGREEING_DIMENSIONS"
+      ],
+      "evidence_refs": [
+        "9d53ed6c591819e88c3efd10e1b299509db8e751d18628be55748099a29d001f",
+        "8589db5274bc64cdc224b1d0db34f1156b508bae95925129bf631359f1c0b855",
+        "f5d09461e804740dd2893bdde398591a9009c5902efc0dc946e96a089945d534",
+        "d4385407079a12469c33adbe8001644ac8bdd278916d66d55a9d6e4af29bb7ef",
+        "ea846c4633fe50e15f7f1bf4d6944181faf8e612f9d5bf9d33bcc51693963551",
+        "5a54835052b6f281e45d45f44214b7ece6cf9fa36edd8e24df555b300159256e",
+        "1a54742c3f146271e279f47d3a7a38213f875858e870a62d9b0760ce8d41a38d",
+        "f1003f4928c55e57f07fc1982c1b92806ac3f01b35a612ba1ba81173d4aa8a2f"
+      ],
+      "rule_version": "regime_rules_v1",
+      "rule_code_hash": "7b2af69b1692a79689ebfc615537e6b8444e8a0e7ecb2647e6a4ea9b59c941ca",
+      "unknown_reason": null
+    },
+    "breadth": {
+      "snapshot_id": "796cae8af4a54979fa6adef13a786a4e32f3648010ba8ab5dbba47d765b72532",
+      "universe_id": "binance_pilot_5",
+      "member_ids": {
+        "BTCUSDT": "03d92503-c70a-4042-ba01-3b70f640c17c",
+        "ETHUSDT": "d79abd0c-40bf-45d8-80bf-ae9e0f2b82ff",
+        "SOLUSDT": "77066a0a-51a7-405f-a916-ade43dd4dae1",
+        "BNBUSDT": "70638639-782b-4664-9ac6-f12b101fb7a6",
+        "XRPUSDT": "affec113-6189-4613-a36b-5cc3bcf70b63"
+      },
+      "session_date": "2026-10-10",
+      "source_manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b",
+      "as_of": "2026-10-11T12:50:53.694444+00:00",
+      "calendar_id": "BINANCE_SPOT:utc_daily",
+      "calendar_version": "v1",
+      "observed_members": 5,
+      "total_members": 5,
+      "above_sma": {
+        "eligible": 5,
+        "positive": 0,
+        "percentage": 0.0,
+        "missing_members": []
+      },
+      "positive_lookback": {
+        "eligible": 5,
+        "positive": 1,
+        "percentage": 20.0,
+        "missing_members": []
+      },
+      "new_high": {
+        "eligible": 5,
+        "positive": 0,
+        "percentage": 0.0,
+        "missing_members": []
+      },
+      "new_low": {
+        "eligible": 5,
+        "positive": 0,
+        "percentage": 0.0,
+        "missing_members": []
+      },
+      "advancing": 5,
+      "declining": 0,
+      "unchanged": 0,
+      "advance_decline_eligible": 5,
+      "feature_refs": [
+        "8670da5d535360b638e96555b0690d6dcd7578dcea4ecdfd07f3fc662eabde39",
+        "a721106e524fb4ba605208d5af5e55a3dbbba3ae95f9b2540b76eef9974535b5",
+        "4d19cece8ea1bf45c64937a700853140412b989f47d96c9a47340a405f4988bb",
+        "787f8857cbaaa4602c99b38bc2dff25d31c1735f1a264aa23907b2e3f9f19d14",
+        "0dec460a8900fe3e0cb27a99bec70dc0bc4943a0fa71bc3930b1333aa7372d9d",
+        "74ad7ecf9b974af56fbc8242ea12ea013f4989102dab7cb049e45ba2993784dc",
+        "1245b27a1c836dbe9713d72189bb7460e04d4cbc2c3aa0df9bcfabc9314bee52",
+        "e3088b526817fe2af869ac1e12070c00bc46ae27dc01584537fc0c09545ff48e",
+        "9b0c9b3da82c98afc2c60a3254d6351507e1b612a95af9be54a24da08bbbe169",
+        "d4d85d381326d07d5e0162bb89fd5c9cb84920cb6e5121837bd2b5f9d47bc952"
+      ],
+      "rule_version": "breadth_v1",
+      "rule_code_hash": "ea7d0013f9f5e6a23c5d43f8df58b76b1b2ef4a7593bab99ed9fbc282cb81596"
+    }
+  },
+  "rsi": {
+    "feature_id": "ddb44f52be669869119eed0d1e0f1760b27e8c64ecb22476362fc484c4849bde",
+    "definition": {
+      "name": "rsi",
+      "version": "1.0.0",
+      "calculation_version": "daily_float64_v1",
+      "calculation_code_hash": "e7093acb7d478e19b04330a0e54e416a572a251af7650f503101bf001ae8ae52",
+      "description": "Wilder RSI; flat run is 50",
+      "required_inputs": [
+        "close"
+      ],
+      "parameter_defaults": {
+        "period": 14
+      },
+      "min_history": "period + 1 bars",
+      "default_min_history": 15,
+      "output_type": "nullable_float64",
+      "unit": "index_0_100",
+      "supported_intervals": [
+        "P1D"
+      ]
+    },
+    "calculation_code_hash": "e7093acb7d478e19b04330a0e54e416a572a251af7650f503101bf001ae8ae52",
+    "required_history": 15,
+    "request": {
+      "instrument_id": "d79abd0c-40bf-45d8-80bf-ae9e0f2b82ff",
+      "feature": "rsi",
+      "feature_version": "1.0.0",
+      "start_date": "2025-10-11",
+      "end_date": "2026-10-10",
+      "as_of": "2026-10-11T12:50:53.694444Z",
+      "manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b",
+      "provider_id": "binance",
+      "adjustment_basis": "raw",
+      "interval": "P1D",
+      "parameters": {
+        "period": 14
+      }
+    },
+    "source_manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b",
+    "provider_id": "binance",
+    "calendar_id": "BINANCE_SPOT:utc_daily",
+    "calendar_version": "v1",
+    "venue_id": "BINANCE_SPOT",
+    "currency": "USDT",
+    "resolved_parameters": {
+      "period": 14
+    },
+    "source_batch_ids": [
+      "d61bd682-4b70-4c6d-83be-e029b4faa21c"
+    ],
+    "selection_policy": "single_provider_or_reject_v1",
+    "expected_sessions": 365,
+    "eligible_sessions": 365,
+    "observed_sessions": 365,
+    "computed_points": 351,
+    "missing_sessions": [],
+    "ineligible_sessions": [],
+    "freshness": "current",
+    "calculated_at": "2026-10-11T12:52:05.792444Z",
+    "elapsed_ms": 420.572,
+    "latest": {
+      "session_date": "2026-10-10",
+      "value": 41.179231078493856,
+      "observation_id": "d7ad242b-1e80-45fd-b323-9eaf15ae8ac7",
+      "source_batch_id": "d61bd682-4b70-4c6d-83be-e029b4faa21c",
+      "available_at": "2026-10-11T12:27:35.540116Z",
+      "input_quality": "valid",
+      "reason": null
+    },
+    "source_observation_count": 365
+  },
+  "overview": {
+    "context": {
+      "universe_id": "binance_pilot_5",
+      "universe_label": "Binance Pilot 5",
+      "source_manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b",
+      "head_manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b",
+      "manifest": {
+        "manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b",
+        "parent_manifest_id": "51d3b0e8-46b0-4760-ac3d-1c8a228a377e",
+        "created_at": "2026-10-11T17:57:41.706839+05:30",
+        "schema_version": "1.0.0-draft",
+        "selection_policy_version": "all_providers_v1"
+      },
+      "recent_manifests": [
+        {
+          "manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b",
+          "parent_manifest_id": "51d3b0e8-46b0-4760-ac3d-1c8a228a377e",
+          "created_at": "2026-10-11T17:57:41.706839+05:30"
+        },
+        {
+          "manifest_id": "51d3b0e8-46b0-4760-ac3d-1c8a228a377e",
+          "parent_manifest_id": "a93e915a-82ad-4bbc-a6c3-0fcb700310ff",
+          "created_at": "2026-10-11T17:57:40.059117+05:30"
+        },
+        {
+          "manifest_id": "a93e915a-82ad-4bbc-a6c3-0fcb700310ff",
+          "parent_manifest_id": "1843d455-b9fb-4a7a-9747-079c287ca71c",
+          "created_at": "2026-10-11T17:57:37.656713+05:30"
+        },
+        {
+          "manifest_id": "1843d455-b9fb-4a7a-9747-079c287ca71c",
+          "parent_manifest_id": "f90603e9-e00b-4769-8aba-13d22650a7be",
+          "created_at": "2026-10-11T17:57:35.540116+05:30"
+        },
+        {
+          "manifest_id": "f90603e9-e00b-4769-8aba-13d22650a7be",
+          "parent_manifest_id": null,
+          "created_at": "2026-10-11T17:57:32.883102+05:30"
+        }
+      ],
+      "as_of": "2026-10-11T12:50:53.694444+00:00",
+      "evaluation_date": "2026-10-10",
+      "history_start": "2025-10-11",
+      "members": [
+        {
+          "symbol": "BTCUSDT",
+          "instrument_id": "03d92503-c70a-4042-ba01-3b70f640c17c",
+          "currency": "USDT",
+          "venue_id": "BINANCE_SPOT",
+          "first_session": "2025-10-11",
+          "last_session": "2026-10-10",
+          "observed_sessions": 365,
+          "status": "available"
+        },
+        {
+          "symbol": "ETHUSDT",
+          "instrument_id": "d79abd0c-40bf-45d8-80bf-ae9e0f2b82ff",
+          "currency": "USDT",
+          "venue_id": "BINANCE_SPOT",
+          "first_session": "2025-10-11",
+          "last_session": "2026-10-10",
+          "observed_sessions": 365,
+          "status": "available"
+        },
+        {
+          "symbol": "SOLUSDT",
+          "instrument_id": "77066a0a-51a7-405f-a916-ade43dd4dae1",
+          "currency": "USDT",
+          "venue_id": "BINANCE_SPOT",
+          "first_session": "2025-10-11",
+          "last_session": "2026-10-10",
+          "observed_sessions": 365,
+          "status": "available"
+        },
+        {
+          "symbol": "BNBUSDT",
+          "instrument_id": "70638639-782b-4664-9ac6-f12b101fb7a6",
+          "currency": "USDT",
+          "venue_id": "BINANCE_SPOT",
+          "first_session": "2025-10-11",
+          "last_session": "2026-10-10",
+          "observed_sessions": 365,
+          "status": "available"
+        },
+        {
+          "symbol": "XRPUSDT",
+          "instrument_id": "affec113-6189-4613-a36b-5cc3bcf70b63",
+          "currency": "USDT",
+          "venue_id": "BINANCE_SPOT",
+          "first_session": "2025-10-11",
+          "last_session": "2026-10-10",
+          "observed_sessions": 365,
+          "status": "available"
+        }
+      ],
+      "providers": [
+        {
+          "provider_id": "binance",
+          "label": "Binance public daily bars",
+          "status": "VALIDATED_PUBLIC",
+          "credential_state": "PUBLIC_NO_CREDENTIAL",
+          "interval": "P1D"
+        },
+        {
+          "provider_id": "upstox",
+          "label": "Upstox adapter",
+          "status": "DEFERRED_NOT_CONFIGURED",
+          "credential_state": "NOT_CONFIGURED",
+          "interval": "P1D"
+        },
+        {
+          "provider_id": "alpaca",
+          "label": "Alpaca adapter",
+          "status": "DEFERRED_NOT_CONFIGURED",
+          "credential_state": "NOT_CONFIGURED",
+          "interval": "P1D"
+        }
+      ],
+      "display": {
+        "primary_currency": "INR",
+        "secondary_currency": "USD",
+        "native_prices_only": true,
+        "timezone": "Asia/Kolkata"
+      }
+    },
+    "items": [
+      {
+        "symbol": "BTCUSDT",
+        "instrument_id": "03d92503-c70a-4042-ba01-3b70f640c17c",
+        "currency": "USDT",
+        "venue_id": "BINANCE_SPOT",
+        "first_session": "2025-10-11",
+        "last_session": "2026-10-10",
+        "observed_sessions": 365,
+        "status": "available",
+        "session_date": "2026-10-10",
+        "close": 82988.36,
+        "observation_id": "6ac53483-d671-4d9e-96c7-ee1d56a4feb2",
+        "quality": "valid",
+        "freshness": "current",
+        "features": {
+          "arithmetic_return": {
+            "feature_id": "50146284da46fdb866384567a10d296afa1324cb29565056914acb72a96eca6b",
+            "name": "arithmetic_return",
+            "value": 0.004269469979929941,
+            "reason": null,
+            "unit": "fraction",
+            "version": "1.0.0",
+            "calculation_version": "daily_float64_v1",
+            "parameters": {},
+            "observed_sessions": 365,
+            "expected_sessions": 365,
+            "freshness": "current",
+            "source_manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b"
+          },
+          "rolling_return": {
+            "feature_id": "a721106e524fb4ba605208d5af5e55a3dbbba3ae95f9b2540b76eef9974535b5",
+            "name": "rolling_return",
+            "value": 0.022301116065929216,
+            "reason": null,
+            "unit": "fraction",
+            "version": "1.0.0",
+            "calculation_version": "daily_float64_v1",
+            "parameters": {
+              "period": 20
+            },
+            "observed_sessions": 365,
+            "expected_sessions": 365,
+            "freshness": "current",
+            "source_manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b"
+          },
+          "sma": {
+            "feature_id": "8670da5d535360b638e96555b0690d6dcd7578dcea4ecdfd07f3fc662eabde39",
+            "name": "sma",
+            "value": 84406.36750000001,
+            "reason": null,
+            "unit": "quote_price",
+            "version": "1.0.0",
+            "calculation_version": "daily_float64_v1",
+            "parameters": {
+              "period": 20
+            },
+            "observed_sessions": 365,
+            "expected_sessions": 365,
+            "freshness": "current",
+            "source_manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b"
+          },
+          "rsi": {
+            "feature_id": "d4385407079a12469c33adbe8001644ac8bdd278916d66d55a9d6e4af29bb7ef",
+            "name": "rsi",
+            "value": 51.7041227922225,
+            "reason": null,
+            "unit": "index_0_100",
+            "version": "1.0.0",
+            "calculation_version": "daily_float64_v1",
+            "parameters": {
+              "period": 14
+            },
+            "observed_sessions": 365,
+            "expected_sessions": 365,
+            "freshness": "current",
+            "source_manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b"
+          },
+          "annualized_volatility": {
+            "feature_id": "5a54835052b6f281e45d45f44214b7ece6cf9fa36edd8e24df555b300159256e",
+            "name": "annualized_volatility",
+            "value": 0.3609104729414322,
+            "reason": null,
+            "unit": "annual_fraction",
+            "version": "1.0.0",
+            "calculation_version": "daily_float64_v1",
+            "parameters": {
+              "period": 20,
+              "annualization": 365
+            },
+            "observed_sessions": 365,
+            "expected_sessions": 365,
+            "freshness": "current",
+            "source_manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b"
+          },
+          "relative_volume": {
+            "feature_id": "fa26fb004a2b4fa3a02e14efd17105d9b4c595e5b9ae4f8ee84415469fa0efeb",
+            "name": "relative_volume",
+            "value": 0.4480243513723034,
+            "reason": null,
+            "unit": "ratio",
+            "version": "1.0.0",
+            "calculation_version": "daily_float64_v1",
+            "parameters": {
+              "period": 20
+            },
+            "observed_sessions": 365,
+            "expected_sessions": 365,
+            "freshness": "current",
+            "source_manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b"
+          }
+        }
+      },
+      {
+        "symbol": "ETHUSDT",
+        "instrument_id": "d79abd0c-40bf-45d8-80bf-ae9e0f2b82ff",
+        "currency": "USDT",
+        "venue_id": "BINANCE_SPOT",
+        "first_session": "2025-10-11",
+        "last_session": "2026-10-10",
+        "observed_sessions": 365,
+        "status": "available",
+        "session_date": "2026-10-10",
+        "close": 2506.52,
+        "observation_id": "d7ad242b-1e80-45fd-b323-9eaf15ae8ac7",
+        "quality": "valid",
+        "freshness": "current",
+        "features": {
+          "arithmetic_return": {
+            "feature_id": "365ce6df45e8dca0e9e45dcb22cc4319498e02c784f795881188acb746506498",
+            "name": "arithmetic_return",
+            "value": 0.0075652208867629245,
+            "reason": null,
+            "unit": "fraction",
+            "version": "1.0.0",
+            "calculation_version": "daily_float64_v1",
+            "parameters": {},
+            "observed_sessions": 365,
+            "expected_sessions": 365,
+            "freshness": "current",
+            "source_manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b"
+          },
+          "rolling_return": {
+            "feature_id": "787f8857cbaaa4602c99b38bc2dff25d31c1735f1a264aa23907b2e3f9f19d14",
+            "name": "rolling_return",
+            "value": -0.052430619875170614,
+            "reason": null,
+            "unit": "fraction",
+            "version": "1.0.0",
+            "calculation_version": "daily_float64_v1",
+            "parameters": {
+              "period": 20
+            },
+            "observed_sessions": 365,
+            "expected_sessions": 365,
+            "freshness": "current",
+            "source_manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b"
+          },
+          "sma": {
+            "feature_id": "4d19cece8ea1bf45c64937a700853140412b989f47d96c9a47340a405f4988bb",
+            "name": "sma",
+            "value": 2663.584,
+            "reason": null,
+            "unit": "quote_price",
+            "version": "1.0.0",
+            "calculation_version": "daily_float64_v1",
+            "parameters": {
+              "period": 20
+            },
+            "observed_sessions": 365,
+            "expected_sessions": 365,
+            "freshness": "current",
+            "source_manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b"
+          },
+          "rsi": {
+            "feature_id": "ddb44f52be669869119eed0d1e0f1760b27e8c64ecb22476362fc484c4849bde",
+            "name": "rsi",
+            "value": 41.179231078493856,
+            "reason": null,
+            "unit": "index_0_100",
+            "version": "1.0.0",
+            "calculation_version": "daily_float64_v1",
+            "parameters": {
+              "period": 14
+            },
+            "observed_sessions": 365,
+            "expected_sessions": 365,
+            "freshness": "current",
+            "source_manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b"
+          },
+          "annualized_volatility": {
+            "feature_id": "3f2cacc9c7c0c0565b9f07aede90471775cbd4e36c8e0669ce86ede6df884368",
+            "name": "annualized_volatility",
+            "value": 0.37556012049846843,
+            "reason": null,
+            "unit": "annual_fraction",
+            "version": "1.0.0",
+            "calculation_version": "daily_float64_v1",
+            "parameters": {
+              "period": 20,
+              "annualization": 365
+            },
+            "observed_sessions": 365,
+            "expected_sessions": 365,
+            "freshness": "current",
+            "source_manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b"
+          },
+          "relative_volume": {
+            "feature_id": "218aae84a18323bdecda8b85eff397035a31b36b0ac7c0b4af44b4ba2b9c4a72",
+            "name": "relative_volume",
+            "value": 0.4623662106462052,
+            "reason": null,
+            "unit": "ratio",
+            "version": "1.0.0",
+            "calculation_version": "daily_float64_v1",
+            "parameters": {
+              "period": 20
+            },
+            "observed_sessions": 365,
+            "expected_sessions": 365,
+            "freshness": "current",
+            "source_manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b"
+          }
+        }
+      },
+      {
+        "symbol": "SOLUSDT",
+        "instrument_id": "77066a0a-51a7-405f-a916-ade43dd4dae1",
+        "currency": "USDT",
+        "venue_id": "BINANCE_SPOT",
+        "first_session": "2025-10-11",
+        "last_session": "2026-10-10",
+        "observed_sessions": 365,
+        "status": "available",
+        "session_date": "2026-10-10",
+        "close": 110.09,
+        "observation_id": "4e46c2ec-9b24-4d0d-97ad-52cf3b60225e",
+        "quality": "valid",
+        "freshness": "current",
+        "features": {
+          "arithmetic_return": {
+            "feature_id": "09e1b26117e376e4bf793d229506e41f79bf9ca624461f4d88d0a859a16cbc5d",
+            "name": "arithmetic_return",
+            "value": 0.008796847796206375,
+            "reason": null,
+            "unit": "fraction",
+            "version": "1.0.0",
+            "calculation_version": "daily_float64_v1",
+            "parameters": {},
+            "observed_sessions": 365,
+            "expected_sessions": 365,
+            "freshness": "current",
+            "source_manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b"
+          },
+          "rolling_return": {
+            "feature_id": "74ad7ecf9b974af56fbc8242ea12ea013f4989102dab7cb049e45ba2993784dc",
+            "name": "rolling_return",
+            "value": -0.009714851128901691,
+            "reason": null,
+            "unit": "fraction",
+            "version": "1.0.0",
+            "calculation_version": "daily_float64_v1",
+            "parameters": {
+              "period": 20
+            },
+            "observed_sessions": 365,
+            "expected_sessions": 365,
+            "freshness": "current",
+            "source_manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b"
+          },
+          "sma": {
+            "feature_id": "0dec460a8900fe3e0cb27a99bec70dc0bc4943a0fa71bc3930b1333aa7372d9d",
+            "name": "sma",
+            "value": 117.80600000000001,
+            "reason": null,
+            "unit": "quote_price",
+            "version": "1.0.0",
+            "calculation_version": "daily_float64_v1",
+            "parameters": {
+              "period": 20
+            },
+            "observed_sessions": 365,
+            "expected_sessions": 365,
+            "freshness": "current",
+            "source_manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b"
+          },
+          "rsi": {
+            "feature_id": "636ba64b48d5d1d744bc299ee7b81a1b7dae49851b407c91052b849a143a7670",
+            "name": "rsi",
+            "value": 44.4790464325731,
+            "reason": null,
+            "unit": "index_0_100",
+            "version": "1.0.0",
+            "calculation_version": "daily_float64_v1",
+            "parameters": {
+              "period": 14
+            },
+            "observed_sessions": 365,
+            "expected_sessions": 365,
+            "freshness": "current",
+            "source_manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b"
+          },
+          "annualized_volatility": {
+            "feature_id": "8d1044999e8eeba9214c578ac5ebf6e3d4d3032a9f64a6ae4b8000269aa00e32",
+            "name": "annualized_volatility",
+            "value": 0.5144287788874394,
+            "reason": null,
+            "unit": "annual_fraction",
+            "version": "1.0.0",
+            "calculation_version": "daily_float64_v1",
+            "parameters": {
+              "period": 20,
+              "annualization": 365
+            },
+            "observed_sessions": 365,
+            "expected_sessions": 365,
+            "freshness": "current",
+            "source_manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b"
+          },
+          "relative_volume": {
+            "feature_id": "4ec562c76936090d759013c8c10d1b3a04c035b491424d9d745ebcc5aa55207f",
+            "name": "relative_volume",
+            "value": 0.3628247838430111,
+            "reason": null,
+            "unit": "ratio",
+            "version": "1.0.0",
+            "calculation_version": "daily_float64_v1",
+            "parameters": {
+              "period": 20
+            },
+            "observed_sessions": 365,
+            "expected_sessions": 365,
+            "freshness": "current",
+            "source_manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b"
+          }
+        }
+      },
+      {
+        "symbol": "BNBUSDT",
+        "instrument_id": "70638639-782b-4664-9ac6-f12b101fb7a6",
+        "currency": "USDT",
+        "venue_id": "BINANCE_SPOT",
+        "first_session": "2025-10-11",
+        "last_session": "2026-10-10",
+        "observed_sessions": 365,
+        "status": "available",
+        "session_date": "2026-10-10",
+        "close": 750.15,
+        "observation_id": "edb526ed-ba7b-4154-bb48-1b2707777878",
+        "quality": "valid",
+        "freshness": "current",
+        "features": {
+          "arithmetic_return": {
+            "feature_id": "be9f744b04e16a21a8a253974df7090ab8a9fe665448182b63317198179aeda6",
+            "name": "arithmetic_return",
+            "value": 0.010548011639185173,
+            "reason": null,
+            "unit": "fraction",
+            "version": "1.0.0",
+            "calculation_version": "daily_float64_v1",
+            "parameters": {},
+            "observed_sessions": 365,
+            "expected_sessions": 365,
+            "freshness": "current",
+            "source_manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b"
+          },
+          "rolling_return": {
+            "feature_id": "e3088b526817fe2af869ac1e12070c00bc46ae27dc01584537fc0c09545ff48e",
+            "name": "rolling_return",
+            "value": -0.02900745573159358,
+            "reason": null,
+            "unit": "fraction",
+            "version": "1.0.0",
+            "calculation_version": "daily_float64_v1",
+            "parameters": {
+              "period": 20
+            },
+            "observed_sessions": 365,
+            "expected_sessions": 365,
+            "freshness": "current",
+            "source_manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b"
+          },
+          "sma": {
+            "feature_id": "1245b27a1c836dbe9713d72189bb7460e04d4cbc2c3aa0df9bcfabc9314bee52",
+            "name": "sma",
+            "value": 772.1305,
+            "reason": null,
+            "unit": "quote_price",
+            "version": "1.0.0",
+            "calculation_version": "daily_float64_v1",
+            "parameters": {
+              "period": 20
+            },
+            "observed_sessions": 365,
+            "expected_sessions": 365,
+            "freshness": "current",
+            "source_manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b"
+          },
+          "rsi": {
+            "feature_id": "e947e6db48ddd7d93525767d09851e6475b70cd046fe7e50e12687d779664732",
+            "name": "rsi",
+            "value": 47.63174219522725,
+            "reason": null,
+            "unit": "index_0_100",
+            "version": "1.0.0",
+            "calculation_version": "daily_float64_v1",
+            "parameters": {
+              "period": 14
+            },
+            "observed_sessions": 365,
+            "expected_sessions": 365,
+            "freshness": "current",
+            "source_manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b"
+          },
+          "annualized_volatility": {
+            "feature_id": "616781f3f787d1a68170b960648c19b511c9362c3a12ac1efc9b640f3ee1455a",
+            "name": "annualized_volatility",
+            "value": 0.3505088389638427,
+            "reason": null,
+            "unit": "annual_fraction",
+            "version": "1.0.0",
+            "calculation_version": "daily_float64_v1",
+            "parameters": {
+              "period": 20,
+              "annualization": 365
+            },
+            "observed_sessions": 365,
+            "expected_sessions": 365,
+            "freshness": "current",
+            "source_manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b"
+          },
+          "relative_volume": {
+            "feature_id": "c345b95577f3b08f86d58b35c6b3c217eca69d8606c48c88bd69f33a3abd5e35",
+            "name": "relative_volume",
+            "value": 0.44527123929594703,
+            "reason": null,
+            "unit": "ratio",
+            "version": "1.0.0",
+            "calculation_version": "daily_float64_v1",
+            "parameters": {
+              "period": 20
+            },
+            "observed_sessions": 365,
+            "expected_sessions": 365,
+            "freshness": "current",
+            "source_manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b"
+          }
+        }
+      },
+      {
+        "symbol": "XRPUSDT",
+        "instrument_id": "affec113-6189-4613-a36b-5cc3bcf70b63",
+        "currency": "USDT",
+        "venue_id": "BINANCE_SPOT",
+        "first_session": "2025-10-11",
+        "last_session": "2026-10-10",
+        "observed_sessions": 365,
+        "status": "available",
+        "session_date": "2026-10-10",
+        "close": 1.4024,
+        "observation_id": "7e890810-452f-4e31-b1b2-bf988a8ba56a",
+        "quality": "valid",
+        "freshness": "current",
+        "features": {
+          "arithmetic_return": {
+            "feature_id": "c3cfc81a46cb62bc3bc2fdec9aad23c84bbd39221cb9f96eac0d30323ae5c1ea",
+            "name": "arithmetic_return",
+            "value": 0.004728471127668943,
+            "reason": null,
+            "unit": "fraction",
+            "version": "1.0.0",
+            "calculation_version": "daily_float64_v1",
+            "parameters": {},
+            "observed_sessions": 365,
+            "expected_sessions": 365,
+            "freshness": "current",
+            "source_manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b"
+          },
+          "rolling_return": {
+            "feature_id": "d4d85d381326d07d5e0162bb89fd5c9cb84920cb6e5121837bd2b5f9d47bc952",
+            "name": "rolling_return",
+            "value": -0.005742644452321866,
+            "reason": null,
+            "unit": "fraction",
+            "version": "1.0.0",
+            "calculation_version": "daily_float64_v1",
+            "parameters": {
+              "period": 20
+            },
+            "observed_sessions": 365,
+            "expected_sessions": 365,
+            "freshness": "current",
+            "source_manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b"
+          },
+          "sma": {
+            "feature_id": "9b0c9b3da82c98afc2c60a3254d6351507e1b612a95af9be54a24da08bbbe169",
+            "name": "sma",
+            "value": 1.4912700000000003,
+            "reason": null,
+            "unit": "quote_price",
+            "version": "1.0.0",
+            "calculation_version": "daily_float64_v1",
+            "parameters": {
+              "period": 20
+            },
+            "observed_sessions": 365,
+            "expected_sessions": 365,
+            "freshness": "current",
+            "source_manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b"
+          },
+          "rsi": {
+            "feature_id": "bab61f244c14dfa3986ee488ff2421b9c4a18d6002397861eced780c8987fa29",
+            "name": "rsi",
+            "value": 44.329914868882135,
+            "reason": null,
+            "unit": "index_0_100",
+            "version": "1.0.0",
+            "calculation_version": "daily_float64_v1",
+            "parameters": {
+              "period": 14
+            },
+            "observed_sessions": 365,
+            "expected_sessions": 365,
+            "freshness": "current",
+            "source_manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b"
+          },
+          "annualized_volatility": {
+            "feature_id": "978079e711f3f4c418f044a223235b57d5ffbaec23815d60d675badc296a2964",
+            "name": "annualized_volatility",
+            "value": 0.5597222198101337,
+            "reason": null,
+            "unit": "annual_fraction",
+            "version": "1.0.0",
+            "calculation_version": "daily_float64_v1",
+            "parameters": {
+              "period": 20,
+              "annualization": 365
+            },
+            "observed_sessions": 365,
+            "expected_sessions": 365,
+            "freshness": "current",
+            "source_manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b"
+          },
+          "relative_volume": {
+            "feature_id": "7a0f5959e6b19e35fc7a2da08d74fa47aa06257fc8b79622277bd97eb4e7128f",
+            "name": "relative_volume",
+            "value": 0.23085738894794766,
+            "reason": null,
+            "unit": "ratio",
+            "version": "1.0.0",
+            "calculation_version": "daily_float64_v1",
+            "parameters": {
+              "period": 20
+            },
+            "observed_sessions": 365,
+            "expected_sessions": 365,
+            "freshness": "current",
+            "source_manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b"
+          }
+        }
+      }
+    ],
+    "state": {
+      "snapshot_id": "f31b533db3c02b0da1f5c71520d8c6c6c17403677272869e875d1a095f39fada",
+      "request": {
+        "universe_id": "binance_pilot_5",
+        "symbols": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT",
+          "BNBUSDT",
+          "XRPUSDT"
+        ],
+        "history_start": "2025-10-11",
+        "evaluation_date": "2026-10-10",
+        "as_of": "2026-10-11T12:50:53.694444Z",
+        "manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b",
+        "provider_id": "binance",
+        "adjustment_basis": "raw"
+      },
+      "source_manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b",
+      "calculation_version": "market_state_rules_v1",
+      "calculation_code_hash": "7b2af69b1692a79689ebfc615537e6b8444e8a0e7ecb2647e6a4ea9b59c941ca",
+      "calculated_at": "2026-10-11T12:52:11.632934Z",
+      "elapsed_ms": 2772.695,
+      "universe_members": {
+        "BTCUSDT": "03d92503-c70a-4042-ba01-3b70f640c17c",
+        "ETHUSDT": "d79abd0c-40bf-45d8-80bf-ae9e0f2b82ff",
+        "SOLUSDT": "77066a0a-51a7-405f-a916-ade43dd4dae1",
+        "BNBUSDT": "70638639-782b-4664-9ac6-f12b101fb7a6",
+        "XRPUSDT": "affec113-6189-4613-a36b-5cc3bcf70b63"
+      },
+      "missing_members": [],
+      "dimensions": [
+        {
+          "name": "trend",
+          "category": "mixed",
+          "metrics": {
+            "btc_close": 82988.36,
+            "ema20": 83246.67743771688,
+            "sma50": 80830.4472,
+            "sma20_slope_5_pct": 1.2180760431332427
+          },
+          "evidence_refs": [
+            "9d53ed6c591819e88c3efd10e1b299509db8e751d18628be55748099a29d001f",
+            "8589db5274bc64cdc224b1d0db34f1156b508bae95925129bf631359f1c0b855",
+            "f5d09461e804740dd2893bdde398591a9009c5902efc0dc946e96a089945d534"
+          ],
+          "scope": "BTCUSDT",
+          "timeframe": "P1D",
+          "source_manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b",
+          "rule_version": "market_state_rules_v1",
+          "rule_code_hash": "7b2af69b1692a79689ebfc615537e6b8444e8a0e7ecb2647e6a4ea9b59c941ca",
+          "eligible_members": 1,
+          "total_members": 1,
+          "freshness": "current",
+          "unknown_reason": null
+        },
+        {
+          "name": "momentum",
+          "category": "mixed",
+          "metrics": {
+            "rsi14": 51.7041227922225,
+            "macd_histogram": -567.8816586833746
+          },
+          "evidence_refs": [
+            "d4385407079a12469c33adbe8001644ac8bdd278916d66d55a9d6e4af29bb7ef",
+            "ea846c4633fe50e15f7f1bf4d6944181faf8e612f9d5bf9d33bcc51693963551"
+          ],
+          "scope": "BTCUSDT",
+          "timeframe": "P1D",
+          "source_manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b",
+          "rule_version": "market_state_rules_v1",
+          "rule_code_hash": "7b2af69b1692a79689ebfc615537e6b8444e8a0e7ecb2647e6a4ea9b59c941ca",
+          "eligible_members": 1,
+          "total_members": 1,
+          "freshness": "current",
+          "unknown_reason": null
+        },
+        {
+          "name": "volatility",
+          "category": "middle",
+          "metrics": {
+            "annualized_log_return_vol20": 0.3609104729414322,
+            "volatility_rank90": 53.888888888888886,
+            "atr14": 2116.370210993505
+          },
+          "evidence_refs": [
+            "5a54835052b6f281e45d45f44214b7ece6cf9fa36edd8e24df555b300159256e",
+            "1a54742c3f146271e279f47d3a7a38213f875858e870a62d9b0760ce8d41a38d",
+            "f1003f4928c55e57f07fc1982c1b92806ac3f01b35a612ba1ba81173d4aa8a2f"
+          ],
+          "scope": "BTCUSDT",
+          "timeframe": "P1D",
+          "source_manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b",
+          "rule_version": "market_state_rules_v1",
+          "rule_code_hash": "7b2af69b1692a79689ebfc615537e6b8444e8a0e7ecb2647e6a4ea9b59c941ca",
+          "eligible_members": 1,
+          "total_members": 1,
+          "freshness": "current",
+          "unknown_reason": null
+        },
+        {
+          "name": "volume_proxy",
+          "category": "thin",
+          "metrics": {
+            "btc_relative_volume20": 0.4480243513723034
+          },
+          "evidence_refs": [
+            "fa26fb004a2b4fa3a02e14efd17105d9b4c595e5b9ae4f8ee84415469fa0efeb"
+          ],
+          "scope": "BTCUSDT; traded base-asset volume, not order-book liquidity",
+          "timeframe": "P1D",
+          "source_manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b",
+          "rule_version": "market_state_rules_v1",
+          "rule_code_hash": "7b2af69b1692a79689ebfc615537e6b8444e8a0e7ecb2647e6a4ea9b59c941ca",
+          "eligible_members": 1,
+          "total_members": 1,
+          "freshness": "current",
+          "unknown_reason": null
+        },
+        {
+          "name": "market_participation",
+          "category": "complete",
+          "metrics": {
+            "observed_members": 5,
+            "expected_members": 5,
+            "fraction": 1.0
+          },
+          "evidence_refs": [
+            "796cae8af4a54979fa6adef13a786a4e32f3648010ba8ab5dbba47d765b72532"
+          ],
+          "scope": "binance_pilot_5",
+          "timeframe": "P1D",
+          "source_manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b",
+          "rule_version": "market_state_rules_v1",
+          "rule_code_hash": "7b2af69b1692a79689ebfc615537e6b8444e8a0e7ecb2647e6a4ea9b59c941ca",
+          "eligible_members": 5,
+          "total_members": 5,
+          "freshness": "current",
+          "unknown_reason": null
+        },
+        {
+          "name": "breadth",
+          "category": "broad_negative",
+          "metrics": {
+            "above_sma20_pct": 0.0,
+            "positive_return20_pct": 20.0,
+            "new_high20_pct": 0.0,
+            "new_low20_pct": 0.0
+          },
+          "evidence_refs": [
+            "796cae8af4a54979fa6adef13a786a4e32f3648010ba8ab5dbba47d765b72532"
+          ],
+          "scope": "binance_pilot_5",
+          "timeframe": "P1D",
+          "source_manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b",
+          "rule_version": "market_state_rules_v1",
+          "rule_code_hash": "7b2af69b1692a79689ebfc615537e6b8444e8a0e7ecb2647e6a4ea9b59c941ca",
+          "eligible_members": 5,
+          "total_members": 5,
+          "freshness": "current",
+          "unknown_reason": null
+        },
+        {
+          "name": "relative_strength",
+          "category": "btc_outperforming",
+          "metrics": {
+            "alt_vs_btc_mean_return_ratio20": -0.04551008321497882,
+            "alt_count": 4
+          },
+          "evidence_refs": [
+            "c77dc1178650eab5fc2294965f4f7efed530bcc0a2a14563de53dcc4652df1e9",
+            "b735dca886365029456e28d8fe78499f9f81e38da2eeac20753942ea90083994",
+            "425a49dfeff8c47a69ad5037c9d66187b8f69e6f1e820c9cbb507caa82b32596",
+            "d6c05107cdecf27445d558a899ef1ee5b4d2bf3463b46fcd70ee4c4884ba553a"
+          ],
+          "scope": "binance_pilot_5",
+          "timeframe": "P1D",
+          "source_manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b",
+          "rule_version": "market_state_rules_v1",
+          "rule_code_hash": "7b2af69b1692a79689ebfc615537e6b8444e8a0e7ecb2647e6a4ea9b59c941ca",
+          "eligible_members": 4,
+          "total_members": 4,
+          "freshness": "current",
+          "unknown_reason": null
+        },
+        {
+          "name": "correlation_state",
+          "category": "high",
+          "metrics": {
+            "alt_btc_mean_pearson60": 0.8334480368889359,
+            "pair_count": 4,
+            "window_returns": 60
+          },
+          "evidence_refs": [
+            "d076ee30211590062ccae74dc2a566f90238e5760e20f9fef238df9e2629aa77",
+            "d6401d903c927693f9822d1534d26e67e8d70127ffc99e01956987ba0a7e15cb",
+            "cca673591cfce5ae9a2f8701ddbade11179951036d7239034943a3663a17a8ed",
+            "ba9d1f03838cbd348f26f06e96163880f998239b09d5636bdbf95c66d2fe5cc5"
+          ],
+          "scope": "binance_pilot_5",
+          "timeframe": "P1D",
+          "source_manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b",
+          "rule_version": "market_state_rules_v1",
+          "rule_code_hash": "7b2af69b1692a79689ebfc615537e6b8444e8a0e7ecb2647e6a4ea9b59c941ca",
+          "eligible_members": 4,
+          "total_members": 4,
+          "freshness": "current",
+          "unknown_reason": null
+        },
+        {
+          "name": "risk_appetite_proxy",
+          "category": "risk_off_proxy",
+          "metrics": {
+            "alt_vs_btc_mean20": -0.04551008321497882,
+            "universe_positive20": 1
+          },
+          "evidence_refs": [
+            "c77dc1178650eab5fc2294965f4f7efed530bcc0a2a14563de53dcc4652df1e9",
+            "b735dca886365029456e28d8fe78499f9f81e38da2eeac20753942ea90083994",
+            "425a49dfeff8c47a69ad5037c9d66187b8f69e6f1e820c9cbb507caa82b32596",
+            "d6c05107cdecf27445d558a899ef1ee5b4d2bf3463b46fcd70ee4c4884ba553a",
+            "796cae8af4a54979fa6adef13a786a4e32f3648010ba8ab5dbba47d765b72532"
+          ],
+          "scope": "binance_pilot_5",
+          "timeframe": "P1D",
+          "source_manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b",
+          "rule_version": "market_state_rules_v1",
+          "rule_code_hash": "7b2af69b1692a79689ebfc615537e6b8444e8a0e7ecb2647e6a4ea9b59c941ca",
+          "eligible_members": 4,
+          "total_members": 4,
+          "freshness": "current",
+          "unknown_reason": null
+        },
+        {
+          "name": "data_freshness",
+          "category": "current",
+          "metrics": {
+            "current_members": 5,
+            "total_members": 5
+          },
+          "evidence_refs": [
+            "6ac53483-d671-4d9e-96c7-ee1d56a4feb2",
+            "d7ad242b-1e80-45fd-b323-9eaf15ae8ac7",
+            "4e46c2ec-9b24-4d0d-97ad-52cf3b60225e",
+            "edb526ed-ba7b-4154-bb48-1b2707777878",
+            "7e890810-452f-4e31-b1b2-bf988a8ba56a"
+          ],
+          "scope": "binance_pilot_5",
+          "timeframe": "P1D",
+          "source_manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b",
+          "rule_version": "market_state_rules_v1",
+          "rule_code_hash": "7b2af69b1692a79689ebfc615537e6b8444e8a0e7ecb2647e6a4ea9b59c941ca",
+          "eligible_members": 5,
+          "total_members": 5,
+          "freshness": "current",
+          "unknown_reason": null
+        },
+        {
+          "name": "uncertainty",
+          "category": "bounded",
+          "metrics": {
+            "unknown_dimensions": 0,
+            "missing_members": 0,
+            "noncurrent_members": 0
+          },
+          "evidence_refs": [],
+          "scope": "binance_pilot_5",
+          "timeframe": "P1D",
+          "source_manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b",
+          "rule_version": "market_state_rules_v1",
+          "rule_code_hash": "7b2af69b1692a79689ebfc615537e6b8444e8a0e7ecb2647e6a4ea9b59c941ca",
+          "eligible_members": 5,
+          "total_members": 5,
+          "freshness": "current",
+          "unknown_reason": null
+        }
+      ],
+      "regime": {
+        "category": "mixed",
+        "rules_fired": [
+          "R7_MIXED_OR_DISAGREEING_DIMENSIONS"
+        ],
+        "evidence_refs": [
+          "9d53ed6c591819e88c3efd10e1b299509db8e751d18628be55748099a29d001f",
+          "8589db5274bc64cdc224b1d0db34f1156b508bae95925129bf631359f1c0b855",
+          "f5d09461e804740dd2893bdde398591a9009c5902efc0dc946e96a089945d534",
+          "d4385407079a12469c33adbe8001644ac8bdd278916d66d55a9d6e4af29bb7ef",
+          "ea846c4633fe50e15f7f1bf4d6944181faf8e612f9d5bf9d33bcc51693963551",
+          "5a54835052b6f281e45d45f44214b7ece6cf9fa36edd8e24df555b300159256e",
+          "1a54742c3f146271e279f47d3a7a38213f875858e870a62d9b0760ce8d41a38d",
+          "f1003f4928c55e57f07fc1982c1b92806ac3f01b35a612ba1ba81173d4aa8a2f"
+        ],
+        "rule_version": "regime_rules_v1",
+        "rule_code_hash": "7b2af69b1692a79689ebfc615537e6b8444e8a0e7ecb2647e6a4ea9b59c941ca",
+        "unknown_reason": null
+      },
+      "breadth": {
+        "snapshot_id": "796cae8af4a54979fa6adef13a786a4e32f3648010ba8ab5dbba47d765b72532",
+        "universe_id": "binance_pilot_5",
+        "member_ids": {
+          "BTCUSDT": "03d92503-c70a-4042-ba01-3b70f640c17c",
+          "ETHUSDT": "d79abd0c-40bf-45d8-80bf-ae9e0f2b82ff",
+          "SOLUSDT": "77066a0a-51a7-405f-a916-ade43dd4dae1",
+          "BNBUSDT": "70638639-782b-4664-9ac6-f12b101fb7a6",
+          "XRPUSDT": "affec113-6189-4613-a36b-5cc3bcf70b63"
+        },
+        "session_date": "2026-10-10",
+        "source_manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b",
+        "as_of": "2026-10-11T12:50:53.694444+00:00",
+        "calendar_id": "BINANCE_SPOT:utc_daily",
+        "calendar_version": "v1",
+        "observed_members": 5,
+        "total_members": 5,
+        "above_sma": {
+          "eligible": 5,
+          "positive": 0,
+          "percentage": 0.0,
+          "missing_members": []
+        },
+        "positive_lookback": {
+          "eligible": 5,
+          "positive": 1,
+          "percentage": 20.0,
+          "missing_members": []
+        },
+        "new_high": {
+          "eligible": 5,
+          "positive": 0,
+          "percentage": 0.0,
+          "missing_members": []
+        },
+        "new_low": {
+          "eligible": 5,
+          "positive": 0,
+          "percentage": 0.0,
+          "missing_members": []
+        },
+        "advancing": 5,
+        "declining": 0,
+        "unchanged": 0,
+        "advance_decline_eligible": 5,
+        "feature_refs": [
+          "8670da5d535360b638e96555b0690d6dcd7578dcea4ecdfd07f3fc662eabde39",
+          "a721106e524fb4ba605208d5af5e55a3dbbba3ae95f9b2540b76eef9974535b5",
+          "4d19cece8ea1bf45c64937a700853140412b989f47d96c9a47340a405f4988bb",
+          "787f8857cbaaa4602c99b38bc2dff25d31c1735f1a264aa23907b2e3f9f19d14",
+          "0dec460a8900fe3e0cb27a99bec70dc0bc4943a0fa71bc3930b1333aa7372d9d",
+          "74ad7ecf9b974af56fbc8242ea12ea013f4989102dab7cb049e45ba2993784dc",
+          "1245b27a1c836dbe9713d72189bb7460e04d4cbc2c3aa0df9bcfabc9314bee52",
+          "e3088b526817fe2af869ac1e12070c00bc46ae27dc01584537fc0c09545ff48e",
+          "9b0c9b3da82c98afc2c60a3254d6351507e1b612a95af9be54a24da08bbbe169",
+          "d4d85d381326d07d5e0162bb89fd5c9cb84920cb6e5121837bd2b5f9d47bc952"
+        ],
+        "rule_version": "breadth_v1",
+        "rule_code_hash": "ea7d0013f9f5e6a23c5d43f8df58b76b1b2ef4a7593bab99ed9fbc282cb81596"
+      }
+    }
+  },
+  "before_knowledge_context": {
+    "universe_id": "binance_pilot_5",
+    "universe_label": "Binance Pilot 5",
+    "source_manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b",
+    "head_manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b",
+    "manifest": {
+      "manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b",
+      "parent_manifest_id": "51d3b0e8-46b0-4760-ac3d-1c8a228a377e",
+      "created_at": "2026-10-11T17:57:41.706839+05:30",
+      "schema_version": "1.0.0-draft",
+      "selection_policy_version": "all_providers_v1"
+    },
+    "recent_manifests": [
+      {
+        "manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b",
+        "parent_manifest_id": "51d3b0e8-46b0-4760-ac3d-1c8a228a377e",
+        "created_at": "2026-10-11T17:57:41.706839+05:30"
+      },
+      {
+        "manifest_id": "51d3b0e8-46b0-4760-ac3d-1c8a228a377e",
+        "parent_manifest_id": "a93e915a-82ad-4bbc-a6c3-0fcb700310ff",
+        "created_at": "2026-10-11T17:57:40.059117+05:30"
+      },
+      {
+        "manifest_id": "a93e915a-82ad-4bbc-a6c3-0fcb700310ff",
+        "parent_manifest_id": "1843d455-b9fb-4a7a-9747-079c287ca71c",
+        "created_at": "2026-10-11T17:57:37.656713+05:30"
+      },
+      {
+        "manifest_id": "1843d455-b9fb-4a7a-9747-079c287ca71c",
+        "parent_manifest_id": "f90603e9-e00b-4769-8aba-13d22650a7be",
+        "created_at": "2026-10-11T17:57:35.540116+05:30"
+      },
+      {
+        "manifest_id": "f90603e9-e00b-4769-8aba-13d22650a7be",
+        "parent_manifest_id": null,
+        "created_at": "2026-10-11T17:57:32.883102+05:30"
+      }
+    ],
+    "as_of": "2026-10-11T12:27:00+00:00",
+    "evaluation_date": null,
+    "history_start": null,
+    "members": [
+      {
+        "symbol": "BTCUSDT",
+        "instrument_id": null,
+        "currency": null,
+        "first_session": null,
+        "last_session": null,
+        "observed_sessions": 0,
+        "status": "MAPPING_UNAVAILABLE_AT_CUTOFF"
+      },
+      {
+        "symbol": "ETHUSDT",
+        "instrument_id": null,
+        "currency": null,
+        "first_session": null,
+        "last_session": null,
+        "observed_sessions": 0,
+        "status": "MAPPING_UNAVAILABLE_AT_CUTOFF"
+      },
+      {
+        "symbol": "SOLUSDT",
+        "instrument_id": null,
+        "currency": null,
+        "first_session": null,
+        "last_session": null,
+        "observed_sessions": 0,
+        "status": "MAPPING_UNAVAILABLE_AT_CUTOFF"
+      },
+      {
+        "symbol": "BNBUSDT",
+        "instrument_id": null,
+        "currency": null,
+        "first_session": null,
+        "last_session": null,
+        "observed_sessions": 0,
+        "status": "MAPPING_UNAVAILABLE_AT_CUTOFF"
+      },
+      {
+        "symbol": "XRPUSDT",
+        "instrument_id": null,
+        "currency": null,
+        "first_session": null,
+        "last_session": null,
+        "observed_sessions": 0,
+        "status": "MAPPING_UNAVAILABLE_AT_CUTOFF"
+      }
+    ],
+    "providers": [
+      {
+        "provider_id": "binance",
+        "label": "Binance public daily bars",
+        "status": "DATA_UNAVAILABLE",
+        "credential_state": "PUBLIC_NO_CREDENTIAL",
+        "interval": "P1D"
+      },
+      {
+        "provider_id": "upstox",
+        "label": "Upstox adapter",
+        "status": "DEFERRED_NOT_CONFIGURED",
+        "credential_state": "NOT_CONFIGURED",
+        "interval": "P1D"
+      },
+      {
+        "provider_id": "alpaca",
+        "label": "Alpaca adapter",
+        "status": "DEFERRED_NOT_CONFIGURED",
+        "credential_state": "NOT_CONFIGURED",
+        "interval": "P1D"
+      }
+    ],
+    "display": {
+      "primary_currency": "INR",
+      "secondary_currency": "USD",
+      "native_prices_only": true,
+      "timezone": "Asia/Kolkata"
+    }
+  },
+  "after_checks_at": "2026-10-11T12:52:11.913305+00:00",
+  "personal_profile": {
+    "schema_version": "personalization_snapshot_v1",
+    "snapshot_id": "bfa737b9-6b90-51fa-b4f8-d10172240083",
+    "audience": "OWNER_RESEARCH",
+    "as_of": "2026-10-11T14:54:55.897009Z",
+    "algorithm_version": "personal_patterns_v1",
+    "implementation_hash": "2816ad0a575264cd21209f83e1e459ccfac29ba76723c33d9dc0dc561cfc674c",
+    "privacy": "LOCAL_ONLY",
+    "reconstruction_kind": "CURRENT_PROFILE",
+    "evidence": [],
+    "memories": [],
+    "proposals": [],
+    "observed_behavior": {
+      "genuine_owner_record_N": 0,
+      "validation_record_N": 0,
+      "recent_record_N": 0,
+      "historical_record_N": 0,
+      "history_state": "INSUFFICIENT_HISTORY",
+      "source_counts": {},
+      "instrument_frequency": {},
+      "mode_frequency": {},
+      "strategy_frequency": {},
+      "feedback_counts": {},
+      "median_horizon": null,
+      "excluded_sources": {},
+      "repeat_threshold": 3,
+      "strong_threshold": 10,
+      "recency_days": 90
+    },
+    "baseline": {
+      "thesis_invalidation": {
+        "eligible_N": 0,
+        "complete_N": 0,
+        "evidence_ids": []
+      },
+      "thesis_counter_evidence": {
+        "eligible_N": 0,
+        "complete_N": 0,
+        "evidence_ids": []
+      },
+      "thesis_risk": {
+        "eligible_N": 0,
+        "complete_N": 0,
+        "evidence_ids": []
+      },
+      "mission_quant": {
+        "eligible_N": 0,
+        "complete_N": 0,
+        "evidence_ids": []
+      },
+      "mission_context": {
+        "eligible_N": 0,
+        "complete_N": 0,
+        "evidence_ids": []
+      },
+      "historical_comparison": {
+        "eligible_N": 0,
+        "complete_N": 0,
+        "evidence_ids": []
+      },
+      "journal_review": {
+        "eligible_N": 0,
+        "complete_N": 0,
+        "evidence_ids": []
+      },
+      "probability_score": null
+    },
+    "patterns": [],
+    "coaching": [],
+    "strategy_evidence": [],
+    "review_queue": [],
+    "study_items": [],
+    "limitations": [
+      "DESCRIPTIVE_RESEARCH_BEHAVIOR_NOT_CAUSAL_OR_PROFITABILITY",
+      "NO_PSYCHOLOGICAL_PROFILING",
+      "NO_REAL_TRADING_INFERENCE",
+      "UNKNOWN_VIEW_AND_TOOL_CLICK_HISTORY_NOT_INFERRED",
+      "EVENT_PROXIMITY_REQUIRES_VERIFIED_EVENT_EVIDENCE",
+      "OVERLAPPING_RECORDS_AND_OUTCOMES_MAY_BE_DEPENDENT",
+      "INSUFFICIENT_OWNER_HISTORY_FOR_RECURRING_HABITS"
+    ],
+    "content_hash": ""
+  }
+}

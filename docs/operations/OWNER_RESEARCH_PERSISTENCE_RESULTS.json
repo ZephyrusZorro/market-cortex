@@ -1,0 +1,118 @@
+{
+  "status": "VALIDATED_SINGLE_AUTHORIZED_OWNER_RESEARCH_PERSISTENCE_AND_REPLAY",
+  "observed_at": "2026-10-11T14:56:54.188968+00:00",
+  "run_id": "f329f8c9-1274-4be5-8f8d-0e695cdd7e7c",
+  "evidence_hash": "f6c96904277c739b8c6cf2977c6fe23c08672c30c0cd23d5033d182f1ae6c2e7",
+  "context": {
+    "mode": "latest",
+    "manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b",
+    "as_of": "2026-10-11T12:48:07.699784Z",
+    "universe_id": "binance_pilot_5",
+    "evaluation_date": "2026-10-10",
+    "history_start": "2025-10-11",
+    "members": {
+      "BNBUSDT": "70638639-782b-4664-9ac6-f12b101fb7a6",
+      "BTCUSDT": "03d92503-c70a-4042-ba01-3b70f640c17c",
+      "ETHUSDT": "d79abd0c-40bf-45d8-80bf-ae9e0f2b82ff",
+      "SOLUSDT": "77066a0a-51a7-405f-a916-ade43dd4dae1",
+      "XRPUSDT": "affec113-6189-4613-a36b-5cc3bcf70b63"
+    },
+    "member_last_sessions": {
+      "BNBUSDT": "2026-10-10",
+      "BTCUSDT": "2026-10-10",
+      "ETHUSDT": "2026-10-10",
+      "SOLUSDT": "2026-10-10",
+      "XRPUSDT": "2026-10-10"
+    },
+    "symbol": "ETHUSDT",
+    "compare_symbol": "BTCUSDT",
+    "environment": "OWNER_MAIN",
+    "base_currency": "INR",
+    "secondary_currency": "USD",
+    "context_manifest_id": null
+  },
+  "request": {
+    "question": "Analyze ETHUSDT momentum and data quality in the pinned owner daily dataset. Include uncertainty and whether available evidence supports an edge.",
+    "mode": "latest",
+    "manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b",
+    "as_of": "2026-10-11T12:48:07.699784Z",
+    "symbol": "ETHUSDT",
+    "compare_symbol": "BTCUSDT",
+    "older_manifest_id": null,
+    "context_manifest_id": null,
+    "candidate_id": null,
+    "thesis_id": null,
+    "prediction_id": null,
+    "journal_entry_id": null,
+    "backtest_run_id": null,
+    "quant_study_id": null,
+    "portfolio_id": null,
+    "scenario_shocks": null,
+    "overlay_quantity": null,
+    "overlay_reference_price": null,
+    "overlay_invalidation_price": null,
+    "depth": "deep"
+  },
+  "model_provider": "deterministic",
+  "model_status": "no_model_configured",
+  "saved_run_count": 1,
+  "replay": {
+    "run_id": "f329f8c9-1274-4be5-8f8d-0e695cdd7e7c",
+    "evidence_reproducible": true,
+    "language_reproducible": false,
+    "checks": [
+      {
+        "tool_id": "dataset.context",
+        "manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b",
+        "as_of": "2026-10-11T12:48:07.699784+00:00",
+        "stored_hash": "6cf4106241b68d28fe3b4f3c5fde7b7fda4fd8c85ccc7ac118634bea398ca1af",
+        "replayed_hash": "6cf4106241b68d28fe3b4f3c5fde7b7fda4fd8c85ccc7ac118634bea398ca1af",
+        "matched": true
+      },
+      {
+        "tool_id": "instrument.features",
+        "manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b",
+        "as_of": "2026-10-11T12:48:07.699784+00:00",
+        "stored_hash": "f5d64067cc177aefd5058ae982350473af64190467d4f1261313bfd59ce2dd06",
+        "replayed_hash": "f5d64067cc177aefd5058ae982350473af64190467d4f1261313bfd59ce2dd06",
+        "matched": true
+      },
+      {
+        "tool_id": "market.state",
+        "manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b",
+        "as_of": "2026-10-11T12:48:07.699784+00:00",
+        "stored_hash": "1f34ac053f81ddeee40b60ea36ddf08584f1a1ae12de3964442dbcc9c1fb110d",
+        "replayed_hash": "1f34ac053f81ddeee40b60ea36ddf08584f1a1ae12de3964442dbcc9c1fb110d",
+        "matched": true
+      },
+      {
+        "tool_id": "instrument.features",
+        "manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b",
+        "as_of": "2026-10-11T12:48:07.699784+00:00",
+        "stored_hash": "99a40957d96352fcaa9bda85556af3dfa247d9bb65282b15815b6d9bf4f76cdb",
+        "replayed_hash": "99a40957d96352fcaa9bda85556af3dfa247d9bb65282b15815b6d9bf4f76cdb",
+        "matched": true
+      },
+      {
+        "tool_id": "asset.compare",
+        "manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b",
+        "as_of": "2026-10-11T12:48:07.699784+00:00",
+        "stored_hash": "547be29a5f82c66614d86e5392d2ac07b4093e350c804ddcff5b1ccafbf3507c",
+        "replayed_hash": "547be29a5f82c66614d86e5392d2ac07b4093e350c804ddcff5b1ccafbf3507c",
+        "matched": true
+      },
+      {
+        "tool_id": "dataset.manifest",
+        "manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b",
+        "as_of": "2026-10-11T12:48:07.699784+00:00",
+        "stored_hash": "d5262f9c3bfc41767e844da2d630783003557c363b39f043fd03b36665154d7e",
+        "replayed_hash": "d5262f9c3bfc41767e844da2d630783003557c363b39f043fd03b36665154d7e",
+        "matched": true
+      }
+    ],
+    "stored_evidence_hash": "f6c96904277c739b8c6cf2977c6fe23c08672c30c0cd23d5033d182f1ae6c2e7"
+  },
+  "after_restart": "MATCH; FULL_PAYLOAD_AND_SIX_TOOL_EVIDENCE_HASHES",
+  "owner_ready": true,
+  "post_restart_receipt": "docs/operations/OWNER_PRODUCTION_RESTART_RESULTS.json"
+}

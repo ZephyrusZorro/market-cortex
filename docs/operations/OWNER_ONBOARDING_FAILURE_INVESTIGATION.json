@@ -1,0 +1,154 @@
+{
+  "status": "VALIDATED_LIVE_OWNER_READ_ONLY_RECOVERY",
+  "original_report": "runtime/owner-onboarding-20473f58dfda42659c60bcf6668b12bb/report.json",
+  "root_cause": "Baseline snapshots set UTC; final guard hashed timestamptz JSON in session default timezone. Equivalent instants serialize with different offsets and yield different hashes.",
+  "minimal_fix": "Set transaction-local UTC for the full migration-row hash; retain count, ID, checksum and applied_at integrity checks. Capture final preflight before any guard failure.",
+  "committed_from_owner_receipt": {
+    "identities": 5,
+    "bars_stored": 1825,
+    "quarantined": 0,
+    "full_range_repeat_duplicates": 1825,
+    "incremental_jobs_done": 5,
+    "incremental_stored": 0,
+    "incremental_duplicates": 15,
+    "head": "94368463-0587-46f0-8c3d-7b5dfee1826b"
+  },
+  "independently_verified": {
+    "backup_hash_verified": true,
+    "backup_bytes": 112693,
+    "restore_schema_and_rows_match_before": true,
+    "restore_tables": 51,
+    "restore_migrations": 13,
+    "utc_migration_hash_matches_before": true,
+    "timezone_changes_json_hash_without_row_changes": true,
+    "hashes": {
+      "UTC": "a10a7e8897bdfcc2830386d1ad8151fe22c6a6b7302468677e4c8893f3fd3093",
+      "Asia/Kolkata": "639655e40806f863c96fd8132ffe4ff098543a536f330ef45aca9b7b27c67e3c"
+    },
+    "owner_parquet_files": 65,
+    "owner_physical_rows": 1825,
+    "retained_restore": "mc_owner_market_4f483e3fa2424c688c5cf60cebbc49e9_test",
+    "owner_parquet_content_hashes_verified": 65,
+    "owner_corrupt_parquets": 0
+  },
+  "regression": {
+    "tests_passed": 9,
+    "scope": "Disposable migrated test catalogs only; UTC/Asia-Kolkata equivalence and real checksum/applied_at tamper rejection; retained backup and failed restore safety.",
+    "log": "runtime/owner-onboarding-recovery-tests.log"
+  },
+  "recovery_mode": "Read-only --verify-existing; no ingestion, migration, job enqueue or owner record write; append new receipt preserving original.",
+  "additional_owner_writes_authorized": false,
+  "owner_ready": false,
+  "verification_receipt": "C:\\Users\\faris\\OneDrive\\Documents\\MARKET_CORTEX_Phase_1_Completed\\runtime\\owner-onboarding-20473f58dfda42659c60bcf6668b12bb\\verification-7c13d8d2c4534941a72e39e258d6249d.json",
+  "verified_at": "2026-10-11T12:45:42.293734+00:00",
+  "live_owner_verification": {
+    "status": "VALIDATED_OWNER_MARKET_DATA_READ_ONLY_RECOVERY",
+    "owner_database_writes": false,
+    "database_identity": {
+      "database": "market_cortex",
+      "server_address": "::1",
+      "server_port": 5432,
+      "server_version": "17.11",
+      "transaction_read_only": "on"
+    },
+    "table_counts": {
+      "app_locks": 0,
+      "calendar_sessions": 0,
+      "consumer_receipts": 0,
+      "context_facts": 0,
+      "context_files": 0,
+      "context_head": 0,
+      "context_manifest_facts": 0,
+      "context_manifest_files": 0,
+      "context_manifests": 0,
+      "context_snapshots": 0,
+      "cortex_research_runs": 0,
+      "dataset_files": 65,
+      "dataset_head": 1,
+      "dataset_manifests": 5,
+      "edge_library": 0,
+      "experiment_definitions": 0,
+      "experiment_edge_links": 0,
+      "experiment_events": 0,
+      "experiment_exposures": 0,
+      "experiment_governance": 0,
+      "experiment_proposals": 0,
+      "identifier_mappings": 5,
+      "instruments": 5,
+      "jobs": 5,
+      "journal_entries": 0,
+      "journal_revisions": 0,
+      "manifest_members": 65,
+      "observations": 1825,
+      "opportunity_candidates": 0,
+      "outbox": 5,
+      "personal_record_versions": 0,
+      "personal_records": 0,
+      "personalization_snapshots": 0,
+      "portfolio_risk_snapshots": 0,
+      "portfolio_versions": 0,
+      "portfolios": 0,
+      "prediction_evaluations": 0,
+      "prediction_records": 0,
+      "prediction_revisions": 0,
+      "provider_capabilities": 0,
+      "quant_artifacts": 0,
+      "quant_edge_evidence": 0,
+      "quarantine": 0,
+      "research_hypotheses": 0,
+      "research_mission_checkpoints": 0,
+      "research_missions": 0,
+      "research_theses": 0,
+      "research_thesis_versions": 0,
+      "schema_migrations": 13,
+      "source_batches": 15,
+      "venues": 1
+    },
+    "migration_count": 13,
+    "migration_ids_and_checksums_unchanged": true,
+    "utc_migration_hash": "a10a7e8897bdfcc2830386d1ad8151fe22c6a6b7302468677e4c8893f3fd3093",
+    "session_timezone": "Asia/Calcutta",
+    "session_migration_hash": "639655e40806f863c96fd8132ffe4ff098543a536f330ef45aca9b7b27c67e3c",
+    "schema_hash": "596fdf250422719c6aa31852644b8329cb65137164bfc7e6d16422acd515cafd",
+    "schema_fingerprint_unchanged": true,
+    "coverage": [
+      {
+        "symbol": "BTCUSDT",
+        "visible_sessions": 365,
+        "hash_matched": true
+      },
+      {
+        "symbol": "ETHUSDT",
+        "visible_sessions": 365,
+        "hash_matched": true
+      },
+      {
+        "symbol": "SOLUSDT",
+        "visible_sessions": 365,
+        "hash_matched": true
+      },
+      {
+        "symbol": "BNBUSDT",
+        "visible_sessions": 365,
+        "hash_matched": true
+      },
+      {
+        "symbol": "XRPUSDT",
+        "visible_sessions": 365,
+        "hash_matched": true
+      }
+    ],
+    "storage": {
+      "referenced": 65,
+      "unreferenced": [],
+      "missing": [],
+      "corrupt": [],
+      "staged_count": 0,
+      "deletion_performed": false
+    },
+    "completed_refresh_jobs": 5,
+    "retained_backup_hash_verified": true
+  },
+  "recovery_action": "Read-only verification completed. No ingestion retry or owner database repair needed.",
+  "application_acceptance": "PENDING_OWNER_PRODUCTION_LAUNCH"
+}

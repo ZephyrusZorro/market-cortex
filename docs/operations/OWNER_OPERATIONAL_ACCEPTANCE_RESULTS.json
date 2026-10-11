@@ -1,0 +1,118 @@
+{
+  "status": "OWNER_READY",
+  "supported_scope": "Private local single-user Binance spot daily raw research; five approved pairs. No broker execution.",
+  "validated_at": "2026-10-11T15:13:58.705172+00:00",
+  "owner_url": "http://127.0.0.1:3000",
+  "owner_api": "http://127.0.0.1:8765",
+  "owner_application_state": "runtime/application-a9c83bf65f414697b8cda568c8b868a3.json",
+  "architecture": "VALIDATED_EXISTING_TWELVE_PHASES",
+  "production_runtime": "VALIDATED_OWNER_AND_PILOT_START_STOP_RESTART",
+  "pilot_environment": "VALIDATED_ISOLATED; EXISTING_LOOPBACK_TRUST_IS_NOT_PASSWORD_AUTHENTICATION_PROOF",
+  "owner_database": {
+    "name": "market_cortex",
+    "port": 5432,
+    "tables": 51,
+    "migrations": 13,
+    "pending": 0,
+    "changed": 0,
+    "full_utc_row_hash": "a10a7e8897bdfcc2830386d1ad8151fe22c6a6b7302468677e4c8893f3fd3093",
+    "schema_hash": "596fdf250422719c6aa31852644b8329cb65137164bfc7e6d16422acd515cafd"
+  },
+  "owner_market_data": {
+    "pairs": 5,
+    "sessions_per_pair": 365,
+    "observations": 1825,
+    "parquet_files": 65,
+    "manifests": 5,
+    "head": "94368463-0587-46f0-8c3d-7b5dfee1826b",
+    "quarantine": 0,
+    "storage_defects": 0,
+    "first_session": "2025-10-11",
+    "last_session": "2026-10-10",
+    "native_quote": "USDT; NO_INR_OR_USD_CONVERSION_INFERRED"
+  },
+  "daily_refresh": "VALIDATED_FIVE_COMPLETED_OWNER_JOBS; 0_NEW_15_DUPLICATE; SCHEDULER_DISABLED",
+  "local_ai": "VALIDATED_DETERMINISTIC_FALLBACK_NO_MODEL_CONFIGURED_ZERO_PAID_API_SPEND",
+  "owner_research": {
+    "saved_count": 1,
+    "run_id": "f329f8c9-1274-4be5-8f8d-0e695cdd7e7c",
+    "evidence_hash": "f6c96904277c739b8c6cf2977c6fe23c08672c30c0cd23d5033d182f1ae6c2e7",
+    "six_tool_evidence_hashes_match": true,
+    "full_payload_survives_restart": true,
+    "other_personal_domain_records": 0
+  },
+  "security": "VALIDATED_LOOPBACK_HOST_ORIGIN_BOUNDARIES; NO_APPLICATION_LOGIN_CLAIM",
+  "backup_recovery": "Retained pre-schema and fully migrated pre-ingestion encrypted owner baselines successfully restored/verified and intact. Pre-ingestion backup contains no market Parquets and predates the new market/research records; it is not a current populated-owner backup. Populated pilot backup/restore/replay also validated separately.",
+  "regression": {
+    "full_backend": {
+      "status": "PASS",
+      "exit_code": 0,
+      "elapsed_seconds": 1049.66,
+      "validated_at": "2026-10-11T10:19:00.629135+00:00",
+      "scope": "FULL_SUITE; ISOLATED_PILOT_CATALOG_CLONE_AND_PARQUET_COPY",
+      "owner_database": "NEVER_USED",
+      "live_pilot_qa_database": "NOT_MUTATED_BY_REGRESSION",
+      "log": "runtime/production-full-backend.log",
+      "disposable_clone_databases_and_files": "CLEANED",
+      "tests_passed": 361,
+      "subtests_passed": 13,
+      "warnings": 1,
+      "skips": 0
+    },
+    "additional_owner_onboarding_safety_tests": 9,
+    "additional_import_and_read_only_verifier_tests": 3,
+    "frontend": {
+      "status": "PASS_ON_RECHECK",
+      "tests": 54,
+      "files": 13,
+      "initial_run": {
+        "passed": 52,
+        "failed": 2,
+        "log": "runtime/production-frontend-tests.log"
+      },
+      "focused_recheck": {
+        "passed": 10,
+        "failed": 0,
+        "log": "runtime/production-frontend-focused.log"
+      },
+      "full_recheck": {
+        "passed": 54,
+        "failed": 0,
+        "log": "runtime/production-frontend-recheck.log"
+      },
+      "note": "Initial asynchronous element waits failed; neither failure reproduced on focused or full recheck. No source/assertion/timeouts changed; cause not established."
+    },
+    "typecheck": "PASS",
+    "production_build_id": "K4ApJcYNA_48DSptxRH31",
+    "note": "Full backend 361 tests plus 13 subtests; subsequent isolated helper updates have 9 and 3 focused passing tests. No claim of one combined 373-test full run."
+  },
+  "deferred": [
+    "UPSTOX_DEFERRED_NOT_CONFIGURED: credentials, verified mappings/calendars and entitlements",
+    "ALPACA_DEFERRED_NOT_CONFIGURED: credentials, verified mappings/calendars and entitlements",
+    "Local LLM optional and not configured",
+    "Scheduler registration optional and disabled"
+  ],
+  "agent_launch_policy": "Earlier automatic execution-review rejection remains; all production launches/restarts were owner-executed existing scripts. No bypass.",
+  "owner_record_mutations": "Exactly approved schema migrations, Binance onboarding and one separately approved CORTEX record; recovery/inventory/replay queries read-only.",
+  "extra_owner_writes_authorized": false,
+  "research_limit": "No supported profitable edge; no trading execution, synthetic owner history, inferred habits or multi-market coverage claim.",
+  "evidence": [
+    "OWNER_MIGRATION_COMPLETION_RESULTS.json",
+    "OWNER_MARKET_DATA_COMPLETION_RESULTS.json",
+    "OWNER_PRODUCTION_LAUNCH_RESULTS.json",
+    "OWNER_PRODUCTION_API_RESULTS.json",
+    "OWNER_PRODUCTION_BROWSER_QA.json",
+    "OWNER_PRODUCTION_INVENTORY_RESULTS.json",
+    "OWNER_PRODUCTION_RESTART_RESULTS.json",
+    "OWNER_PRODUCTION_RESTART_BROWSER_QA.json",
+    "OWNER_RESEARCH_PERSISTENCE_RESULTS.json",
+    "OWNER_PRODUCTION_IMPORT_CORRECTION_RESULTS.json",
+    "PRODUCTION_PILOT_VALIDATION_RESULTS.json",
+    "PRODUCTION_RESTART_RESULTS.json"
+  ],
+  "release": {
+    "identification": "Local annotated v1.0.1-operational tag resolves the release commit after this verified snapshot is committed.",
+    "tag": "v1.0.1-operational",
+    "pushed": false
+  }
+}

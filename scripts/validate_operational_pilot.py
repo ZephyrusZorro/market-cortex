@@ -19,6 +19,7 @@ from market_cortex.cortex_contracts import ResearchRequest
 
 def main():
     p=argparse.ArgumentParser(); p.add_argument('--profile',type=Path,required=True); p.add_argument('--api',default='http://127.0.0.1:8001')
+    p.add_argument('--output',type=Path,default=Path('docs/operations/OPERATIONAL_PILOT_RESULTS.json'))
     args=p.parse_args(); _,settings=load_profile(args.profile)
     target=urlsplit(args.api)
     if settings.environment=='OWNER_MAIN' or target.scheme!='http' or target.hostname!='127.0.0.1' or target.username or target.password or target.path or target.query:
@@ -74,7 +75,7 @@ def main():
         'model_evaluation':'NO_INSTALLED_RUNTIME_OR_MODEL; ACTUAL_FAILURE_FALLBACK_ONLY',
         'owner_history':profile['observed_behavior'],'owner_main':'UNTOUCHED',
         'prior_momentum_OOS':{'return':-.07817165407921722,'N':82},'conclusion':'NO_SUPPORTED_PROFITABLE_EDGE'}
-    (root/'docs/operations/OPERATIONAL_PILOT_RESULTS.json').write_text(json.dumps(result,indent=2,default=str),encoding='utf-8')
+    args.output.write_text(json.dumps(result,indent=2,default=str),encoding='utf-8')
     print(json.dumps({'status':result['status'],'timings':timings,'research_run_id':research['run_id']}))
     client.close()
 

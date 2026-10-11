@@ -1,0 +1,122 @@
+{
+  "observed_at": "2026-10-11T10:20:41.437949+00:00",
+  "environment": "PILOT_TEST",
+  "run_id": "5abaa90a-9182-4450-9327-0ee9f701fbcc",
+  "evidence_hash": "07d2c768a07b557b375ba5f692edb65e21993ff643db19698752a0100d357bd5",
+  "context": {
+    "mode": "latest",
+    "manifest_id": "8c66134e-2ad4-4359-bc2c-aa51c7c3e140",
+    "as_of": "2026-10-10T20:37:07.311461Z",
+    "universe_id": "binance_pilot_5",
+    "evaluation_date": "2026-10-09",
+    "history_start": "2024-01-01",
+    "members": {
+      "BNBUSDT": "982aa9ce-e6c8-4dee-958a-dd5c5a6d6340",
+      "BTCUSDT": "dbe1c9c1-a1c1-4c95-b74c-1973f640a462",
+      "ETHUSDT": "e7069c4c-2d48-49fd-85ef-55bbda6d22c2",
+      "SOLUSDT": "eb97fc2c-34c8-441b-b4c9-5792343ab55d",
+      "XRPUSDT": "294adbc0-32da-415e-b5c1-c219193d8953"
+    },
+    "member_last_sessions": {
+      "BNBUSDT": "2026-10-09",
+      "BTCUSDT": "2026-10-09",
+      "ETHUSDT": "2026-10-09",
+      "SOLUSDT": "2026-10-09",
+      "XRPUSDT": "2026-10-09"
+    },
+    "symbol": "ETHUSDT",
+    "compare_symbol": "BTCUSDT",
+    "environment": "PILOT_TEST",
+    "base_currency": "INR",
+    "secondary_currency": "USD",
+    "context_manifest_id": "158ad3f7-aab9-5d41-b79f-05eef01bc207"
+  },
+  "head": "5fda5a53-4bcd-4788-84a6-e84cf799a3da",
+  "read_only_replay": {
+    "run_id": "5abaa90a-9182-4450-9327-0ee9f701fbcc",
+    "evidence_reproducible": true,
+    "language_reproducible": false,
+    "checks": [
+      {
+        "tool_id": "dataset.context",
+        "manifest_id": "8c66134e-2ad4-4359-bc2c-aa51c7c3e140",
+        "as_of": "2026-10-10T20:37:07.311461+00:00",
+        "stored_hash": "1e78a2620e19c42966eaef88784ddb7cd708afc3c37bbf97df444cf2a6dcbb4c",
+        "replayed_hash": "1e78a2620e19c42966eaef88784ddb7cd708afc3c37bbf97df444cf2a6dcbb4c",
+        "matched": true
+      },
+      {
+        "tool_id": "instrument.features",
+        "manifest_id": "8c66134e-2ad4-4359-bc2c-aa51c7c3e140",
+        "as_of": "2026-10-10T20:37:07.311461+00:00",
+        "stored_hash": "060065afef95b81459fb1753b0b0a81d56b9aaadfd020417064a9c2c57c71c0d",
+        "replayed_hash": "060065afef95b81459fb1753b0b0a81d56b9aaadfd020417064a9c2c57c71c0d",
+        "matched": true
+      },
+      {
+        "tool_id": "market.state",
+        "manifest_id": "8c66134e-2ad4-4359-bc2c-aa51c7c3e140",
+        "as_of": "2026-10-10T20:37:07.311461+00:00",
+        "stored_hash": "28d87df9a0486b0285c26e59f4eedbf2524e003ae4f6e9a07496ae2750bdbcb7",
+        "replayed_hash": "28d87df9a0486b0285c26e59f4eedbf2524e003ae4f6e9a07496ae2750bdbcb7",
+        "matched": true
+      },
+      {
+        "tool_id": "instrument.features",
+        "manifest_id": "8c66134e-2ad4-4359-bc2c-aa51c7c3e140",
+        "as_of": "2026-10-10T20:37:07.311461+00:00",
+        "stored_hash": "f4e98c8af76bc49a0fe1efce3bff77ff47372bcb5628f9aa7744cffac0977b18",
+        "replayed_hash": "f4e98c8af76bc49a0fe1efce3bff77ff47372bcb5628f9aa7744cffac0977b18",
+        "matched": true
+      },
+      {
+        "tool_id": "asset.compare",
+        "manifest_id": "8c66134e-2ad4-4359-bc2c-aa51c7c3e140",
+        "as_of": "2026-10-10T20:37:07.311461+00:00",
+        "stored_hash": "353d059b2d15bb1888ddcdb66fa1fd231a0f0e515daad7be15b6fd88b066f07a",
+        "replayed_hash": "353d059b2d15bb1888ddcdb66fa1fd231a0f0e515daad7be15b6fd88b066f07a",
+        "matched": true
+      },
+      {
+        "tool_id": "dataset.manifest",
+        "manifest_id": "8c66134e-2ad4-4359-bc2c-aa51c7c3e140",
+        "as_of": "2026-10-10T20:37:07.311461+00:00",
+        "stored_hash": "92e4999e7c05ae8f1ebc1fb98b09d3268e591f422a5debc794a13873a9ef37c7",
+        "replayed_hash": "92e4999e7c05ae8f1ebc1fb98b09d3268e591f422a5debc794a13873a9ef37c7",
+        "matched": true
+      }
+    ],
+    "stored_evidence_hash": "07d2c768a07b557b375ba5f692edb65e21993ff643db19698752a0100d357bd5"
+  },
+  "security_checks": [
+    {
+      "port": 8001,
+      "method": "GET",
+      "header": "Host",
+      "status": 403
+    },
+    {
+      "port": 8001,
+      "method": "POST",
+      "header": "Origin",
+      "status": 403
+    },
+    {
+      "port": 3002,
+      "method": "GET",
+      "header": "Host",
+      "status": 403
+    },
+    {
+      "port": 3002,
+      "method": "POST",
+      "header": "Origin",
+      "status": 403
+    }
+  ],
+  "foreign_origin_get_proxy": {
+    "status": 200,
+    "allow_origin": null
+  },
+  "security_scope": "Foreign Host rejected on reads; foreign browser Origin rejected on POST; proxy GET does not grant CORS. Initial overly broad GET-Origin rejection expectation was corrected after code inspection."
+}

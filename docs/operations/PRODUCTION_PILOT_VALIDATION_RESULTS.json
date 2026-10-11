@@ -1,0 +1,151 @@
+{
+  "observed_at": "2026-10-11T10:27:29.774696+00:00",
+  "status": "VALIDATED_PRODUCTION_PILOT",
+  "owner_ready": false,
+  "production_runtime": {
+    "status": "VALIDATED_START",
+    "actor": "OWNER_TERMINAL",
+    "state_file": "runtime/application-6c0ac9a5fe5244a991628cc5553d2b32.json",
+    "next_start_process_confirmed": true,
+    "build_id": "K4ApJcYNA_48DSptxRH31",
+    "health": "READY",
+    "environment": "PILOT_TEST",
+    "manifest_id": "5fda5a53-4bcd-4788-84a6-e84cf799a3da"
+  },
+  "browser": {
+    "status": "VALIDATED_EXISTING_PILOT_READ_WORKFLOWS",
+    "panes_and_checks": [
+      "Overview",
+      "Instruments BTC",
+      "Instruments ETH",
+      "Feature Explorer RSI",
+      "Market State",
+      "Compare & Breadth",
+      "Data & Coverage",
+      "Research Desk",
+      "System & Lineage",
+      "CORTEX saved run and replay",
+      "Opportunity Scanner ephemeral",
+      "Portfolio & Risk",
+      "Journal existing synthetic entries",
+      "Prediction Ledger",
+      "Intelligence",
+      "Research Lab saved dossier and replay",
+      "My Research owner history exclusion",
+      "Quant Lab saved replay",
+      "Advanced Experimental Quant saved ridge result; API replay verified separately",
+      "Pinned earlier manifest comparison",
+      "Pinned earlier manifest Overview",
+      "Historical cutoff before discovery clears comparison",
+      "Returned latest Overview"
+    ],
+    "console_errors_or_warnings": 0,
+    "evidence": "PRODUCTION_BROWSER_QA.json",
+    "chart_screenshot": "runtime/production-chart.png",
+    "experimental_replay_scope": "Saved ridge result viewed in browser; compute-only replay verified separately through the production API."
+  },
+  "as_of": {
+    "earlier_manifest": "8c66134e-2ad4-4359-bc2c-aa51c7c3e140",
+    "earlier_evaluation_session": "2026-10-09",
+    "current_evaluation_session": "2026-10-10",
+    "pre_discovery_cutoff": "2020-01-01T12:00:00+05:30",
+    "later_comparison_values_cleared": true
+  },
+  "replay": {
+    "cortex": {
+      "run_id": "5abaa90a-9182-4450-9327-0ee9f701fbcc",
+      "hash": "07d2c768a07b557b375ba5f692edb65e21993ff643db19698752a0100d357bd5",
+      "matched": true
+    },
+    "mission": {
+      "id_prefix": "11ad96ac",
+      "status": "VERIFIED",
+      "matched": true
+    },
+    "quant": {
+      "run_id": "e8b4794e-008d-58ed-afe1-95e14498fa77",
+      "status": "MATCH",
+      "result_hash": "2f5f25f561149b40397d37399d2ca81a65762b7d2284ceb2a78b7233c53e08f5"
+    },
+    "experimental": {
+      "experiment_id": "20137c98-5a40-534c-a11c-c304a23883a1",
+      "result": {
+        "status": "MATCH",
+        "saved_result_hash": "2535fa6a3e8a3688192b92e70f5a77e109f26b6809c8b580d780c9cf74630201",
+        "recomputed_result_hash": "2535fa6a3e8a3688192b92e70f5a77e109f26b6809c8b580d780c9cf74630201",
+        "dataset_match": true,
+        "comparison": "EXACT_SAME_NUMPY_RUNTIME; CROSS_RUNTIME_RECOMPUTE_REQUIRES_RECORDED_VERSION"
+      },
+      "mode": "PRODUCTION_PILOT_TEST",
+      "mutations": "NONE; compute-only replay"
+    }
+  },
+  "security": [
+    {
+      "port": 8001,
+      "method": "GET",
+      "header": "Host",
+      "status": 403
+    },
+    {
+      "port": 8001,
+      "method": "POST",
+      "header": "Origin",
+      "status": 403
+    },
+    {
+      "port": 3002,
+      "method": "GET",
+      "header": "Host",
+      "status": 403
+    },
+    {
+      "port": 3002,
+      "method": "POST",
+      "header": "Origin",
+      "status": 403
+    }
+  ],
+  "proxy_get_cors": {
+    "status": 200,
+    "allow_origin": null
+  },
+  "post_browser_integrity": {
+    "status": "VALIDATED",
+    "table_counts_unchanged": true,
+    "tables_compared": 51,
+    "storage": {
+      "referenced": 203,
+      "unreferenced": [],
+      "missing": [],
+      "corrupt": [],
+      "staged_count": 0,
+      "deletion_performed": false
+    }
+  },
+  "regression": {
+    "status": "PASS",
+    "exit_code": 0,
+    "elapsed_seconds": 1049.66,
+    "validated_at": "2026-10-11T10:19:00.629135+00:00",
+    "scope": "FULL_SUITE; ISOLATED_PILOT_CATALOG_CLONE_AND_PARQUET_COPY",
+    "owner_database": "NEVER_USED",
+    "live_pilot_qa_database": "NOT_MUTATED_BY_REGRESSION",
+    "log": "runtime/production-full-backend.log",
+    "disposable_clone_databases_and_files": "CLEANED",
+    "tests_passed": 361,
+    "subtests_passed": 13,
+    "warnings": 1,
+    "skips": 0
+  },
+  "frontend": "54_PASS_ON_RECHECK; TYPECHECK_PASS; prior two async wait failures not reproduced; no assertions or timeouts changed",
+  "owner_schema": "VALIDATED_PREVIOUS_OWNER_EXECUTION; NO_MIGRATION_RERUN",
+  "owner_market_data": "NOT_INITIALIZED; EXPLICIT_INITIAL_WRITE_APPROVAL_PENDING",
+  "scheduler": "NOT_ENABLED; SEPARATE_APPROVAL_REQUIRED",
+  "upstox_alpaca": "DEFERRED_NOT_CONFIGURED",
+  "local_ai": "DETERMINISTIC_FALLBACK; LOCAL_LLM_NOT_CONFIGURED",
+  "shutdown_restart": "VALIDATED_OWNER_EXECUTED_CONTROLLED_STOP_AND_PRODUCTION_RESTART",
+  "release": "NO_COMMIT_TAG_OR_PUSH; ACCEPTANCE_GATES_REMAIN",
+  "restart_evidence": "PRODUCTION_RESTART_RESULTS.json",
+  "current_state_file": "runtime/application-84cd888863fc48a18410415605e441da.json"
+}

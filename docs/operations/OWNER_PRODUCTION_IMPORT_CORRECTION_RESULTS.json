@@ -1,0 +1,55 @@
+{
+  "status": "VALIDATED_MODULE_ENTRYPOINT_AND_MISSING_CONFIGURATION_GUARD",
+  "root_cause": "DIRECT_FILE_INVOCATION_ADDS_SCRIPTS_BEFORE_INSTALLED_PACKAGE; scripts/market_cortex.py shadows market_cortex",
+  "observed_at": "2026-10-11T15:06:12.653340+00:00",
+  "correct_invocation": ".venv/Scripts/python.exe -m scripts.verify_owner_production",
+  "actual_module_execution": {
+    "status": "FAILED_READ_ONLY_OWNER_ACCEPTANCE",
+    "report": "C:\\Users\\faris\\OneDrive\\Documents\\MARKET_CORTEX_Phase_1_Completed\\runtime\\owner-production-verification-28009f0e0aeb417c8fa61facaaf65303.json",
+    "owner_database_writes": false,
+    "error_code": "DATABASE_NOT_CONFIGURED"
+  },
+  "child_database_configuration": "REMOVED_BEFORE_EXECUTION; NO_OWNER_DATABASE_ACCESS",
+  "tests": {
+    "passed": 3,
+    "scope": "Module help/import and direct-path rejection; read-only transaction ordering; unexpected extra research row rejected."
+  },
+  "owner_inventory": "VALIDATED_OWNER_EXECUTED_READ_ONLY_RECEIPT",
+  "owner_application_restart": "NOT_PERFORMED",
+  "owner_ready": false,
+  "applications_still_ready": {
+    "owner": {
+      "status": "ready",
+      "settings": {
+        "database_configured": true,
+        "owner_configured": true,
+        "timezone": "Asia/Kolkata",
+        "base_currency": "INR",
+        "cloud_model_allowed": true,
+        "environment": "OWNER_MAIN"
+      },
+      "manifest_id": "94368463-0587-46f0-8c3d-7b5dfee1826b"
+    },
+    "pilot": {
+      "status": "ready",
+      "settings": {
+        "database_configured": true,
+        "owner_configured": true,
+        "timezone": "Asia/Kolkata",
+        "base_currency": "INR",
+        "cloud_model_allowed": true,
+        "environment": "PILOT_TEST"
+      },
+      "manifest_id": "5fda5a53-4bcd-4788-84a6-e84cf799a3da"
+    }
+  },
+  "read_only_audit": {
+    "direct_inventory_transaction": "SET TRANSACTION READ ONLY before SELECTs",
+    "migration_checks": "SHOW, SELECT, transaction-local timezone SET; full canonical row hash and ledger unchanged guards retained",
+    "preflight": "Read-only identity, schema checksums and table counts; storage scan issues SELECTs and hashes existing files",
+    "owner_record_mutations": false,
+    "permitted_filesystem_output": "Unique local JSON diagnostic receipt only"
+  },
+  "original_onboarding_report_unchanged": true,
+  "owner_inventory_report": "C:\\Users\\faris\\OneDrive\\Documents\\MARKET_CORTEX_Phase_1_Completed\\runtime\\owner-production-verification-1f9cecacc5ba4d48b0d4ad4b4adaf133.json"
+}

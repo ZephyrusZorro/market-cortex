@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 from pathlib import Path
+from typing import Callable
 
 import psycopg
 
@@ -15,13 +16,22 @@ def connect(dsn: str) -> psycopg.Connection:
     return psycopg.connect(dsn, connect_timeout=5, application_name="market-cortex")
 
 
-def migrate(dsn: str, project_root: Path) -> list[str]:
+def migrate(dsn: str, project_root: Path, *,
+            verify_before: Callable[[psycopg.Connection], None] | None = None,
+            verify_after: Callable[[psycopg.Connection, list[str]], None] | None = None,
+            lock_timeout_ms: int | None = None) -> list[str]:
+    if lock_timeout_ms is not None and not 1 <= lock_timeout_ms <= 30_000:
+        raise ValueError('INVALID_MIGRATION_LOCK_TIMEOUT')
     migrations = sorted((project_root / "infra" / "migrations").glob("[0-9]*.sql"))
     applied: list[str] = []
     with connect(dsn) as connection:
         with connection.transaction():
+            if lock_timeout_ms is not None:
+                connection.execute("SELECT set_config('lock_timeout',%s,true)", (f'{lock_timeout_ms}ms',))
             connection.execute("SELECT pg_advisory_xact_lock(%s)", (837_241_903,))
             connection.execute("SELECT pg_advisory_xact_lock_shared(%s)", (837_241_904,))
+            if verify_before is not None:
+                verify_before(connection)
             connection.execute("CREATE TABLE IF NOT EXISTS schema_migrations (name text PRIMARY KEY, checksum text NOT NULL, applied_at timestamptz NOT NULL DEFAULT now())")
             for migration in migrations:
                 sql = migration.read_text(encoding="utf-8")
@@ -34,4 +44,6 @@ def migrate(dsn: str, project_root: Path) -> list[str]:
                 connection.execute(sql)
                 connection.execute("INSERT INTO schema_migrations (name, checksum) VALUES (%s, %s)", (migration.name, checksum))
                 applied.append(migration.name)
+            if verify_after is not None:
+                verify_after(connection, applied)
     return applied

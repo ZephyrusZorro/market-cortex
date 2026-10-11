@@ -1,0 +1,18 @@
+{
+  "status": "OWNER_READY_SUPPORTED_BINANCE_DAILY_RESEARCH",
+  "approved_at_client_date": "2026-10-11",
+  "approved_scope": "Retained encrypted 51-table baseline; one isolated UTF8 recovery; verified Binance five-pair bootstrap; 365 sessions/pair ending 2026-10-11 exclusive; duplicate/as-of/incremental-refresh checks; actual owner application validation. No migrations, resets, synthetic owner records or scheduling.",
+  "actor_required": "OWNER_TERMINAL_1",
+  "production_pilot": "VALIDATED_START_STOP_RESTART_AND_REPLAY",
+  "owner_ready": true,
+  "original_execution_report": "C:\\Users\\faris\\OneDrive\\Documents\\MARKET_CORTEX_Phase_1_Completed\\runtime\\owner-onboarding-20473f58dfda42659c60bcf6668b12bb\\report.json",
+  "original_execution_status": "FAILED_STOPPED_AFTER_ALL_INGESTION_AND_REFRESH_COMPLETED",
+  "verification_receipt": "C:\\Users\\faris\\OneDrive\\Documents\\MARKET_CORTEX_Phase_1_Completed\\runtime\\owner-onboarding-20473f58dfda42659c60bcf6668b12bb\\verification-7c13d8d2c4534941a72e39e258d6249d.json",
+  "verification_status": "VALIDATED_OWNER_MARKET_DATA_READ_ONLY_RECOVERY",
+  "next_action": "Owner may use the validated local workstation; no automatic refresh task enabled.",
+  "initial_wrapper": "HISTORICAL_EXECUTED; DO_NOT_RERUN",
+  "additional_owner_writes_authorized": false,
+  "application_state": "runtime/application-6898cdce55e34ef1ac077e05bdd55b35.json",
+  "application_acceptance": "VALIDATED_PRODUCTION_START_STOP_RESTART_API_BROWSER_AND_SAVED_RESEARCH",
+  "current_application_state": "runtime/application-a9c83bf65f414697b8cda568c8b868a3.json"
+}

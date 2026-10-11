@@ -1,0 +1,167 @@
+{
+  "validated_at": "2026-10-10T20:42:10.279229+00:00",
+  "local_date": "2026-10-11",
+  "timezone": "Asia/Kolkata",
+  "baseline_commit": "9de5113",
+  "owner_ready": "BLOCKED",
+  "production_launch": {
+    "status": "BLOCKED_EXECUTION_POLICY",
+    "action": "next.cmd start --hostname 127.0.0.1 --port 3002",
+    "reason": "blocked by policy",
+    "phase": "TOOL_PROCESS_CREATION; NO_NEXT_RUNTIME_OUTPUT",
+    "rule_id": "NOT_PROVIDED",
+    "approval_escalation": "UNAVAILABLE; SESSION_APPROVAL_NEVER",
+    "alternate_launcher_used": false
+  },
+  "backend_full": {
+    "passed": 351,
+    "subtests": 13,
+    "skipped": 0,
+    "warnings": 1,
+    "elapsed_seconds": 595.96,
+    "scope": "Collection began before final owner diagnostic fix and its two additional tests"
+  },
+  "final_operational_regression": {
+    "passed": 20,
+    "warnings": 1,
+    "elapsed_seconds": 11.88,
+    "scope": "All operations tests including final diagnostic implementation and both additional tests; separate fresh disposable test DB"
+  },
+  "frontend": {
+    "passed": 54,
+    "files": 13,
+    "typecheck": "PASS",
+    "production_build": "PASS",
+    "runtime": "BLOCKED"
+  },
+  "upgrade_rehearsal": "VALIDATED_SYNTHETIC_ONLY; 11 MIGRATIONS; 34 EMPTY NEW TABLES; ORIGINAL ROWS AND BAR/MANIFEST PRESERVED",
+  "owner_connection": "VALIDATED_FROM_OWNER_EXECUTED_LOCAL_READ_ONLY_REPORT",
+  "owner_failed_checks": [
+    "11_PENDING_MIGRATIONS; EXPLICIT_AUTHORIZATION_REQUIRED"
+  ],
+  "owner_integrity": "ZERO_REFERENCED_MISSING_CORRUPT_UNREFERENCED_STAGED",
+  "owner_mutations": "NONE",
+  "owner_backup": "NOT_CREATED; PROPOSED_AFTER_AUTHORIZATION",
+  "pilot_final_preflight": {
+    "settings": {
+      "database_configured": true,
+      "owner_configured": true,
+      "timezone": "Asia/Kolkata",
+      "base_currency": "INR",
+      "cloud_model_allowed": true,
+      "environment": "PILOT_TEST"
+    },
+    "status": "VALIDATED",
+    "checks": {
+      "database_identity": {
+        "database": "market_cortex_pilot_test",
+        "server_address": "127.0.0.1",
+        "server_port": 55432,
+        "server_version": "17.11",
+        "transaction_read_only": "on"
+      },
+      "database": "CONNECTED_READ_ONLY",
+      "encoding": "UTF8",
+      "pending_migrations": [],
+      "changed_migrations": [],
+      "data_root_exists": true,
+      "table_counts": {
+        "app_locks": 0,
+        "calendar_sessions": 0,
+        "consumer_receipts": 0,
+        "context_facts": 1234,
+        "context_files": 3,
+        "context_head": 1,
+        "context_manifest_facts": 2468,
+        "context_manifest_files": 6,
+        "context_manifests": 3,
+        "context_snapshots": 3,
+        "cortex_research_runs": 571,
+        "dataset_files": 195,
+        "dataset_head": 1,
+        "dataset_manifests": 35,
+        "edge_library": 1,
+        "experiment_definitions": 32,
+        "experiment_edge_links": 4,
+        "experiment_events": 394,
+        "experiment_exposures": 144,
+        "experiment_governance": 28,
+        "experiment_proposals": 1,
+        "identifier_mappings": 10,
+        "instruments": 10,
+        "jobs": 76,
+        "journal_entries": 2,
+        "journal_revisions": 2,
+        "manifest_members": 195,
+        "observations": 5065,
+        "opportunity_candidates": 513,
+        "outbox": 35,
+        "personal_record_versions": 0,
+        "personal_records": 0,
+        "personalization_snapshots": 6,
+        "portfolio_risk_snapshots": 2,
+        "portfolio_versions": 10,
+        "portfolios": 3,
+        "prediction_evaluations": 6,
+        "prediction_records": 3,
+        "prediction_revisions": 9,
+        "provider_capabilities": 0,
+        "quant_artifacts": 390,
+        "quant_edge_evidence": 0,
+        "quarantine": 0,
+        "research_hypotheses": 4,
+        "research_mission_checkpoints": 609,
+        "research_missions": 27,
+        "research_theses": 12,
+        "research_thesis_versions": 66,
+        "schema_migrations": 13,
+        "source_batches": 48,
+        "venues": 2
+      },
+      "storage": {
+        "referenced": 198,
+        "unreferenced": [],
+        "missing": [],
+        "corrupt": [],
+        "staged_count": 0,
+        "deletion_performed": false
+      }
+    }
+  },
+  "preservation": {
+    "experiment": true,
+    "mission": true,
+    "personal": true,
+    "windows_storage_r_plus_b": true
+  },
+  "log_sha256": {
+    "deployment-backend-tests.log": "282d09483729979c4a396528d494b48127592e4648e0de4d20f20e0c1f28ac70",
+    "deployment-preflight-regression.log": "ad9ede23823acfed8d640684f561b17148abeef3109dcb5ba49daaa41f01df5e",
+    "deployment-frontend-tests.log": "f35794cb554c320250a79f7a3495e9c9daabf6bc15b3b8c37c4f8303aa31b031",
+    "deployment-typecheck.log": "681efdb6722d0e1c331f0ea81a587a81d2858b3a5ea14e06d27cbec7b37e0843",
+    "deployment-build.log": "0e3967b7d2cf0271aa75eba715dce88d858ce55f1ee8b47158ea29b0f024ef9e",
+    "deployment-upgrade-rehearsal.log": "aa513bd7db07657319df54e55ee328466ec3b81f4bb4b35f155e5bc5e71d4fd6"
+  },
+  "cleanup": {
+    "owned_api_frontend": "STOPPED; PORTS8001_3002_FREE",
+    "temporary_databases_remaining": 0,
+    "dedicated_validation_cluster": "STOPPED_AFTER_ZERO_OTHER_CLIENT_CHECK",
+    "owner_services": "17_AND_18_RUNNING_UNCHANGED",
+    "owner_data_root_entries": 0,
+    "scheduled_task_registered": false
+  },
+  "release": {
+    "commit_created": false,
+    "tag_created": false,
+    "pushed": false,
+    "reason": "Owner-readiness acceptance gates unmet; user release condition"
+  },
+  "limitations": [
+    "PRODUCTION_BROWSER_NOT_VALIDATED",
+    "OWNER_SCHEMA_UPGRADE_AWAITS_AUTHORIZATION_AND_ACTUAL_BASELINE_RECOVERY",
+    "UPSTOX_ALPACA_DEFERRED_NOT_CONFIGURED",
+    "LOCAL_LLM_OPTIONAL_UNVALIDATED",
+    "SCHEDULE_DRY_RUN_ONLY",
+    "NO_SUPPORTED_PROFITABLE_EDGE"
+  ]
+}

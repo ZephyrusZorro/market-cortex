@@ -1,0 +1,64 @@
+{
+  "status": "APPROVED_RUNNER_READY; ACTUAL_OWNER_EXECUTION_PENDING",
+  "validated_at": "2026-10-11T09:35:44.690667+00:00",
+  "local_date": "2026-10-11",
+  "timezone": "Asia/Kolkata",
+  "authorization": "EXPLICIT_USER_AUTHORIZATION_RECEIVED; NO_ADDITIONAL_MIGRATION_PERMISSION_REQUIRED",
+  "owner_execution": "NOT_PERFORMED; SECURE_CONNECTION_SCOPED_TO_OWNER_TERMINAL",
+  "owner_backup_created": false,
+  "owner_schema_modified_by_agent": false,
+  "actual_owner_report_created": false,
+  "last_inspected_owner_state": "17_APPLICATION_TABLES; TWO_MIGRATIONS; THREE_METADATA_ROWS; ZERO_REFERENCED_PARQUETS",
+  "approved_plan_file_sha256": "74a1043c1eb0740d50f2e663e3f8995f6119c136292309cb3bf82b5ab94d624b",
+  "approved_pending_migration_N": 11,
+  "new_table_N": 34,
+  "test_scope": "DISPOSABLE_TEST_DATABASES_ONLY; EMPTY_INSPECTED_BASELINE_REPLICATED; NO_OWNER_OR_PILOT_IMPORT",
+  "final_tests": {
+    "passed": 35,
+    "warnings": 1,
+    "skipped": 0,
+    "elapsed_seconds": 57.24,
+    "owner_guard_cases": 8,
+    "operations_cases": 20,
+    "existing_postgres_backup_integration_cases": 7
+  },
+  "tested": [
+    "specific encrypted bundle restored and schema upgraded",
+    "zero-artifact restore directory exists",
+    "original metadata row hashes preserved",
+    "backup file remains unchanged",
+    "34 new tables empty",
+    "wrong key prevents source migration",
+    "source row-count change prevents backup",
+    "changed records after rehearsal prevent source migration",
+    "post-SQL guard failure aborts whole transaction",
+    "unreviewed SQL prevented",
+    "competing migration lock times out",
+    "interruption produces safe stop report",
+    "normal migration/catalog/backup integration"
+  ],
+  "powerShell": "PARSES; MISSING_OWNER_CONNECTION_STOPS_BEFORE_PROCEDURE",
+  "repeatable_read_snapshots": true,
+  "trusted_transaction_guards": true,
+  "no_automatic_rollback_or_cutover": true,
+  "test_log_sha256": "b3f420a7023d8130d7213fe6f6abf5dec6b4992fdbdb4183013284dac04a3a20",
+  "runner_source_sha256": {
+    "src\\market_cortex\\owner_migration.py": "5d8d74fdb0493658bae912ad3ef25a22bbe88cc7e90bd35c3dbe1e774dd3c7cf",
+    "src\\market_cortex\\database.py": "4ffcacef88dd253992fb9db09a929967bf408f02d09959408722acdcba9465e0",
+    "scripts\\Invoke-OwnerMigration.ps1": "cad2bc97892b63852e17111c2bf093dacbcd89e15de5e5822c86a65c2276a024"
+  },
+  "preservation": {
+    "experiment": true,
+    "mission": true,
+    "personal": true,
+    "windows_storage_r_plus_b": true
+  },
+  "cleanup": {
+    "temporary_test_databases_remaining": 0,
+    "other_validation_clients": 0,
+    "owner_root_entries": 0
+  },
+  "production": "SEPARATE_PREVIOUS_EXECUTION_POLICY_REJECTION; NOT_RETRIED_OR_BYPASSED",
+  "owner_ready": false,
+  "commit_tag_push": "NONE; RELEASE_GATES_UNMET"
+}

@@ -1,0 +1,76 @@
+{
+  "status": "AUTHORIZED_EXECUTED; OWNER_MARKET_DATA_VALIDATED_READ_ONLY",
+  "probed_at": "2026-10-11T09:58:31.792972+00:00",
+  "provider": "BINANCE_PUBLIC_SPOT",
+  "data_root": "C:/MarketCortexData",
+  "interval": "P1D",
+  "adjustment": "raw",
+  "start_inclusive": "2025-10-11T00:00:00+00:00",
+  "end_exclusive": "2026-10-11T00:00:00+00:00",
+  "last_closed_session": "2026-10-10",
+  "sessions_per_pair": 365,
+  "expected_bar_N": 1825,
+  "expected_monthly_parquet_N_if_all_valid": 65,
+  "symbols": [
+    {
+      "symbol": "BTCUSDT",
+      "base": "BTC",
+      "quote": "USDT",
+      "status": "TRADING",
+      "earliest_sampled_session_utc": "2017-08-17T00:00:00+00:00",
+      "exchange_info_sha256": "1977aba29f2ace65015823ecc50a6b101e87d1826ddeda2fd42453f574e5b7d4",
+      "first_sample_sha256": "6e5c67aceb33ff80a3f1d7944f39993deee51b28e8cfe2b6f60029642dd7a29d"
+    },
+    {
+      "symbol": "ETHUSDT",
+      "base": "ETH",
+      "quote": "USDT",
+      "status": "TRADING",
+      "earliest_sampled_session_utc": "2017-08-17T00:00:00+00:00",
+      "exchange_info_sha256": "468906933149bfd69d6d221f16124df39141f9f5971ebda596c8e3316c6c36d8",
+      "first_sample_sha256": "21e26735511b3c534e3ef28864f34274bba5841cf0dc708f9a0ff666d5965a0b"
+    },
+    {
+      "symbol": "SOLUSDT",
+      "base": "SOL",
+      "quote": "USDT",
+      "status": "TRADING",
+      "earliest_sampled_session_utc": "2020-08-11T00:00:00+00:00",
+      "exchange_info_sha256": "8af1d496cc639b5bd7a68cb2fc3dde24b75705a3b1d55d21da5cf60fa2572c71",
+      "first_sample_sha256": "3fcec4a8e421892fca0975e2ca7fdf099493a00e8eb4ee9a39de508c9dc76126"
+    },
+    {
+      "symbol": "BNBUSDT",
+      "base": "BNB",
+      "quote": "USDT",
+      "status": "TRADING",
+      "earliest_sampled_session_utc": "2017-11-06T00:00:00+00:00",
+      "exchange_info_sha256": "3e88a426e0a0d8d13e16271ff96f88fcbd2ecdccbe617f02d41d2526842ef78f",
+      "first_sample_sha256": "3e47c17e5573fb1dada572e92686c9a2e27fe1f75d0598c63c87907ccd14d001"
+    },
+    {
+      "symbol": "XRPUSDT",
+      "base": "XRP",
+      "quote": "USDT",
+      "status": "TRADING",
+      "earliest_sampled_session_utc": "2018-05-04T00:00:00+00:00",
+      "exchange_info_sha256": "cd8968d0c831661cb89286f996de0c39b59b0338cd52b640e3e965d993033d84",
+      "first_sample_sha256": "cf8b45c7114830714837d69d0e2d06e0487d42a77909dc8a32875ae7fd17daf4"
+    }
+  ],
+  "owner_persistence": true,
+  "fx_conversion": "NONE; PRICES_QUOTED_IN_USDT",
+  "refresh_time": "07:00 Asia/Kolkata",
+  "scheduling": "OPTIONAL; EXPLICIT_ENABLEMENT_REQUIRED",
+  "provider_authentication": "NONE_REQUIRED",
+  "production_pilot_acceptance": "VALIDATED; PRODUCTION_PILOT_VALIDATION_RESULTS.json",
+  "owner_initial_write_authorization": "EXPLICIT_OWNER_APPROVAL_2026-10-11",
+  "pre_ingestion_backup": "REQUIRED_NEW_RETAINED_ENCRYPTED_51_TABLE_BASELINE_AND_ISOLATED_UTF8_RECOVERY; DO_NOT_REUSE_PRE_SCHEMA_BASELINE_AS_CURRENT_STATE",
+  "implemented_runner": "src/market_cortex/owner_onboarding.py",
+  "wrapper": "scripts/Invoke-OwnerBinanceOnboarding.ps1",
+  "verification_receipt": "C:\\Users\\faris\\OneDrive\\Documents\\MARKET_CORTEX_Phase_1_Completed\\runtime\\owner-onboarding-20473f58dfda42659c60bcf6668b12bb\\verification-7c13d8d2c4534941a72e39e258d6249d.json",
+  "owner_ready": true,
+  "application_acceptance": "VALIDATED_OWNER_PRODUCTION_AND_RESTART_RECOVERY",
+  "initial_wrapper_execution": "COMPLETED; DO_NOT_RERUN",
+  "additional_owner_writes_authorized": false
+}

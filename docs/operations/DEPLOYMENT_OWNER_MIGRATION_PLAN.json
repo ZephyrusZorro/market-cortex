@@ -1,0 +1,179 @@
+{
+  "status": "PROPOSED_NOT_AUTHORIZED_NOT_APPLIED",
+  "source_preflight_sha256": "9dbec9eb51a2da1e4a87f126bc15e1f20ba24dfe7f2ee7f06fdb4f6fc1e9fd61",
+  "migrations": [
+    {
+      "name": "0003_cortex_research.sql",
+      "sha256": "22ef6f02c1eb50436f1ab0cfedb286ef7d871c64ac3b21e1375ed1f14e076ca3",
+      "creates": [
+        "cortex_research_runs"
+      ],
+      "alter_statements": [],
+      "derived_updates": [],
+      "destructive_data_statements": false
+    },
+    {
+      "name": "0004_opportunity_theses.sql",
+      "sha256": "711a7a4bf4118e57698d646ad3211ce8273fa66cd64444db4b7e276d9c6578f7",
+      "creates": [
+        "opportunity_candidates",
+        "research_theses",
+        "research_thesis_versions"
+      ],
+      "alter_statements": [],
+      "derived_updates": [],
+      "destructive_data_statements": false
+    },
+    {
+      "name": "0005_portfolio_risk.sql",
+      "sha256": "542202ff41be63638ec3590a9c6f04f99c296858eeac7a106b1a518013dfe0a0",
+      "creates": [
+        "portfolios",
+        "portfolio_versions",
+        "portfolio_risk_snapshots"
+      ],
+      "alter_statements": [],
+      "derived_updates": [],
+      "destructive_data_statements": false
+    },
+    {
+      "name": "0006_journal_learning.sql",
+      "sha256": "ebf96046e8ffa433670ea840e1100f02456873ec5b74087e32a030fba5541a43",
+      "creates": [
+        "journal_entries",
+        "journal_revisions",
+        "prediction_records",
+        "prediction_revisions",
+        "prediction_evaluations",
+        "edge_library"
+      ],
+      "alter_statements": [
+        "ALTER TABLE prediction_revisions ADD FOREIGN KEY (evaluation_id) REFERENCES prediction_evaluations(evaluation_id);"
+      ],
+      "derived_updates": [],
+      "destructive_data_statements": false
+    },
+    {
+      "name": "0007_quant_lab.sql",
+      "sha256": "53c69ee7f1b3c85255b2fd699b7893e5b8c21efa06a25dc62623dc7a95c4fe1a",
+      "creates": [
+        "quant_artifacts",
+        "quant_edge_evidence"
+      ],
+      "alter_statements": [],
+      "derived_updates": [],
+      "destructive_data_statements": false
+    },
+    {
+      "name": "0008_quant_jobs.sql",
+      "sha256": "b006ff73c4f8eaeffd4d2254f8e06b3cd3ebd904cde64e39161c7856dc65ff33",
+      "creates": [],
+      "alter_statements": [
+        "ALTER TABLE jobs ADD COLUMN result_ref uuid REFERENCES quant_artifacts(artifact_id);"
+      ],
+      "derived_updates": [],
+      "destructive_data_statements": false
+    },
+    {
+      "name": "0009_quant_summaries.sql",
+      "sha256": "a82cfeb91b8c02f377b5792ba9e806f8bd274b6ec78c02ae43391d2e63a9c15b",
+      "creates": [],
+      "alter_statements": [
+        "ALTER TABLE quant_artifacts ADD COLUMN summary jsonb NOT NULL DEFAULT '{}'::jsonb;"
+      ],
+      "derived_updates": [
+        "quant_artifacts"
+      ],
+      "destructive_data_statements": false
+    },
+    {
+      "name": "0010_context_intelligence.sql",
+      "sha256": "c14c1a4c8e115c5675b6f9328220d8636f62e752f6d742e464f2489e33583c8f",
+      "creates": [
+        "context_facts",
+        "context_files",
+        "context_manifests",
+        "context_manifest_facts",
+        "context_manifest_files",
+        "context_head",
+        "context_snapshots"
+      ],
+      "alter_statements": [],
+      "derived_updates": [],
+      "destructive_data_statements": false
+    },
+    {
+      "name": "0011_research_missions.sql",
+      "sha256": "7254d893ee8f6be5719e0e16a77cf78b7e5ef0f6d27e1d8bd098db86130e47af",
+      "creates": [
+        "research_missions",
+        "research_mission_checkpoints"
+      ],
+      "alter_statements": [],
+      "derived_updates": [],
+      "destructive_data_statements": false
+    },
+    {
+      "name": "0012_personalization.sql",
+      "sha256": "7c0792831f0cd9e7a26b20d8208ba11733d74e8e9e1333a797587037f4bd6a5f",
+      "creates": [
+        "personal_records",
+        "personal_record_versions",
+        "personalization_snapshots"
+      ],
+      "alter_statements": [],
+      "derived_updates": [],
+      "destructive_data_statements": false
+    },
+    {
+      "name": "0013_experimental_research.sql",
+      "sha256": "02316b256e92b7e0d7d514d61dfaaf589f13718fc19c620ba10a9314460f6065",
+      "creates": [
+        "research_hypotheses",
+        "experiment_definitions",
+        "experiment_events",
+        "experiment_exposures",
+        "experiment_governance",
+        "experiment_edge_links",
+        "experiment_proposals"
+      ],
+      "alter_statements": [
+        "ALTER TABLE quant_artifacts DROP CONSTRAINT quant_artifacts_kind_check;",
+        "ALTER TABLE quant_artifacts ADD CONSTRAINT quant_artifacts_kind_check CHECK\n (kind IN ('source','run','sensitivity','walk_forward','robustness','monte_carlo','comparison',\n          'experiment_dataset','experiment_model','experiment_result','experiment_analogue','experiment_dossier','experiment_comparison'));"
+      ],
+      "derived_updates": [],
+      "destructive_data_statements": false
+    }
+  ],
+  "new_table_N": 34,
+  "source_data_deletion": false,
+  "requires": [
+    "explicit owner migration authorization",
+    "retained encrypted owner backup with separately retained key",
+    "isolated restoration of that actual owner backup and migration rehearsal",
+    "read-only post-upgrade verification"
+  ],
+  "owner_records_to_create": [],
+  "integrity": "VALIDATED: ZERO_REFERENCED_MISSING_CORRUPT_UNREFERENCED",
+  "existing_table_counts": {
+    "app_locks": 0,
+    "calendar_sessions": 0,
+    "consumer_receipts": 0,
+    "dataset_files": 0,
+    "dataset_head": 1,
+    "dataset_manifests": 0,
+    "identifier_mappings": 0,
+    "instruments": 0,
+    "jobs": 0,
+    "manifest_members": 0,
+    "observations": 0,
+    "outbox": 0,
+    "provider_capabilities": 0,
+    "quarantine": 0,
+    "schema_migrations": 2,
+    "source_batches": 0,
+    "venues": 0
+  },
+  "new_table_collisions": [],
+  "synthetic_upgrade_rehearsal": "VALIDATED; DEPLOYMENT_UPGRADE_REHEARSAL_RESULTS.json"
+}

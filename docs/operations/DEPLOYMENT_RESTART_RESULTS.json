@@ -1,0 +1,86 @@
+{
+  "validated_at": "2026-10-10T20:25:54.232155+00:00",
+  "runtime": "FASTAPI_ONLY; PRODUCTION_NEXT_BLOCKED",
+  "environment": "PILOT_TEST",
+  "graceful_shutdown": "UVICORN_APPLICATION_SHUTDOWN_COMPLETE_OBSERVED; CTRL_C_WRAPPER_EXIT_1",
+  "port_released_before_restart": true,
+  "restart_health": {
+    "status": "ready",
+    "settings": {
+      "database_configured": true,
+      "owner_configured": true,
+      "timezone": "Asia/Kolkata",
+      "base_currency": "INR",
+      "cloud_model_allowed": true,
+      "environment": "PILOT_TEST"
+    },
+    "manifest_id": "8c66134e-2ad4-4359-bc2c-aa51c7c3e140"
+  },
+  "research_id": "03f9f5b1-ab58-4898-96e9-765987da5005",
+  "research_hash": "3c93afb62916685e3f219b27422011e281f25d2d958d014e7be87bcb4f195c23",
+  "replay": {
+    "run_id": "03f9f5b1-ab58-4898-96e9-765987da5005",
+    "evidence_reproducible": true,
+    "language_reproducible": false,
+    "checks": [
+      {
+        "tool_id": "dataset.context",
+        "manifest_id": "8c66134e-2ad4-4359-bc2c-aa51c7c3e140",
+        "as_of": "2026-10-10T20:24:06.298268+00:00",
+        "stored_hash": "aa9972d7a524b5d232508bf427698249042f955cbc8bb5d70b6f51654f3cc7f0",
+        "replayed_hash": "aa9972d7a524b5d232508bf427698249042f955cbc8bb5d70b6f51654f3cc7f0",
+        "matched": true
+      },
+      {
+        "tool_id": "instrument.features",
+        "manifest_id": "8c66134e-2ad4-4359-bc2c-aa51c7c3e140",
+        "as_of": "2026-10-10T20:24:06.298268+00:00",
+        "stored_hash": "f800f08d964d84098e65450cd5c5cb4c9199bf157063181011a90d53825b32d9",
+        "replayed_hash": "f800f08d964d84098e65450cd5c5cb4c9199bf157063181011a90d53825b32d9",
+        "matched": true
+      },
+      {
+        "tool_id": "market.state",
+        "manifest_id": "8c66134e-2ad4-4359-bc2c-aa51c7c3e140",
+        "as_of": "2026-10-10T20:24:06.298268+00:00",
+        "stored_hash": "ddcd53b51ae601ae396b3efdfc285cf75b8d11c031bfce5b6cf4b91cd8cab20d",
+        "replayed_hash": "ddcd53b51ae601ae396b3efdfc285cf75b8d11c031bfce5b6cf4b91cd8cab20d",
+        "matched": true
+      },
+      {
+        "tool_id": "dataset.manifest",
+        "manifest_id": "8c66134e-2ad4-4359-bc2c-aa51c7c3e140",
+        "as_of": "2026-10-10T20:24:06.298268+00:00",
+        "stored_hash": "70dc52d24b1d8961f849e0b0d248aac29612e29c47fb50281be309604cf4c3c4",
+        "replayed_hash": "70dc52d24b1d8961f849e0b0d248aac29612e29c47fb50281be309604cf4c3c4",
+        "matched": true
+      }
+    ],
+    "stored_evidence_hash": "3c93afb62916685e3f219b27422011e281f25d2d958d014e7be87bcb4f195c23"
+  },
+  "preflight": {
+    "settings": {
+      "database_configured": true,
+      "owner_configured": true,
+      "timezone": "Asia/Kolkata",
+      "base_currency": "INR",
+      "cloud_model_allowed": true,
+      "environment": "PILOT_TEST"
+    },
+    "status": "VALIDATED",
+    "checks": {
+      "database_identity": {
+        "database": "market_cortex_pilot_test",
+        "server_address": "127.0.0.1",
+        "server_port": 55432,
+        "server_version": "17.11",
+        "transaction_read_only": "on"
+      },
+      "encoding": "UTF8",
+      "database": "CONNECTED_READ_ONLY",
+      "pending_migrations": [],
+      "changed_migrations": [],
+      "data_root_exists": true
+    }
+  }
+}
