@@ -156,9 +156,12 @@ def refresh_plan(profile: Profile, settings: Settings, now: datetime, *, start: 
         instrument = registry.resolve(provider_id="binance", identifier_type="exchange_pair", identifier_value=symbol,
                                       venue_id="BINANCE_SPOT", at=now, known_at=now)
         with connect(settings.database_url) as connection:
+            connection.execute('SET TRANSACTION READ ONLY')
             latest = connection.execute("""SELECT max(session_date) FROM observations
                 WHERE instrument_id=%s AND provider_id='binance' AND interval='P1D' AND adjustment_basis='raw'
-                  AND quality_state IN ('valid','corrected') AND available_at <= %s""", (instrument.instrument_id, now)).fetchone()[0]
+                  AND quality_state IN ('valid','corrected') AND available_at <= %s AND session_date < %s""", (instrument.instrument_id, now, end.date())).fetchone()[0]
+        if latest is None and start is None and settings.environment == 'OWNER_MAIN':
+            raise ValueError('OWNER_HISTORY_REQUIRED_NO_IMPLICIT_BOOTSTRAP')
         first = utc(start) if start else (datetime.combine(latest, datetime.min.time(), timezone.utc)
                 - timedelta(days=profile.correction_overlap_days - 1) if latest else end - timedelta(days=30))
         first = max(first, instrument.valid_from)
@@ -188,9 +191,13 @@ def enqueue_refresh(profile: Profile, settings: Settings, now: datetime, *, sche
 def worker(profile: Profile, settings: Settings, *, adapter=None) -> dict:
     queue = JobQueue(settings.database_url)
     with connect(settings.database_url) as connection:
+        # A process repeatedly dying while leased must not retry forever.
+        connection.execute("""UPDATE jobs SET state='dead',lease_until=NULL,error_code='LEASE_RETRY_LIMIT'
+            WHERE kind=%s AND payload->>'profile_key'=%s AND attempts>=3
+            AND ((state='leased' AND lease_until<now()) OR state='ready')""", (KIND, profile_key(settings)))
         candidate = connection.execute("""SELECT job_id FROM jobs WHERE kind=%s AND payload->>'profile_key'=%s
             AND ((state='ready' AND next_attempt_at<=now()) OR (state='leased' AND lease_until<now()))
-            ORDER BY next_attempt_at,job_id LIMIT 1""", (KIND, profile_key(settings))).fetchone()
+            AND attempts<3 ORDER BY next_attempt_at,job_id LIMIT 1""", (KIND, profile_key(settings))).fetchone()
     job = queue.claim(600, kind=KIND, job_id=candidate[0]) if candidate else None
     if job is None:
         return {"status": "IDLE"}
@@ -199,7 +206,7 @@ def worker(profile: Profile, settings: Settings, *, adapter=None) -> dict:
         if plan.profile_key != profile_key(settings) or plan.symbol not in profile.symbols:
             raise ValueError("REFRESH_PROFILE_MISMATCH")
         start, end = utc(plan.start), utc(plan.end)
-        if start >= end or (end-start) > timedelta(days=366) or end > datetime.now(timezone.utc).replace(hour=0,minute=0,second=0,microsecond=0):
+        if start != start.replace(hour=0,minute=0,second=0,microsecond=0) or end != end.replace(hour=0,minute=0,second=0,microsecond=0) or start >= end or (end-start) > timedelta(days=366) or end > datetime.now(timezone.utc).replace(hour=0,minute=0,second=0,microsecond=0):
             raise ValueError("INVALID_REFRESH_RANGE")
         catalog = catalog_for(settings)
         instruments, mappings = catalog.load_identity()
@@ -209,8 +216,12 @@ def worker(profile: Profile, settings: Settings, *, adapter=None) -> dict:
         mapping = registry.mapping_for(instrument.instrument_id, "binance", "exchange_pair", start)
         calendar = catalog.load_calendar(instrument.primary_venue_id, start, end)
         fetched = (adapter or BinanceDaily()).fetch_daily(instrument, mapping, calendar, start, end)
+        if not fetched.bars or max(b.session_date for b in fetched.bars) != (end-timedelta(days=1)).date():
+            raise ProviderFailure('LATEST_CLOSED_SESSION_UNAVAILABLE', retryable=True)
         result = catalog.ingest(list(fetched.bars), calendar, source_batch_id=fetched.batch_id,
                                 provider_id=fetched.provider_id, raw_hash=fetched.raw_hash, fetched_at=fetched.fetched_at)
+        if result.quarantined:
+            raise ProviderFailure('DATA_QUALITY_QUARANTINED')
         output = {"symbol": plan.symbol, "stored": result.stored, "duplicates": result.duplicates,
                   "quarantined": result.quarantined, "manifest_id": str(result.manifest_id) if result.manifest_id else None,
                   "completed_at": datetime.now(timezone.utc).isoformat(), "pages": fetched.pages}
@@ -231,18 +242,33 @@ def worker(profile: Profile, settings: Settings, *, adapter=None) -> dict:
         return {"status": state.upper(), "job_id": str(job.job_id), "code": code}
 
 
-def status(settings: Settings, now: datetime) -> dict:
+def status(settings: Settings, now: datetime, profile: Profile | None = None) -> dict:
     with connect(settings.database_url) as connection:
+        connection.execute('SET TRANSACTION READ ONLY')
         rows = connection.execute("""SELECT j.job_id,j.state,j.attempts,j.next_attempt_at,j.error_code,j.payload
             FROM jobs j WHERE kind=%s AND payload->>'profile_key'=%s ORDER BY next_attempt_at DESC LIMIT 50""", (KIND,profile_key(settings))).fetchall()
         latest = connection.execute("""SELECT instrument_id,max(session_date) FROM observations
-            WHERE provider_id='binance' AND adjustment_basis='raw' AND quality_state IN ('valid','corrected')
-                AND available_at <= %s GROUP BY instrument_id""", (utc(now),)).fetchall()
+            WHERE provider_id='binance' AND interval='P1D' AND adjustment_basis='raw' AND quality_state IN ('valid','corrected')
+                AND available_at <= %s AND end_at<=%s GROUP BY instrument_id""", (utc(now), utc(now))).fetchall()
     expected = utc(now).date() - timedelta(days=1)
+    instruments, mappings = catalog_for(settings).load_identity()
+    registry = IdentityRegistry(instruments, mappings)
+    days = dict(latest)
+    items = []
+    symbols = profile.symbols if profile else Profile.model_fields['symbols'].default
+    for symbol in symbols:
+        try:
+            instrument = registry.resolve(provider_id='binance', identifier_type='exchange_pair', identifier_value=symbol,
+                venue_id='BINANCE_SPOT', at=utc(now), known_at=utc(now))
+            day = days.get(instrument.instrument_id)
+            items.append({'symbol':symbol, 'instrument_id':str(instrument.instrument_id),
+                          'last_session':day.isoformat() if day else None,
+                          'freshness':'DATA_UNAVAILABLE' if day is None else 'FRESH' if day == expected else 'STALE'})
+        except (LookupError, ValueError):
+            items.append({'symbol':symbol, 'instrument_id':None, 'last_session':None, 'freshness':'IDENTITY_UNAVAILABLE'})
     return {"environment": settings.environment, "expected_closed_session": expected.isoformat(),
-            "freshness_policy": "binance_utc_daily_closed_session_v1", "items": [
-                {"instrument_id": str(i), "last_session": day.isoformat(), "freshness": "FRESH" if day == expected else "STALE"}
-                for i, day in latest], "jobs": [
+            "freshness_policy": "binance_utc_daily_closed_session_v1", "items": items,
+            'all_fresh': bool(items) and all(i['freshness']=='FRESH' for i in items), "jobs": [
                 {"job_id": str(r[0]), "state": r[1], "attempts": r[2], "next_attempt_at": r[3].isoformat(),
                  "error_code": r[4], "symbol": r[5].get("symbol"), "result": r[5].get("operational_result")} for r in rows]}
 
@@ -260,6 +286,11 @@ def main() -> int:
         now = datetime.now(timezone.utc)
         if args.command in {"refresh", "schedule", "worker"} and settings.environment == "OWNER_MAIN" and not args.confirm_owner_writes:
             raise ValueError("OWNER_WRITE_AUTHORIZATION_REQUIRED")
+        if args.command in {'refresh','schedule','worker'} and settings.environment=='OWNER_MAIN':
+            check = preflight(settings)
+            identity = check['checks'].get('database_identity',{})
+            if check['status']!='VALIDATED' or identity.get('database')!='market_cortex' or identity.get('server_port')!=5432:
+                raise ValueError('OWNER_REFRESH_IDENTITY_OR_SCHEMA_DIFFERS')
         if args.command == "preflight":
             result = preflight(settings, integrity=args.integrity)
         elif args.command == "plan":
@@ -271,7 +302,7 @@ def main() -> int:
         elif args.command == "worker":
             result = worker(profile, settings)
         else:
-            result = status(settings, now)
+            result = status(settings, now, profile)
         print(json.dumps(result, ensure_ascii=True))
         return 1 if result.get("status") in {"FAILED", "DEAD", "READY"} else 0
     except Exception as error:

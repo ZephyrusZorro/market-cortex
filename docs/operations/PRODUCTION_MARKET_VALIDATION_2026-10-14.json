@@ -1,0 +1,106 @@
+{
+  "observed_at": "2026-10-14T15:23:02.946182+00:00",
+  "status": "BINANCE_INDEPENDENT_PRODUCTION_VALIDATED",
+  "build_id": "DtQIrwong0xKe8a4j0Wzg",
+  "provider_value_samples": 11,
+  "matched_live_samples": 3,
+  "provider_delivery": "PUBLIC_BINANCE_WEBSOCKET",
+  "browser_delivery": "HTTP_POLL_EVERY_2_SECONDS",
+  "current_active_stream_symbols": 0,
+  "coverage": {
+    "binance": {
+      "identities": 3689,
+      "statuses": {
+        "BREAK": 2309,
+        "TRADING": 1380
+      },
+      "exchanges": {
+        "BINANCE_SPOT": 3689
+      },
+      "current_present_identities": 3689,
+      "current_present_exchanges": {
+        "BINANCE_SPOT": 3689
+      },
+      "current_present_statuses": {
+        "BREAK": 2309,
+        "TRADING": 1380
+      },
+      "snapshot_observed_at": "2026-10-14T13:22:27.913853+00:00",
+      "manifest_hash": "4f0bb22bedc31c4db8ab9b61f4d0db392ea0fcc5d1dd5bfe31d6a67ff68c4422",
+      "authentication": "PUBLIC_METADATA"
+    },
+    "upstox": {
+      "identities": 36271,
+      "statuses": {
+        "SUSPENDED": 13481,
+        "LISTED": 22773,
+        "ABSENT_FROM_CURRENT_SOURCE": 16,
+        "CONFLICTING_LISTED_AND_SUSPENDED": 1
+      },
+      "exchanges": {
+        "BSE": 19602,
+        "NSE": 16669
+      },
+      "current_present_identities": 36255,
+      "current_present_exchanges": {
+        "BSE": 19586,
+        "NSE": 16669
+      },
+      "current_present_statuses": {
+        "SUSPENDED": 13481,
+        "LISTED": 22773,
+        "CONFLICTING_LISTED_AND_SUSPENDED": 1
+      },
+      "snapshot_observed_at": "2026-10-14T13:22:30.683171+00:00",
+      "manifest_hash": "25545bb86a84e2127d59e9f478416da3f6aa09e9d1cb93451b6b6588b0ac057b",
+      "authentication": "PUBLIC_METADATA"
+    },
+    "alpaca": {
+      "identities": 0,
+      "statuses": {},
+      "exchanges": {},
+      "current_present_identities": 0,
+      "current_present_exchanges": {},
+      "current_present_statuses": {},
+      "snapshot_observed_at": null,
+      "manifest_hash": null,
+      "authentication": "DEFERRED_NOT_CONFIGURED"
+    }
+  },
+  "history_instruments": {
+    "binance": 6
+  },
+  "performance": {
+    "chart_ready_median_ms_before": 2080.4,
+    "chart_ready_median_ms_after": 936.02,
+    "symbol_switch_median_ms_before": 990.63,
+    "symbol_switch_median_ms_after": 379.6,
+    "search_median_ms": 796.58,
+    "js_heap_after_bytes": 17548804
+  },
+  "tests": {
+    "python_passed": 320,
+    "python_skipped": 118,
+    "subtests_passed": 13,
+    "frontend_passed": 68,
+    "focused_provider_security_passed": 55,
+    "production_browser_errors": 0,
+    "production_browser_warnings": 0
+  },
+  "owner_writes": false,
+  "pilot_writes": false,
+  "owner_database_access": false,
+  "scheduling_enabled": false,
+  "release_created": false,
+  "pushed": false,
+  "broker_onboarding": "PREPARED_AWAITING_PRIVATE_CREDENTIALS",
+  "receipts_sha256": {
+    "market-playwright-production-2026-10-14.json": "1f015ebad99cbd33d27beb45d11e29f9e19c3590d5ea8e55f7c342787131a5b7",
+    "market-production-rendered-source-comparison-2026-10-14.json": "c0e0495fd0ba162a452ba15e527aea27b412352695ab600905eb39698e555c02",
+    "market-production-live-source-comparison-2026-10-14.json": "e8963b21ebdd0864ad02dd347d0cd8266decc113b5d8176a63099b4a2e927507",
+    "market-production-replay-and-cache-final-2026-10-14.json": "34b48eff5aef9dab4b3c976bbd33015389095421680b433dcad0513a93ccc44a",
+    "market-production-final-inventory-2026-10-14.json": "cf532fdb097d6aaa1959d1b9aac93bf3ddc0b089de2e88f474af83b39c6e1920",
+    "market-production-catalog-verified-2026-10-14.json": "ded8f82d6b8fba18b29ba2cdeacc13cf6c818f7cb14bf130dd565197a6a01751",
+    "market-production-broker-deferred-ui-2026-10-14.json": "163fb215989eb4c4818f3d2b8f38106440dd129b8a55a290ee52bfb054a772ec"
+  }
+}

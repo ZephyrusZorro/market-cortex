@@ -1,0 +1,62 @@
+{
+  "status": "INDEPENDENT_FOUNDATION_VALIDATED_ALL_MARKET_ACCEPTANCE_OPEN",
+  "protected_release": {
+    "tag": "v1.0.1-operational",
+    "peeled_commit": "cfe696d51b137566c15eebaf734ff7ee0ca95197",
+    "tag_modified": false,
+    "pushed": false,
+    "owner_database_writes": false,
+    "existing_application_restarts": false,
+    "scheduler_registered": false
+  },
+  "evidence_classification": {
+    "binance": "LIVE_PUBLIC_DISCOVERY_HISTORY_STREAM_RESTART",
+    "upstox_catalog": "LIVE_PUBLIC_METADATA_ONLY",
+    "upstox_authenticated": "DEFERRED_NOT_CONFIGURED",
+    "alpaca_authenticated": "DEFERRED_NOT_CONFIGURED",
+    "broker_accuracy_guards": "SYNTHETIC_REGRESSION_ONLY",
+    "browser_acceptance": "EXECUTION_APPROVAL_BLOCKER_OWNER_TERMINAL_HANDOFF_PENDING"
+  },
+  "latest_provider_native_catalogs": {
+    "binance": {"identities": 3684, "trading": 1375, "break": 2309},
+    "upstox": {"cash_identities": 36219, "listed": 22881, "suspended": 13338, "nse": 16667, "bse": 19552},
+    "full_live_coverage_claimed": false,
+    "canonical_mapping_authority_verified": false
+  },
+  "public_history_accuracy": {
+    "symbols": ["ADAUSDT", "DOTUSDT"],
+    "closed_daily_rows_per_symbol": 30,
+    "exact_ohlcv_match": true,
+    "repeat_cache_provider_calls": 0,
+    "as_of_verified": true
+  },
+  "source_archive_integrity": {"status": "VALIDATED", "manifests": 38, "artifacts": 31, "bytes": 6656389},
+  "resource_measurement": {"full_validation_peak_working_set_bytes": 630841344, "indexed_search_milliseconds_range": [31, 80]},
+  "tests": {
+    "full_isolated_suite_before_final_probe_refinement": {"passed": 382, "skipped": 34, "subtests_passed": 13},
+    "focused_foundation_before_final_probe_refinement": {"passed": 70, "subtests_passed": 13},
+    "latest_probe_accuracy_entitlement_suite": {"passed": 22, "new_guards": 9},
+    "frontend": {"passed": 60, "typescript": "PASSED", "isolated_webpack_build": "PASSED"},
+    "counts_overlap_do_not_sum": true,
+    "existing_warning": "STARLETTE_HTTPX_DEPRECATION"
+  },
+  "retained_owner_backup_sha256": "1cb01c848c4fc7ac94d28e533ff506596df917e31518192bdcc5c5ed9c93641a",
+  "owner_research_evidence_sha256": "f6c96904277c739b8c6cf2977c6fe23c08672c30c0cd23d5033d182f1ae6c2e7",
+  "remaining_gates": [
+    "ACTUAL_UPSTOX_ALPACA_CREDENTIAL_AND_SOURCE_PROBES",
+    "INDEPENDENT_BROWSER_ACCEPTANCE",
+    "VERIFIED_INDIA_US_CANONICAL_IDENTITY_AND_EXCHANGE_CALENDARS",
+    "REVIEWED_OWNER_IMPORT_AND_PRODUCTION_INTEGRATION",
+    "EXPLICIT_PERSISTENT_COLLECTION_AND_SCHEDULE_AUTHORIZATION"
+  ],
+  "receipts": [
+    "runtime/multi-market-foundation-validation-final-0c306424e0eb40148568db23fade99bc.json",
+    "runtime/multi-market-final-stream-refinement.json",
+    "runtime/multi-market-storage-measurement-final.json",
+    "runtime/multi-market-api-validation.json",
+    "runtime/multi-market-release-protection-read-only.json",
+    "runtime/multi-market-full-regression-isolated.log",
+    "runtime/multi-market-focused-final.log",
+    "runtime/multi-market-probe-regression.log"
+  ]
+}

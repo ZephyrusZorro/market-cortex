@@ -1,0 +1,109 @@
+{
+  "date": "2026-10-11",
+  "status": "CURRENT_OWNER_PROTECTION_COMPLETE_REFRESH_AND_EQUITIES_PREPARED_WITH_EXPLICIT_GATES",
+  "release_commit": "cfe696d51b137566c15eebaf734ff7ee0ca95197",
+  "release_tag": "v1.0.1-operational",
+  "tag_modified": false,
+  "new_release_created": false,
+  "push_performed": false,
+  "owner_database_writes": false,
+  "owner_migrations_or_onboarding_repeated": false,
+  "current_owner_backup": "VALIDATED_CURRENT_OWNER_BACKUP_AND_ISOLATED_RESTORE",
+  "current_owner_protection_acceptance": {
+    "owner_receipt": "runtime/owner-protection-51cf820416c74937aa786795c14c3d43/report.json",
+    "owner_receipt_sha256": "03642b5da7db33ddc4fb5132c974d6ae9b983f37fc9db7ae38aad024aaeabfe9",
+    "independent_receipt": "runtime/owner-protection-51cf820416c74937aa786795c14c3d43/independent-read-only-verification.json",
+    "independently_verified_at_utc": "2026-10-11T16:42:35.167456+00:00",
+    "retained_bundle": "C:/MarketCortexBackups/owner-current-dab5dbc0b5884373b56868c183cc4131.mcbackup",
+    "retained_bundle_bytes": 1198133,
+    "retained_bundle_sha256": "1cb01c848c4fc7ac94d28e533ff506596df917e31518192bdcc5c5ed9c93641a",
+    "recovery_database": "mc_protection_dab5dbc0b5884373b56868c183cc4131_test",
+    "recovery_port": 55432,
+    "recovery_encoding": "UTF8",
+    "recovery_root": "C:/MarketCortexRestoreDrills/owner-current-dab5dbc0b5884373b56868c183cc4131",
+    "all_table_counts_and_row_hashes_matched": 51,
+    "verified_migrations": 13,
+    "physical_parquets_verified": 65,
+    "physical_bar_rows_verified": 1825,
+    "saved_research_records": 1,
+    "matched_research_evidence_hashes": 6,
+    "matched_original_pinned_symbol_hashes": 5,
+    "source_unchanged": true,
+    "earlier_owner_backups_hashes_preserved": true,
+    "disk_loss_recovery_second_device_copy": "NOT_CONFIGURED"
+  },
+  "owner_command": "scripts/Invoke-OwnerProtection.ps1",
+  "owner_protection_scope": {
+    "new_retained_encrypted_bundle": true,
+    "existing_backups_deleted_or_overwritten": false,
+    "new_isolated_utf8_database_and_root": true,
+    "all_application_table_fingerprints": true,
+    "all_dataset_and_context_artifact_references": true,
+    "shared_pg_dump_inventory_snapshot": true,
+    "pinned_daily_replay": true,
+    "existing_research_replay": true,
+    "owner_cutover_or_rollback": false
+  },
+  "regression_runs": [
+    {
+      "evidence_class": "DISPOSABLE_SYNTHETIC_CATALOGS_AND_HERMETIC_TESTS",
+      "passed": 87,
+      "subtests_passed": 13,
+      "skipped": 0,
+      "warnings": 1,
+      "seconds": 53.21,
+      "log": "runtime/post-release-regression-e3fc676fbff54a3680bc00bd7b488e72.log",
+      "files": ["test_post_release_protection.py", "test_provider_readiness.py", "test_refresh_protection.py", "test_operations.py", "test_backup_restore_integration.py", "test_owner_onboarding.py", "test_owner_production_verifier.py", "test_foundation.py", "test_probe_read_only.py"]
+    },
+    {
+      "evidence_class": "HERMETIC_PROVIDER_CALENDAR_AND_FOUNDATION_RECHECK_AFTER_FINAL_PROVIDER_FIX",
+      "passed": 35,
+      "subtests_passed": 13,
+      "skipped": 0,
+      "warnings": 1,
+      "seconds": 2.36,
+      "files": ["test_provider_readiness.py", "test_foundation.py"]
+    }
+  ],
+  "regression_notes": [
+    "These overlapping focused runs are not a combined full project test run.",
+    "The warning is the existing Starlette/TestClient/httpx deprecation warning.",
+    "New test fixture roots use short temporary directories to avoid Windows content-addressed filename MAX_PATH failures.",
+    "All test databases were newly created disposable targets; their cleanup did not drop owner, pilot, historical recovery databases or retained backups."
+  ],
+  "powershell_parse": "PASSED_FIVE_PREPARED_SCRIPTS",
+  "git_diff_check": "PASSED",
+  "running_application_read_only_checks": {
+    "owner_status": "ready",
+    "owner_environment": "OWNER_MAIN",
+    "owner_manifest": "94368463-0587-46f0-8c3d-7b5dfee1826b",
+    "pilot_status": "ready",
+    "pilot_environment": "PILOT_TEST",
+    "pilot_manifest": "5fda5a53-4bcd-4788-84a6-e84cf799a3da",
+    "saved_owner_research_http_status": 200,
+    "saved_owner_research_payload_hash_matched": true,
+    "application_restart_performed": false
+  },
+  "daily_refresh": {
+    "status": "NOT_ENABLED_PENDING_EXPLICIT_SCHEDULE_AND_SCOPE_AUTHORIZATION",
+    "proposed_profile": "config/operations-owner-refresh.proposed.json",
+    "proposed_local_time": "07:00 Asia/Kolkata",
+    "proposed_utc_time": "01:30 UTC",
+    "correction_overlap_days": 3,
+    "max_durable_attempts": 3,
+    "actual_registered_market_cortex_tasks": 0,
+    "owner_refresh_executed": false,
+    "dpapi_and_scheduler_production_acceptance": "PENDING_AUTHORIZATION_AND_OWNER_EXECUTION"
+  },
+  "providers": {
+    "official_documentation_checked": "2026-10-11",
+    "upstox": "DEFERRED_NOT_CONFIGURED",
+    "alpaca": "DEFERRED_NOT_CONFIGURED",
+    "upstox_receipt": "runtime/provider-upstox-489e43bf5257461282c6e8b6911b88d8.json",
+    "alpaca_receipt": "runtime/provider-alpaca-bdf4aab23d9e4524a52169d53f894e5f.json",
+    "independent_probes": "VALIDATED_MISSING_CREDENTIAL_GUARDS_AND_GET_ONLY_TRANSPORT; NO_AUTHENTICATED_LIVE_RESULT",
+    "owner_ingestion": false,
+    "canonical_market_mappings_and_calendars": "REQUIRED_BEFORE_ISOLATED_INGESTION_ACCEPTANCE",
+    "broker_order_or_auth_write_endpoints_added": false
+  }
+}

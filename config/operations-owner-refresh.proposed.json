@@ -1,0 +1,9 @@
+{
+  "environment": "OWNER_MAIN",
+  "database_env": "MARKET_CORTEX_DATABASE_URL",
+  "data_root": "C:/MarketCortexData",
+  "symbols": ["BTCUSDT", "ETHUSDT", "SOLUSDT", "BNBUSDT", "XRPUSDT"],
+  "refresh_time": "07:00",
+  "timezone": "Asia/Kolkata",
+  "correction_overlap_days": 3
+}

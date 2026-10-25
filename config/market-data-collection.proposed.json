@@ -1,0 +1,35 @@
+{
+  "status": "PROPOSED_DISABLED_REQUIRES_REVIEWED_OWNER_OPERATION",
+  "environment": "INDEPENDENT_MARKET_DATA_TEST",
+  "catalog_sync": {
+    "enabled": false,
+    "public_providers": ["binance", "upstox"],
+    "credentialed_providers": ["alpaca"],
+    "proposed_local_time": "08:30",
+    "timezone": "Asia/Kolkata",
+    "missed_start": "run_once_after_logon",
+    "overlap": "refuse_second_writer",
+    "maximum_runtime_minutes": 10
+  },
+  "collector": {
+    "enabled": false,
+    "start_at_logon": false,
+    "maximum_binance_symbols": 50,
+    "maximum_upstox_symbols": 50,
+    "maximum_alpaca_iex_symbols": 30,
+    "selected_symbols": [],
+    "interval": "1m",
+    "reconnect_limit": 5,
+    "maximum_backoff_seconds": 30,
+    "flush_seconds": 5,
+    "dedup_events": 4096,
+    "maximum_events_per_capture": 200000,
+    "offline_bar_recovery_days": 3,
+    "recovery_call_budget": 100,
+    "recover_ticks": false,
+    "cloud_required": false
+  },
+  "owner_database_access": false,
+  "owner_import_approved": false,
+  "register_windows_tasks": false
+}

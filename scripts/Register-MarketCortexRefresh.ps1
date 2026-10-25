@@ -1,5 +1,5 @@
 [CmdletBinding(SupportsShouldProcess=$true,ConfirmImpact='High')]
-param([Parameter(Mandatory=$true)][string]$Profile,[switch]$Enable,[switch]$ConfirmOwnerWrites,
+param([Parameter(Mandatory=$true)][string]$Profile,[switch]$Enable,[switch]$ConfirmOwnerWrites,[string]$ConnectionFile,
       [string]$TaskName='MarketCortex-ExplicitDailyRefresh')
 $ErrorActionPreference='Stop'
 if (-not $Enable) { throw 'SCHEDULE_DISABLED: use -Enable only after reviewing the profile and task' }
@@ -7,12 +7,19 @@ $taskRepo=(Resolve-Path -LiteralPath (Join-Path $PSScriptRoot '..')).Path
 $taskProfile=(Resolve-Path -LiteralPath $Profile).Path
 $taskConfig=Get-Content -LiteralPath $taskProfile -Raw | ConvertFrom-Json
 if ($taskConfig.environment -eq 'OWNER_MAIN' -and -not $ConfirmOwnerWrites) { throw 'OWNER_WRITE_AUTHORIZATION_REQUIRED' }
+if ($taskConfig.environment -eq 'OWNER_MAIN' -and -not $ConnectionFile) { throw 'OWNER_SCHEDULE_REQUIRES_PRIVATE_DPAPI_CONNECTION_FILE' }
+if ($ConnectionFile) {
+    $taskConnection=(Resolve-Path -LiteralPath $ConnectionFile).Path
+    if ($taskConnection.Contains('"')) { throw 'INVALID_PATH' }
+}
 if ($taskProfile.Contains('"') -or $taskRepo.Contains('"')) { throw 'INVALID_PATH' }
 if ($taskConfig.timezone -ne 'Asia/Kolkata' -or (Get-TimeZone).Id -ne 'India Standard Time') { throw 'SCHEDULE_REQUIRES_MATCHING_INDIA_TIMEZONE' }
 if ($TaskName -notmatch '^MarketCortex-[A-Za-z0-9_-]{1,64}$') { throw 'INVALID_TASK_NAME' }
 if (Get-ScheduledTask -TaskName $TaskName -ErrorAction SilentlyContinue) { throw 'TASK_ALREADY_EXISTS: inspect it before replacing' }
-# Task credentials are inherited from the user's environment, never embedded in task arguments.
+# OWNER_MAIN credentials are decrypted from a current-user DPAPI file by the runner.
+# The task stores a file path only; a private terminal environment is not inherited.
 $taskExtra=if($ConfirmOwnerWrites){' -ConfirmOwnerWrites'}else{''}
+if ($ConnectionFile) { $taskExtra+=' -ConnectionFile "'+$taskConnection+'"' }
 $taskShell=(Get-Process -Id $PID).Path
 $taskAction=New-ScheduledTaskAction -Execute $taskShell -Argument "-NoProfile -WindowStyle Hidden -File `"$PSScriptRoot\Refresh-MarketCortex.ps1`" -Profile `"$taskProfile`"$taskExtra" -WorkingDirectory $taskRepo
 # A daily trigger plus logon catches missed runs. Ten-minute repetition retries durable backoff jobs.

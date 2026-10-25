@@ -1,12 +1,14 @@
 'use client';
 
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import type { ChartBar, ChartFeature } from '@/lib/api';
 
 type ChartOptions = Record<string, unknown>;
 
 function CanvasChart({ option, height = 320, label }: { option: ChartOptions; height?: number; label: string }) {
   const element = useRef<HTMLDivElement>(null);
+  const active = useRef<import('echarts').ECharts | undefined>(undefined);
+  const latest = useRef(option);
   useEffect(() => {
     let disposed = false;
     let chart: import('echarts').ECharts | undefined;
@@ -14,17 +16,45 @@ function CanvasChart({ option, height = 320, label }: { option: ChartOptions; he
     import('echarts').then((echarts) => {
       if (disposed || !element.current) return;
       chart = echarts.init(element.current, undefined, { renderer: 'canvas' });
-      chart.setOption(option);
+      active.current = chart;
+      chart.setOption(latest.current);
       observer = new ResizeObserver(() => chart?.resize());
       observer.observe(element.current);
     });
-    return () => { disposed = true; observer?.disconnect(); chart?.dispose(); };
-  }, [option]);
+    return () => { disposed = true; observer?.disconnect(); chart?.dispose(); active.current=undefined; };
+  }, []);
+  useEffect(()=>{latest.current=option;active.current?.setOption(option);},[option]);
   return <div ref={element} role="img" aria-label={label} style={{ width: '100%', height }} />;
 }
 
 const palette = { text: '#98aaa8', grid: '#263431', up: '#7ccfa8', down: '#e68f82',
   cyan: '#78b9c5', lime: '#d2de9a', orange: '#e6b97a', violet: '#a7a0cc' };
+
+export function SourcePriceChart({bars}:{bars:ChartBar[]}) {
+  const [windowSize,setWindowSize]=useState<number|null>(null);
+  const [offset,setOffset]=useState(0);
+  const size=Math.min(windowSize ?? bars.length,bars.length);
+  const boundedOffset=Math.min(offset,Math.max(0,bars.length-size));
+  const visible=useMemo(()=>bars.slice(bars.length-boundedOffset-size,bars.length-boundedOffset),[bars,boundedOffset,size]);
+  const option=useMemo(()=>({animation:false,backgroundColor:'transparent',
+    tooltip:{trigger:'axis',axisPointer:{type:'cross'},backgroundColor:'#182320',textStyle:{color:'#e3e9df'}},
+    grid:[{left:45,right:75,top:20,height:'65%'},{left:45,right:75,top:'72%',height:'16%'}],
+    xAxis:[0,1].map(gridIndex=>({type:'category',gridIndex,data:visible.map(b=>b.session_date),axisLabel:{color:palette.text,show:gridIndex===1},axisLine:{lineStyle:{color:palette.grid}}})),
+    yAxis:[0,1].map(gridIndex=>({type:'value',gridIndex,scale:true,position:'right',axisLabel:{color:palette.text},splitLine:{lineStyle:{color:palette.grid}}})),
+    series:[{name:'Source OHLC',type:'candlestick',data:visible.map(b=>[b.open,b.close,b.low,b.high]),itemStyle:{color:palette.up,color0:palette.down,borderColor:palette.up,borderColor0:palette.down}},
+      {name:'Source volume',type:'bar',xAxisIndex:1,yAxisIndex:1,data:visible.map(b=>({value:b.volume,itemStyle:{color:b.close>=b.open?palette.up:palette.down}}))}]}),[visible]);
+  return <div>
+    <div aria-label="Chart navigation">
+      <button disabled={size<=2} onClick={()=>setWindowSize(Math.max(2,Math.floor(size/2)))}>Zoom in</button>{' '}
+      <button disabled={size===bars.length} onClick={()=>{const next=Math.min(bars.length,size*2);setWindowSize(next);setOffset(Math.min(boundedOffset,bars.length-next));}}>Zoom out</button>{' '}
+      <button disabled={boundedOffset>=bars.length-size} onClick={()=>setOffset(Math.min(bars.length-size,boundedOffset+Math.max(1,Math.floor(size/4))))}>Pan earlier</button>{' '}
+      <button disabled={boundedOffset===0} onClick={()=>setOffset(Math.max(0,boundedOffset-Math.max(1,Math.floor(size/4))))}>Pan later</button>{' '}
+      <button onClick={()=>{setWindowSize(null);setOffset(0);}}>Reset view</button>
+    </div>
+    <p aria-label="Chart viewport">{visible.length} of {bars.length} source candles · {visible[0]?.session_date} through {visible.at(-1)?.session_date}</p>
+    <CanvasChart option={option} height={600} label="Provider OHLC candlesticks and volume with pan and zoom"/>
+  </div>;
+}
 
 export function QuantChart({points,benchmarkAvailable=true}:{points:{session:string;net:number;gross:number;benchmark:number;drawdown:number}[];benchmarkAvailable?:boolean}) {
   const option=useMemo(()=>({animation:false,backgroundColor:'transparent',

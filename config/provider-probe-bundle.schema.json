@@ -1,0 +1,387 @@
+{
+  "$defs": {
+    "CalendarSession": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "1.0.0-draft",
+          "default": "1.0.0-draft",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "calendar_id": {
+          "title": "Calendar Id",
+          "type": "string"
+        },
+        "venue_id": {
+          "title": "Venue Id",
+          "type": "string"
+        },
+        "session_date": {
+          "format": "date",
+          "title": "Session Date",
+          "type": "string"
+        },
+        "open_at": {
+          "format": "date-time",
+          "title": "Open At",
+          "type": "string"
+        },
+        "close_at": {
+          "format": "date-time",
+          "title": "Close At",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "open",
+            "early_close",
+            "holiday"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "version": {
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "calendar_id",
+        "venue_id",
+        "session_date",
+        "open_at",
+        "close_at",
+        "status",
+        "version"
+      ],
+      "title": "CalendarSession",
+      "type": "object"
+    },
+    "IdentifierMapping": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "1.0.0-draft",
+          "default": "1.0.0-draft",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "mapping_id": {
+          "format": "uuid",
+          "title": "Mapping Id",
+          "type": "string"
+        },
+        "instrument_id": {
+          "format": "uuid",
+          "title": "Instrument Id",
+          "type": "string"
+        },
+        "provider_id": {
+          "title": "Provider Id",
+          "type": "string"
+        },
+        "venue_id": {
+          "title": "Venue Id",
+          "type": "string"
+        },
+        "identifier_type": {
+          "enum": [
+            "ticker",
+            "isin",
+            "cusip",
+            "figi",
+            "provider_token",
+            "exchange_pair",
+            "contract_code",
+            "series_code",
+            "other"
+          ],
+          "title": "Identifier Type",
+          "type": "string"
+        },
+        "identifier_value": {
+          "title": "Identifier Value",
+          "type": "string"
+        },
+        "valid_from": {
+          "format": "date-time",
+          "title": "Valid From",
+          "type": "string"
+        },
+        "valid_to": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Valid To"
+        },
+        "available_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Available At"
+        },
+        "confidence": {
+          "default": 1.0,
+          "title": "Confidence",
+          "type": "number"
+        },
+        "source_batch_id": {
+          "anyOf": [
+            {
+              "format": "uuid",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Batch Id"
+        }
+      },
+      "required": [
+        "mapping_id",
+        "instrument_id",
+        "provider_id",
+        "venue_id",
+        "identifier_type",
+        "identifier_value",
+        "valid_from"
+      ],
+      "title": "IdentifierMapping",
+      "type": "object"
+    },
+    "Instrument": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "1.0.0-draft",
+          "default": "1.0.0-draft",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "instrument_id": {
+          "format": "uuid",
+          "title": "Instrument Id",
+          "type": "string"
+        },
+        "asset_class": {
+          "enum": [
+            "equity",
+            "etf",
+            "index",
+            "crypto_spot",
+            "future",
+            "option",
+            "perpetual",
+            "fx",
+            "commodity",
+            "rate_series",
+            "other"
+          ],
+          "title": "Asset Class",
+          "type": "string"
+        },
+        "instrument_kind": {
+          "title": "Instrument Kind",
+          "type": "string"
+        },
+        "primary_venue_id": {
+          "title": "Primary Venue Id",
+          "type": "string"
+        },
+        "trading_currency": {
+          "title": "Trading Currency",
+          "type": "string"
+        },
+        "price_unit": {
+          "title": "Price Unit",
+          "type": "string"
+        },
+        "quantity_unit": {
+          "title": "Quantity Unit",
+          "type": "string"
+        },
+        "listing_status": {
+          "enum": [
+            "active",
+            "halted",
+            "delisted",
+            "expired",
+            "unknown"
+          ],
+          "title": "Listing Status",
+          "type": "string"
+        },
+        "valid_from": {
+          "format": "date-time",
+          "title": "Valid From",
+          "type": "string"
+        },
+        "valid_to": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Valid To"
+        },
+        "underlying_instrument_id": {
+          "anyOf": [
+            {
+              "format": "uuid",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Underlying Instrument Id"
+        },
+        "issuer_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Issuer Id"
+        }
+      },
+      "required": [
+        "instrument_id",
+        "asset_class",
+        "instrument_kind",
+        "primary_venue_id",
+        "trading_currency",
+        "price_unit",
+        "quantity_unit",
+        "listing_status",
+        "valid_from"
+      ],
+      "title": "Instrument",
+      "type": "object"
+    },
+    "Venue": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "1.0.0-draft",
+          "default": "1.0.0-draft",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "venue_id": {
+          "title": "Venue Id",
+          "type": "string"
+        },
+        "timezone": {
+          "title": "Timezone",
+          "type": "string"
+        },
+        "session_kind": {
+          "enum": [
+            "regular",
+            "24x7"
+          ],
+          "title": "Session Kind",
+          "type": "string"
+        }
+      },
+      "required": [
+        "venue_id",
+        "timezone",
+        "session_kind"
+      ],
+      "title": "Venue",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "instrument": {
+      "$ref": "#/$defs/Instrument"
+    },
+    "mapping": {
+      "$ref": "#/$defs/IdentifierMapping"
+    },
+    "venue": {
+      "$ref": "#/$defs/Venue"
+    },
+    "calendar_id": {
+      "title": "Calendar Id",
+      "type": "string"
+    },
+    "calendar_version": {
+      "title": "Calendar Version",
+      "type": "string"
+    },
+    "sessions": {
+      "items": {
+        "$ref": "#/$defs/CalendarSession"
+      },
+      "title": "Sessions",
+      "type": "array"
+    },
+    "identity_evidence": {
+      "maxLength": 500,
+      "minLength": 10,
+      "title": "Identity Evidence",
+      "type": "string"
+    },
+    "calendar_evidence": {
+      "maxLength": 500,
+      "minLength": 10,
+      "title": "Calendar Evidence",
+      "type": "string"
+    },
+    "start": {
+      "format": "date-time",
+      "title": "Start",
+      "type": "string"
+    },
+    "end": {
+      "format": "date-time",
+      "title": "End",
+      "type": "string"
+    }
+  },
+  "required": [
+    "instrument",
+    "mapping",
+    "venue",
+    "calendar_id",
+    "calendar_version",
+    "sessions",
+    "identity_evidence",
+    "calendar_evidence",
+    "start",
+    "end"
+  ],
+  "title": "AdapterProbeBundle",
+  "type": "object"
+}

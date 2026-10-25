@@ -1,0 +1,48 @@
+{
+  "status": "PROPOSAL_ONLY_NOT_AN_EXECUTABLE_OPERATIONS_PROFILE",
+  "approved": false,
+  "operational_tag": "v1.0.1-operational",
+  "operational_commit": "cfe696d51b137566c15eebaf734ff7ee0ca95197",
+  "owner_database_writes_enabled": false,
+  "owner_deployment_enabled": false,
+  "continuous_collectors_enabled": false,
+  "windows_tasks_enabled": false,
+  "source_cache_root_proposed": "C:\\MarketCortexSources\\three-market-v1",
+  "source_cache_maximum_bytes": 536870912,
+  "initial_market_history_start_date": "2026-10-01",
+  "initial_market_history_end_date_exclusive": "2026-10-14",
+  "initial_interval": "P1D",
+  "new_broker_daily_bar_upper_bound": 91,
+  "canonical_import_requires_separate_approval": true,
+  "canonical_gate_status": "IDENTITY_CALENDAR_SOURCE_WINDOW_ACTIONS_NOT_ALL_VERIFIED",
+  "binance_existing_owner_pairs_reused_without_backfill": ["BTCUSDT", "ETHUSDT", "SOLUSDT", "BNBUSDT", "XRPUSDT"],
+  "upstox_candidate_native_ids": [
+    "NSE_EQ|INE002A01018", "BSE_EQ|INE002A01018",
+    "NSE_EQ|INE009A01021", "BSE_EQ|INE009A01021"
+  ],
+  "alpaca_candidates": [
+    {"symbol": "AAPL", "asset_id": "b0b6dd9d-8b9b-48a9-ba46-b9d54906e415", "listing_exchange": "NASDAQ"},
+    {"symbol": "SPY", "asset_id": "b28f4066-5c6d-479b-a2af-85dc1a8f16fb", "listing_exchange": "ARCA"},
+    {"symbol": "QQQ", "asset_id": "2d9e926c-e17c-47c3-ad8c-26c7a594e48f", "listing_exchange": "NASDAQ"}
+  ],
+  "feeds": {"binance": "spot_public", "upstox": "historical_v3_and_v3_ltpc", "alpaca": "iex_only"},
+  "bounded_acceptance_capture_seconds_per_provider": 120,
+  "bounded_capture_maximum_events_per_provider": 200000,
+  "on_demand_request_limits": {"daily_calendar_days": 365, "intraday_calendar_days": 3, "rows": 20000, "pages": 20},
+  "initial_history_and_comparison_network_attempt_upper_bound": 42,
+  "initial_metadata_get_attempt_upper_bound": 21,
+  "upstox_feed_authorize_attempt_upper_bound": 18,
+  "process_shared_request_budgets": {
+    "binance": {"minimum_spacing_seconds": 1, "per_minute": 30},
+    "upstox": {"minimum_spacing_seconds": 1, "per_minute": 40, "per_30_minutes": 1000},
+    "alpaca": {"minimum_spacing_seconds": 1, "per_minute": 60}
+  },
+  "live_subscription_hard_caps": {"binance": 50, "upstox": 50, "alpaca_iex": 30},
+  "credential_loading": "CURRENT_USER_DPAPI_PROCESS_SCOPE_ONLY",
+  "automatic_gap_recovery": {"enabled": false, "proposed_maximum_days": 3, "proposed_provider_call_budget": 100, "tick_recovery": false},
+  "bulk_universe_history_download": false,
+  "synthetic_prices": false,
+  "backup_before_owner_change": "NEW_RETAINED_ENCRYPTED_BUNDLE_PLUS_NEW_ISOLATED_RESTORE_REQUIRED",
+  "recovery_overwrites_owner": false,
+  "automatic_backup_or_evidence_deletion": false
+}

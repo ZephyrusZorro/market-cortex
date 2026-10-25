@@ -69,7 +69,7 @@ def decrypt_file(source: Path, destination: Path, passphrase: str) -> None:
         infile.seek(len(header))
         remaining = payload_end - len(header)
         try:
-            with destination.open("wb") as outfile:
+            with destination.open("xb") as outfile:
                 while remaining:
                     block = infile.read(min(CHUNK, remaining))
                     if not block:
@@ -96,8 +96,8 @@ def _tool(binary: str) -> str:
 
 def _run_pg(binary: str, dsn: str, args: list[str]) -> None:
     info = conninfo_to_dict(dsn)
-    mapping = {"dbname": "PGDATABASE", "host": "PGHOST", "port": "PGPORT", "user": "PGUSER",
-               "password": "PGPASSWORD", "sslmode": "PGSSLMODE"}
+    mapping = {"dbname": "PGDATABASE", "host": "PGHOST", "hostaddr": "PGHOSTADDR", "port": "PGPORT", "user": "PGUSER",
+               "password": "PGPASSWORD", "sslmode": "PGSSLMODE", "options": "PGOPTIONS", "connect_timeout": "PGCONNECT_TIMEOUT"}
     env = {key: value for key, value in os.environ.items() if not key.startswith("PG")}
     env.update({target: str(info[source]) for source, target in mapping.items() if source in info})
     try:
@@ -118,7 +118,7 @@ def _safe_member(name: str) -> bool:
              name.startswith("artifacts/lake/") and name.endswith(".parquet")))
 
 
-def backup(settings: Settings, destination: Path, passphrase: str) -> dict:
+def backup(settings: Settings, destination: Path, passphrase: str, *, recovery_metadata: dict | None = None) -> dict:
     if not settings.database_url:
         raise ValueError("database not configured")
     destination = destination.resolve()
@@ -131,33 +131,50 @@ def backup(settings: Settings, destination: Path, passphrase: str) -> dict:
     with tempfile.TemporaryDirectory(prefix="market-cortex-backup-") as work:
         staging = Path(work)
         with connect(settings.database_url) as lock_connection:
+            lock_connection.execute('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ, READ ONLY')
+            lock_connection.execute("SET LOCAL lock_timeout='10s'")
             lock_connection.execute("SELECT pg_advisory_lock(%s)", (LOCK_ID,))
             try:
-                head = catalog.head()
-                artifacts = catalog.artifacts_for(head) if head else []
+                # The dump, table fingerprints and file references use ONE MVCC
+                # snapshot, including concurrent research records. Cover every
+                # catalog artifact, including branches outside the current head.
+                snapshot_id = lock_connection.execute('SELECT pg_export_snapshot()').fetchone()[0]
+                head_row = lock_connection.execute('SELECT manifest_id FROM dataset_head WHERE singleton=true').fetchone()
+                head = head_row[0] if head_row else None
+                artifacts = lock_connection.execute('SELECT relative_path,content_hash,row_count FROM dataset_files').fetchall()
                 if lock_connection.execute("SELECT to_regclass('context_files')").fetchone()[0]:
-                    from .intelligence_store import ContextStore
-                    artifacts += ContextStore(catalog).artifacts()
+                    artifacts += lock_connection.execute('SELECT relative_path,content_hash,row_count FROM context_files').fetchall()
+                by_path = {}
+                for path, content_hash, rows in artifacts:
+                    if path in by_path and by_path[path] != (content_hash, rows):
+                        raise ValueError('CONFLICTING_ARTIFACT_REFERENCE')
+                    by_path[path] = (content_hash, rows)
+                from .protection_inventory import inventory
+                catalog_inventory = inventory(lock_connection)
                 dump = staging / "catalog.dump"
                 _run_pg("pg_dump", settings.database_url, ["--format=custom", "--no-owner", "--no-privileges",
-                                                            "--file", str(dump)])
+                                                            "--snapshot", snapshot_id, "--file", str(dump)])
                 files = []
-                for artifact in artifacts:
-                    original = (settings.data_root / artifact.relative_path).resolve()
-                    if not original.is_relative_to(settings.data_root.resolve()) or _sha(original) != artifact.content_hash:
+                for relative, (content_hash, rows) in sorted(by_path.items()):
+                    if not _safe_member('artifacts/' + relative):
+                        raise ValueError('UNSAFE_ARTIFACT_PATH')
+                    original = (settings.data_root / relative).resolve()
+                    if not original.is_relative_to(settings.data_root.resolve()) or _sha(original) != content_hash:
                         raise OSError("referenced artifact missing or corrupted")
-                    target = staging / "artifacts" / artifact.relative_path
+                    target = staging / "artifacts" / relative
                     target.parent.mkdir(parents=True, exist_ok=True)
                     shutil.copyfile(original, target)
-                    if _sha(target) != artifact.content_hash:
+                    if _sha(target) != content_hash:
                         raise OSError("artifact changed during copy")
-                    files.append({"path": artifact.relative_path, "sha256": artifact.content_hash,
-                                  "rows": artifact.row_count})
+                    files.append({"path": relative, "sha256": content_hash, "rows": rows})
                 database_encoding = lock_connection.execute('SHOW server_encoding').fetchone()[0]
                 manifest = {"format": "MCBACKUP1", "created_at": datetime.now(timezone.utc).isoformat(),
                             "database_encoding": database_encoding,
                             "head_manifest_id": str(head) if head else None, "catalog_sha256": _sha(dump),
-                            "artifacts": files}
+                            "catalog_inventory": catalog_inventory,
+                            "owner_metadata": {'timezone': settings.owner_timezone, 'base_currency': settings.base_currency,
+                                               'environment': settings.environment},
+                            'recovery_metadata': recovery_metadata or {}, "artifacts": files}
                 (staging / "manifest.json").write_text(json.dumps(manifest, sort_keys=True, indent=2), encoding="utf-8")
                 if catalog.head() != head:
                     raise RuntimeError("manifest head moved during backup")
@@ -175,14 +192,17 @@ def backup(settings: Settings, destination: Path, passphrase: str) -> dict:
             encrypt_file(tar_path, temp_output, passphrase)
             os.link(temp_output, destination)
     return {"head_manifest_id": manifest["head_manifest_id"], "artifact_count": len(files),
-            "encrypted_backup": str(destination)}
+            "encrypted_backup": str(destination), "catalog_inventory": catalog_inventory}
 
 
 def restore(source: Path, destination_data_root: Path, restore_dsn: str, live_dsn: str | None,
             passphrase: str) -> dict:
     def database_identity(dsn: str) -> tuple[str, str, str]:
         info = conninfo_to_dict(dsn)
-        return (info.get("host") or "localhost", info.get("port") or "5432", info.get("dbname") or "")
+        host = info.get('hostaddr') or info.get('host') or 'localhost'
+        if host in {'localhost', '127.0.0.1', '::1'}:
+            host = 'loopback'
+        return (host, info.get("port") or "5432", info.get("dbname") or "")
     if not restore_dsn or (live_dsn and database_identity(restore_dsn) == database_identity(live_dsn)):
         raise ValueError("restore requires a separate database connection")
     if destination_data_root.exists() and any(destination_data_root.iterdir()):
@@ -220,6 +240,14 @@ def restore(source: Path, destination_data_root: Path, restore_dsn: str, live_ds
         if not dbname:
             raise ValueError("restore database name required")
         with connect(restore_dsn) as connection:
+            connection.execute('SET TRANSACTION READ ONLY')
+            actual = connection.execute('SELECT current_database(),inet_server_port()').fetchone()
+            if live_dsn:
+                with connect(live_dsn) as live:
+                    live.execute('SET TRANSACTION READ ONLY')
+                    live_actual = live.execute('SELECT current_database(),inet_server_port()').fetchone()
+                if actual == live_actual:
+                    raise ValueError('restore requires a separate database connection')
             count = connection.execute("""SELECT count(*) FROM pg_tables
                 WHERE schemaname NOT IN ('pg_catalog', 'information_schema')""").fetchone()[0]
             if count:
@@ -227,7 +255,7 @@ def restore(source: Path, destination_data_root: Path, restore_dsn: str, live_ds
             target_encoding = connection.execute('SHOW server_encoding').fetchone()[0]
             if manifest.get('database_encoding') == 'UTF8' and target_encoding != 'UTF8':
                 raise ValueError('restore database must use UTF8 to preserve Unicode research evidence')
-        _run_pg("pg_restore", restore_dsn, ["--exit-on-error", "--no-owner", "--no-privileges",
+        _run_pg("pg_restore", restore_dsn, ["--exit-on-error", "--single-transaction", "--no-owner", "--no-privileges",
                                             "--dbname", dbname, str(extraction / "catalog.dump")])
         for file in manifest["artifacts"]:
             destination = destination_data_root / file["path"]
@@ -235,5 +263,10 @@ def restore(source: Path, destination_data_root: Path, restore_dsn: str, live_ds
             shutil.copyfile(extraction / "artifacts" / file["path"], destination)
             if _sha(destination) != file["sha256"]:
                 raise OSError("restored artifact checksum mismatch")
+        if 'catalog_inventory' in manifest:
+            from .protection_inventory import read_inventory
+            if read_inventory(restore_dsn, manifest['catalog_inventory']['schema']) != manifest['catalog_inventory']:
+                raise ValueError('RESTORED_CATALOG_FINGERPRINT_DIFFERS')
     return {"head_manifest_id": manifest["head_manifest_id"], "artifact_count": len(manifest["artifacts"]),
-            "restore_data_root": str(destination_data_root)}
+            "restore_data_root": str(destination_data_root),
+            "catalog_inventory_verified": 'catalog_inventory' in manifest}

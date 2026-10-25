@@ -1,0 +1,86 @@
+{
+  "status": "CACHED_THREE_MARKET_PRODUCTION_BROWSER_ACCEPTANCE_PASSED",
+  "observed_at": "2026-10-14T18:00:36.738761+00:00",
+  "browser_receipt_sha256": "ca55d20492f923f8f30052e08ae600bdc7156f329f462ff78e3432023797126f",
+  "verified_charts": [
+    {
+      "provider": "binance",
+      "symbol": "BTCUSDT",
+      "native_id": "BTCUSDT",
+      "rows": 30,
+      "api_archive_rows_sha256": "5378b949c540bd0b8d76a90e8d1fef19838e4eb217d5e7d75e25e14ce77663b4",
+      "plotted_sample_count": 3,
+      "readout_and_tooltip_values_match": true
+    },
+    {
+      "provider": "binance",
+      "symbol": "ETHUSDT",
+      "native_id": "ETHUSDT",
+      "rows": 30,
+      "api_archive_rows_sha256": "3a0e05a86baedacf4f5a4610f79fa14dedf8bb0039944396f3db444ba8064b3e",
+      "plotted_sample_count": 3,
+      "readout_and_tooltip_values_match": true
+    },
+    {
+      "provider": "upstox",
+      "symbol": "RELIANCE",
+      "native_id": "NSE_EQ|INE002A01018",
+      "rows": 8,
+      "api_archive_rows_sha256": "97b9788680744f587e8248a84a298c3efa2c74301e6d88b6098736c3fa6e2cd5",
+      "plotted_sample_count": 3,
+      "readout_and_tooltip_values_match": true
+    },
+    {
+      "provider": "alpaca",
+      "symbol": "AAPL",
+      "native_id": "b0b6dd9d-8b9b-48a9-ba46-b9d54906e415",
+      "rows": 9,
+      "api_archive_rows_sha256": "8b2cb0361af48e6a8eff57e0ca05185aa1b7abde504e2d43589af7a3ae5d7f22",
+      "plotted_sample_count": 3,
+      "readout_and_tooltip_values_match": true
+    }
+  ],
+  "catalog_native_records": 73494,
+  "catalog_filters_and_pinned_pagination_passed": true,
+  "uncached_cases_have_no_candles": true,
+  "live_state": "UNAVAILABLE_NO_ACTIVE_COLLECTOR",
+  "browser_websockets": 0,
+  "uncaught_javascript_errors": 0,
+  "expected_missing_credential_http_errors": 8,
+  "archive_integrity": {
+    "status": "VALIDATED",
+    "manifests": 364,
+    "artifacts": 309,
+    "bytes": 10685773,
+    "database_access": false,
+    "owner_writes": false
+  },
+  "original_manifest_artifacts_retained": true,
+  "validated_daily_datasets_unchanged": true,
+  "independent_archive_unchanged": false,
+  "later_independent_append_audit": "C:\\Users\\faris\\OneDrive\\Documents\\MARKET_CORTEX_Phase_1_Completed\\runtime\\three-market-independent-append-audit-2026-10-14.json",
+  "owner_database_access": false,
+  "owner_writes": false,
+  "owner_deployment": false,
+  "stage_a_authorized": false,
+  "stage_b_authorized": false,
+  "stage_c_authorized": false,
+  "proposed_stage_a": "C:\\Users\\faris\\OneDrive\\Documents\\MARKET_CORTEX_Phase_1_Completed\\docs\\operations\\STAGE_A_OWNER_WORKSTATION_APPROVAL_2026-10-14.md",
+  "tests": {
+    "focused_synthetic_source_safety_regressions_passed": 81,
+    "real_browser_historical_chart_cases_passed": 4,
+    "real_browser_uncached_cases_passed": 3,
+    "rendered_tooltip_samples_passed": 12
+  },
+  "performance": {
+    "first_chart_ms": 965.3756000006979,
+    "warm_chart_median_ms": 398.8348499988206,
+    "symbol_switch_median_ms": 251.9450500003586,
+    "maximum_warm_http_p95_ms": 136.43449999653967,
+    "browser_search_medians_ms": {
+      "binance": 336.1984000002849,
+      "upstox": 372.2492000015336,
+      "alpaca": 381.8020999970031
+    }
+  }
+}

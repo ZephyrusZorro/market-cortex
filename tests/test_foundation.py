@@ -505,14 +505,19 @@ class BackupTests(unittest.TestCase):
             self.assertNotIn(source.read_bytes()[:128], encrypted.read_bytes())
             decrypt_file(encrypted, restored, "a-long-test-only-backup-passphrase")
             self.assertEqual(restored.read_bytes(), source.read_bytes())
+            with self.assertRaises(FileExistsError):
+                decrypt_file(encrypted, restored, "a-long-test-only-backup-passphrase")
+            self.assertEqual(restored.read_bytes(), source.read_bytes())
             with self.assertRaises(ValueError):
-                decrypt_file(encrypted, restored, "a-different-backup-passphrase")
-            self.assertFalse(restored.exists())
+                decrypt_file(encrypted, Path(directory) / 'wrong-key', "a-different-backup-passphrase")
+            self.assertFalse((Path(directory) / 'wrong-key').exists())
+            self.assertEqual(restored.read_bytes(), source.read_bytes())
             tampered = bytearray(encrypted.read_bytes())
             tampered[-20] ^= 1
             encrypted.write_bytes(tampered)
             with self.assertRaises(ValueError):
-                decrypt_file(encrypted, restored, "a-long-test-only-backup-passphrase")
+                decrypt_file(encrypted, Path(directory) / 'tampered', "a-long-test-only-backup-passphrase")
+            self.assertFalse((Path(directory) / 'tampered').exists())
         self.assertFalse(_safe_member("artifacts/../../secret"))
         self.assertFalse(_safe_member("artifacts\\lake\\x.parquet"))
         self.assertTrue(_safe_member("artifacts/lake/kind=Bar/a.parquet"))

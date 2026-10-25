@@ -1,0 +1,120 @@
+{
+  "status": "THREE_MARKET_INDEPENDENT_PREPARATION_VALIDATED_OWNER_APPROVAL_PENDING",
+  "observed_at": "2026-10-14T17:19:48.886940+00:00",
+  "probe_audit": "C:\\Users\\faris\\OneDrive\\Documents\\MARKET_CORTEX_Phase_1_Completed\\runtime\\three-market-probe-final-audit-2026-10-14.json",
+  "api_validation": "C:\\Users\\faris\\OneDrive\\Documents\\MARKET_CORTEX_Phase_1_Completed\\runtime\\three-market-capped-bundle-validation-2026-10-14.json",
+  "discoverable_native_records": 73494,
+  "broker_fresh_price_evidence": {
+    "upstox": {
+      "authentication_confirmed": true,
+      "subscription_confirmed": true,
+      "connected_at_capture_end": false,
+      "last_error": null,
+      "feed_entitlements_observed": [
+        "v3_ltpc"
+      ],
+      "observations_received": 1,
+      "kinds": {
+        "last_trade_snapshot": 1
+      },
+      "price_observations": 1,
+      "arrival_states": {
+        "STALE": 1
+      },
+      "price_event_age_at_arrival_seconds": {
+        "min": 21030.363432,
+        "median": 21030.363432,
+        "max": 21030.363432
+      },
+      "fresh_price_observations_received": false,
+      "fresh_distinct_event_timestamps": 0,
+      "fresh_distinct_trade_prices": 0,
+      "fresh_distinct_bids": 0,
+      "fresh_distinct_asks": 0,
+      "fresh_price_range": null,
+      "fresh_price_changes_observed": false,
+      "freshness_threshold_seconds": 30,
+      "current_connection_inferred": false,
+      "bar_start_timestamps_excluded_from_price_latency": true
+    },
+    "alpaca": {
+      "authentication_confirmed": true,
+      "subscription_confirmed": true,
+      "connected_at_capture_end": false,
+      "last_error": null,
+      "feed_entitlements_observed": [
+        "iex"
+      ],
+      "observations_received": 502,
+      "kinds": {
+        "trade": 16,
+        "quote": 485,
+        "candle": 1
+      },
+      "price_observations": 501,
+      "arrival_states": {
+        "FRESH": 501
+      },
+      "price_event_age_at_arrival_seconds": {
+        "min": 2.623073,
+        "median": 2.627543,
+        "max": 2.732786
+      },
+      "fresh_price_observations_received": true,
+      "fresh_distinct_event_timestamps": 498,
+      "fresh_distinct_trade_prices": 10,
+      "fresh_distinct_bids": 11,
+      "fresh_distinct_asks": 11,
+      "fresh_price_range": [
+        "344.61",
+        "344.675"
+      ],
+      "fresh_price_changes_observed": true,
+      "freshness_threshold_seconds": 30,
+      "current_connection_inferred": false,
+      "bar_start_timestamps_excluded_from_price_latency": true
+    }
+  },
+  "owner_writes": false,
+  "owner_database_access": false,
+  "owner_deployed": false,
+  "collectors_enabled": false,
+  "schedules_enabled": false,
+  "running_independent_api_uses_combined_bundle": false,
+  "broker_production_browser_acceptance": "PENDING_OPTIONAL_INDEPENDENT_ACTIVATION",
+  "test_evidence": {
+    "full_suite_before_final_quota_changes": {
+      "passed": 337,
+      "skipped": 118,
+      "subtests_passed": 13
+    },
+    "final_focused_suite": {
+      "passed": 74,
+      "preparation_tests": 19
+    },
+    "warning": "EXISTING_STARLETTE_HTTPX_DEPRECATION"
+  },
+  "approval_proposal": "C:\\Users\\faris\\OneDrive\\Documents\\MARKET_CORTEX_Phase_1_Completed\\docs\\operations\\THREE_MARKET_OWNER_INTEGRATION_PROPOSAL.md",
+  "remaining_gates": [
+    "UPSTOX_FRESH_ACTIVE_SESSION_EVENTS",
+    "IDENTITY_AND_CORPORATE_ACTION_VALIDITY",
+    "VERIFIED_CALENDARS_AND_SOURCE_WINDOWS",
+    "RETENTION_RIGHTS",
+    "SOURCE_CACHE_ENCRYPTED_BACKUP_REHEARSAL",
+    "OWNER_INVENTORY_AND_DEPLOYMENT_APPROVAL",
+    "BROKER_PRODUCTION_BROWSER_ACCEPTANCE"
+  ],
+  "changed_preparation_files": [
+    "C:\\Users\\faris\\OneDrive\\Documents\\MARKET_CORTEX_Phase_1_Completed\\src\\market_cortex\\market_observation_audit.py",
+    "C:\\Users\\faris\\OneDrive\\Documents\\MARKET_CORTEX_Phase_1_Completed\\src\\market_cortex\\market_archive_bundle.py",
+    "C:\\Users\\faris\\OneDrive\\Documents\\MARKET_CORTEX_Phase_1_Completed\\src\\market_cortex\\market_rate_budget.py",
+    "C:\\Users\\faris\\OneDrive\\Documents\\MARKET_CORTEX_Phase_1_Completed\\src\\market_cortex\\market_archive.py",
+    "C:\\Users\\faris\\OneDrive\\Documents\\MARKET_CORTEX_Phase_1_Completed\\src\\market_cortex\\market_universe.py",
+    "C:\\Users\\faris\\OneDrive\\Documents\\MARKET_CORTEX_Phase_1_Completed\\src\\market_cortex\\market_stream.py",
+    "C:\\Users\\faris\\OneDrive\\Documents\\MARKET_CORTEX_Phase_1_Completed\\src\\market_cortex\\market_data_app.py",
+    "C:\\Users\\faris\\OneDrive\\Documents\\MARKET_CORTEX_Phase_1_Completed\\src\\market_cortex\\multi_market_probe.py",
+    "C:\\Users\\faris\\OneDrive\\Documents\\MARKET_CORTEX_Phase_1_Completed\\src\\market_cortex\\providers.py",
+    "C:\\Users\\faris\\OneDrive\\Documents\\MARKET_CORTEX_Phase_1_Completed\\scripts\\verify_three_market_bundle.py",
+    "C:\\Users\\faris\\OneDrive\\Documents\\MARKET_CORTEX_Phase_1_Completed\\tests\\test_three_market_preparation.py"
+  ]
+}

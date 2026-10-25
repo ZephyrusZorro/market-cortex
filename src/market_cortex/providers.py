@@ -11,7 +11,7 @@ import json
 import os
 import re
 import time
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import date, datetime, timedelta, timezone
 from decimal import Decimal, InvalidOperation
 from typing import Protocol
@@ -28,7 +28,9 @@ HOSTS = {
     "api.fiscaldata.treasury.gov": (r"/services/api/fiscal_service/v2/accounting/od/avg_interest_rates",),
     "data-api.binance.vision": (r"/api/v3/klines", r"/api/v3/exchangeInfo"),
     "data.alpaca.markets": (r"/v2/stocks/[A-Z0-9]+(?:\.[A-Z0-9]+)?/bars",),
-    "api.upstox.com": (r"/v3/historical-candle/NSE_EQ%7C[A-Z0-9]+/days/1/\d{4}-\d{2}-\d{2}/\d{4}-\d{2}-\d{2}",),
+    "paper-api.alpaca.markets": (r"/v2/assets", r"/v2/calendar"),
+    "api.alpaca.markets": (r"/v2/assets", r"/v2/calendar"),
+    "api.upstox.com": (r"/v2/instruments/search", r"/v3/feed/market-data-feed/authorize", r"/v3/historical-candle/(?:NSE|BSE)_EQ%7C[A-Z0-9]+/(?:minutes|hours|days|weeks|months)/[0-9]+/\d{4}-\d{2}-\d{2}/\d{4}-\d{2}-\d{2}"),
 }
 MAX_RESPONSE_BYTES = 4_000_000
 MAX_PAGES = 30
@@ -53,11 +55,19 @@ class Page:
     data: object
     content_hash: str
     status: int
+    rate_limit_headers: dict[str, int] = field(default_factory=dict)
 
 
 class ReadTransport:
-    def __init__(self, client: httpx.Client | None = None):
+    def __init__(self, client: httpx.Client | None = None, *, max_response_bytes=MAX_RESPONSE_BYTES):
         self.client = client or httpx.Client(timeout=httpx.Timeout(10.0, connect=5.0), follow_redirects=False)
+        self.max_response_bytes = max_response_bytes
+
+    def before_attempt(self, host: str, path: str) -> None:
+        """Optional independent-provider budget hook; default transport unchanged."""
+
+    def observe_response(self, host: str, status: int, headers) -> None:
+        """Optional quota/cooldown hook. Never persist raw response headers."""
 
     def get(self, host: str, path: str, *, params: dict | None = None, headers: dict | None = None) -> Page:
         if host not in HOSTS or not any(re.fullmatch(pattern, path) for pattern in HOSTS[host]):
@@ -65,10 +75,12 @@ class ReadTransport:
         if params and any(key.lower() in ("api_key", "secret", "token", "authorization") for key in params):
             raise ProviderFailure("CREDENTIAL_IN_QUERY_FORBIDDEN")
         for attempt in range(3):
+            self.before_attempt(host, path)
             try:
                 with self.client.stream("GET", f"https://{host}{path}", params=params, follow_redirects=False,
                                         headers={"Accept": "application/json", **(headers or {})}) as response:
                     status = response.status_code
+                    self.observe_response(host, status, response.headers)
                     if status in (401, 403):
                         raise ProviderFailure("ACCESS_DENIED")
                     if status in (429, 500, 502, 503, 504):
@@ -80,16 +92,21 @@ class ReadTransport:
                     if status != 200:
                         raise ProviderFailure("HTTP_ERROR")
                     length = response.headers.get("Content-Length")
-                    if length and length.isdigit() and int(length) > MAX_RESPONSE_BYTES:
+                    if length and length.isdigit() and int(length) > self.max_response_bytes:
                         raise ProviderFailure("RESPONSE_TOO_LARGE")
                     payload = bytearray()
                     for chunk in response.iter_bytes():
                         payload.extend(chunk)
-                        if len(payload) > MAX_RESPONSE_BYTES:
+                        if len(payload) > self.max_response_bytes:
                             raise ProviderFailure("RESPONSE_TOO_LARGE")
                     body = bytes(payload)
                     try:
-                        return Page(json.loads(body), hashlib.sha256(body).hexdigest(), status)
+                        safe_limits = {}
+                        for name in ('x-ratelimit-limit','x-ratelimit-remaining','x-ratelimit-reset','x-mbx-used-weight-1m'):
+                            value = response.headers.get(name,'')
+                            if value.isdigit() and len(value) <= 12:
+                                safe_limits[name] = int(value)
+                        return Page(json.loads(body), hashlib.sha256(body).hexdigest(), status, safe_limits)
                     except (ValueError, UnicodeError):
                         raise ProviderFailure("MALFORMED_JSON") from None
             except ProviderFailure:
@@ -262,7 +279,7 @@ class AlpacaDaily:
         seen = set()
         for _ in range(MAX_PAGES):
             params = {"timeframe": "1Day", "start": start.isoformat(), "end": end.isoformat(),
-                      "feed": self.feed, "adjustment": "raw", "limit": 1000}
+                      "feed": self.feed, "adjustment": "raw", "asof": "-", "limit": 1000}
             if page_token:
                 params["page_token"] = page_token
             page = self.transport.get("data.alpaca.markets", f"/v2/stocks/{symbol}/bars", params=params,
@@ -284,6 +301,8 @@ class AlpacaDaily:
                                           session_date=session_date, open_=row["o"], high=row["h"], low=row["l"],
                                           close=row["c"], volume=row.get("v"), feed=self.feed, adjustment="raw",
                                           window_basis="local_day"))
+                except CalendarMissing:
+                    raise ProviderFailure('CALENDAR_UNKNOWN') from None
                 except (KeyError, AttributeError, ValueError, TypeError):
                     raise ProviderFailure("MALFORMED_CANDLE") from None
             page_token = page.data.get("next_page_token")
@@ -306,14 +325,15 @@ class UpstoxDaily:
     def fetch_daily(self, instrument: Instrument, mapping: IdentifierMapping,
                     calendar: SessionCalendar, start: datetime, end: datetime) -> FetchBatch:
         require_identity(self.provider_id, instrument, mapping, calendar, "provider_token", start, end)
-        if (calendar.venue.venue_id != "XNSE" or calendar.venue.timezone != "Asia/Kolkata" or
+        if (calendar.venue.venue_id not in ("XNSE", "XBOM") or calendar.venue.timezone != "Asia/Kolkata" or
             calendar.venue.session_kind != "regular"):
             raise ProviderFailure("UNSUPPORTED_IDENTITY_OR_CALENDAR")
         token = os.environ.get("UPSTOX_ACCESS_TOKEN")
         if not token:
             raise NotConfigured()
         native_key = mapping.identifier_value
-        if not re.fullmatch(r"NSE_EQ\|[A-Z0-9]{8,30}", native_key):
+        prefix = 'NSE_EQ' if calendar.venue.venue_id == 'XNSE' else 'BSE_EQ'
+        if not re.fullmatch(prefix + r"\|[A-Z0-9]{8,30}", native_key):
             raise ProviderFailure("INVALID_NATIVE_KEY")
         start, end = utc(start), utc(end)
         if start >= end:
@@ -345,6 +365,8 @@ class UpstoxDaily:
                                           source_hash=page.content_hash, record_id=f"{native_key}:{session_date}",
                                           session_date=session_date, open_=row[1], high=row[2], low=row[3],
                                           close=row[4], volume=row[5], feed="historical_v3", adjustment="provider_unspecified"))
+                except CalendarMissing:
+                    raise ProviderFailure('CALENDAR_UNKNOWN') from None
                 except (IndexError, KeyError, AttributeError, ValueError, TypeError):
                     raise ProviderFailure("MALFORMED_CANDLE") from None
             cursor = chunk_end + timedelta(days=1)
