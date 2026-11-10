@@ -1,5 +1,8 @@
 # MARKET CORTEX
 
+> **Architecture & Systems Design:** Designed, architected, and specified by Faris Ruknuddin. Built as a local-first point-in-time quantitative market research platform using PostgreSQL metadata, immutable Parquet manifests, and DuckDB reproducible queries.
+
+
 Private, local-first market research software. **Phases 1–11 are implemented for the five-pair Binance pilot.** The [Phase 0 blueprint](docs/architecture/PHASE_0_BASELINE_2026-09-26.md), [Phase 1 evidence](docs/planning/PHASE_1_EXIT_MATRIX_2026-10-03.md), [Phase 2 rules](docs/analytics/PHASE_2_ANALYTICS.md), [workstation guide](docs/workstation/PHASE_3_WORKSTATION.md), [CORTEX v1 guide](docs/cortex/PHASE_4_CORTEX_V1.md), [opportunity guide](docs/opportunity/PHASE_5_OPPORTUNITY_AND_THESIS.md), [risk guide](docs/risk/PHASE_6_RISK_AND_PORTFOLIO.md), [learning guide](docs/learning/PHASE_7_JOURNAL_PREDICTION_LEARNING.md), and [Phase 8 exit matrix](docs/planning/PHASE_8_EXIT_MATRIX_2026-10-05.md) describe the validated scope.
 
 ## What runs now
